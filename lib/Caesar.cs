@@ -1,14 +1,10 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace InformationSystemSecurity.lib
 {
     internal class Caesar
     {
-        public static string Encript(string text, string key)
+        public static string Encrypt(string text, string key)
         {
             char keyChar = key[0];
 
@@ -33,7 +29,7 @@ namespace InformationSystemSecurity.lib
             return new string(chars);
         }
 
-        public static string PolyEncript(string text, string key)
+        public static string PolyEncrypt(string text, string key)
         {
             string result = "";
             char keyState = '_';
@@ -66,11 +62,12 @@ namespace InformationSystemSecurity.lib
             return result;
         }
 
-        public static string EncriptSBlock(string text, string key) {
+        public static string EncryptSBlock(string text, string key)
+        {
 
             throw new NotImplementedException();
         }
-        public static string DecriptSBlock(string text, string key)
+        public static string DecryptSBlock(string text, string key)
         {
 
             throw new NotImplementedException();

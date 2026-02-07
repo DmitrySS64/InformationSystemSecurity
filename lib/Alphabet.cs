@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace InformationSystemSecurity.lib
 {
@@ -10,7 +8,8 @@ namespace InformationSystemSecurity.lib
         public const string AlphabetString = "_АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЫЬЭЮЯ";
         public static readonly int Length = AlphabetString.Length;
 
-        public static int Char2Num(char c) {
+        public static int Char2Num(char c)
+        {
             int charCode = (int)c;
 
             if (charCode == 95) return 0;
@@ -24,6 +23,7 @@ namespace InformationSystemSecurity.lib
 
             return baseNumber;
         }
+
         public static char Num2Char(int num)
         {
             if (num == 0) return '_';
@@ -37,7 +37,7 @@ namespace InformationSystemSecurity.lib
 
             return (char)charCode;
         }
-        //public static int[] Text2Array(string text) => text.Select(Char2Num).ToArray();
+        
         public static int[] Text2Array(string text)
         {
             if (string.IsNullOrEmpty(text)) return Array.Empty<int>();
@@ -51,7 +51,6 @@ namespace InformationSystemSecurity.lib
             return result;
         }
 
-        //public static string Array2Text(int[] nums) => string.Concat(nums.Select(Num2Char));
         public static string Array2Text(int[] nums)
         {
             if (nums == null || nums.Length == 0) return string.Empty;
@@ -63,8 +62,6 @@ namespace InformationSystemSecurity.lib
             return result;
         }
 
-
-        //public static char AddChars(char c1, char c2) => Num2Char(Char2Num(c1) + Char2Num(c2) + Length);
         public static char AddChars(char c1, char c2)
         {
             int firstNum = Char2Num(c1);
@@ -74,17 +71,14 @@ namespace InformationSystemSecurity.lib
             return Num2Char(resultNum);
         }
 
-
-        //public static char SubtractChars(char c1, char c2) => Num2Char(Char2Num(c1) - Char2Num(c2));
-        public static char SubtractChars(char c1, char c2) {
+        public static char SubtractChars(char c1, char c2)
+        {
             int firstNum = Char2Num(c1);
             int secondNum = Char2Num(c2);
             int resultNum = (firstNum - secondNum + Length) % Length;
 
             return Num2Char(resultNum);
         }
-
-
 
         public static string AddTexts(string text1, string text2)
         {
@@ -141,7 +135,7 @@ namespace InformationSystemSecurity.lib
                 {
                     resultChars[i] = SubtractChars('_', text2[i]);
                 }
-            } 
+            }
 
             return new string(resultChars);
         }

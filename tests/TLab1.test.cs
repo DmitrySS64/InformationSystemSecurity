@@ -1,123 +1,162 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
-using InformationSystemSecurity.lib;
+﻿using InformationSystemSecurity.lib;
 using NUnit.Framework;
+using System.Security.Permissions;
 
 namespace InformationSystemSecurity.tests
 {
     [TestFixture]
-    internal class TLab1
+    public class Lab1Tests
     {
+        #region Alphabet Tests
         [Test]
-        public void Alphabet_Text2Array_and_back() {
-            var a = Alphabet.Text2Array(Alphabet.AlphabetString);
-            var b = Alphabet.Array2Text(a);
+        public void TextToNumberArray_And_NumberArrayToText() {
+            string alphabetString = Alphabet.AlphabetString;
+            
+            int[] a = Alphabet.Text2Array(alphabetString);
+            string b = Alphabet.Array2Text(a);
 
-            Assert.That(b, Is.EqualTo(Alphabet.AlphabetString), "Ошибка в методах Text2Array и Array2Text");
+            Assert.That(b, Is.EqualTo(Alphabet.AlphabetString));
         }
 
         [Test]
-        public void Alphabet_AddChars_and_SubtractChars()
+        public void AddCharacters()
         {
             var a = 'Я';
             var b = 'Ж';
             var c = 'Е';
 
-            Assert.That(Alphabet.AddChars(a,b), Is.EqualTo(c), "Ошибка в методе AddChars");
-            Assert.That(Alphabet.SubtractChars(c, b), Is.EqualTo(a), "Ошибка в методе SubtractChars");
+            Assert.That(Alphabet.AddChars(a,b), Is.EqualTo(c));
         }
 
         [Test]
-        public void Alphabet_AddTexts_and_SubtractTexts() {
-            string a = "ЕЖИК";
-            string a_1 = "ЕЖИК____";
-            string b = "В_ТУМАНЕ";
-            string c = "ИЖЬЯМАНЕ";
-
-            Assert.That(Alphabet.AddTexts(a, b), Is.EqualTo(c), "Ошибка в методе AddTexts");
-            Assert.That(Alphabet.SubtractTexts(c, b), Is.EqualTo(a_1), "Ошибка в методе SubtractTexts");
-        }
-
-        [Test]
-        public void Caesar_Encript()
+        public void SubtractCharacters()
         {
-            string _in = "ОЛОЛО_КРИНЖ";
-            string k1 = "_";
-            string k2 = "Х";
+            var a = 'Я';
+            var b = 'Ж';
+            var c = 'Е';
 
-            string out2 = "ДБДБДХАЖЯГЭ";
-
-            Assert.That(Caesar.Encript(_in, k1), Is.EqualTo(_in), "Ошибка в методе Caesar.Encript");
-            Assert.That(Caesar.Encript(_in, k2), Is.EqualTo(out2), "Ошибка в методе Caesar.Encript");
+            Assert.That(Alphabet.SubtractChars(c, b), Is.EqualTo(a));
         }
 
         [Test]
-        public void Caesar_Decrypt()
+        public void AddTexts()
         {
-            string in1 = "ОЛОЛО_КРИНЖ";
-            string in2 = "ДБДБДХАЖЯГЭ";
-            string k1 = "_";
-            string k2 = "Х";
+            string text1 = "ЕЖИК";
+            string text2 = "В_ТУМАНЕ";
+            string expected = "ИЖЬЯМАНЕ";
 
-            string _out = "ОЛОЛО_КРИНЖ";
+            string result = Alphabet.AddTexts(text1, text2);
 
-            Assert.That(Caesar.Decrypt(in1, k1), Is.EqualTo(_out), "Ошибка в методе Caesar.Decrypt");
-            Assert.That(Caesar.Decrypt(in2, k2), Is.EqualTo(_out), "Ошибка в методе Caesar.Decrypt");
+            Assert.That(result, Is.EqualTo(expected));
         }
 
         [Test]
-        public void Caesar_PolyEncript()
+        public void SubtractTexts_ShouldSubtractTextsCorrectly()
         {
-            string 
-                in1 = "ОЛОЛО_КРИНЖ",
-                in2 = in1,
-                k1 = "Х",
-                k2 = "ПАНТЕОН",
-                out1 = "ДЧРГЭГДАОЙШ",
-                out2 = "ЯЭНЮЖЖ_ХОБН";
+            string cipherText = "ИЖЬЯМАНЕ";
+            string text2 = "В_ТУМАНЕ";
+            string expected = "ЕЖИК____";
 
-            Assert.That(Caesar.PolyEncript(in1, k1), Is.EqualTo(out1), "Ошибка в методе Caesar.PolyEncript");
-            Assert.That(Caesar.PolyEncript(in2, k2), Is.EqualTo(out2), "Ошибка в методе Caesar.PolyEncript");
+            string result = Alphabet.SubtractTexts(cipherText, text2);
+
+            Assert.That(result, Is.EqualTo(expected));
+        }
+
+        #endregion
+
+        #region Caesar Cipher Tests
+
+        [Test]
+        public void Encrypt_WithZeroKey()
+        {
+            string plainText = "ОЛОЛО_КРИНЖ";
+            string key = "_";
+
+            string result = Caesar.Encrypt(plainText, key);
+
+            Assert.That(result, Is.EqualTo(plainText));
         }
 
         [Test]
-        public void Caesar_PolyDecrypt()
+        public void Encrypt_WithKey()
         {
-            string
-                in1 = "ОЛОЛО_КРИНЖ",
-                in2 = in1,
-                k1 = "Х",
-                k2 = "ПАНТЕОН",
-                out1 = "ДЧРГЭГДАОЙШ",
-                out2 = "ЯЭНЮЖЖ_ХОБН";
+            // Arrange
+            string plainText = "ОЛОЛО_КРИНЖ";
+            string key = "Х";
+            string expected = "ДБДБДХАЖЯГЭ";
 
-            Assert.That(Caesar.PolyDecrypt(out1, k1), Is.EqualTo(in1), "Ошибка в методе Caesar.PolyDecrypt");
-            Assert.That(Caesar.PolyDecrypt(out2, k2), Is.EqualTo(in2), "Ошибка в методе Caesar.PolyDecrypt");
+            // Act
+            string result = Caesar.Encrypt(plainText, key);
+
+            // Assert
+            Assert.That(result, Is.EqualTo(expected));
         }
-
 
         [Test]
-        public void Caesar_EncriptSBlock()
+        public void Decrypt()
         {
-            string
-                in1 = "БЛОК",
-                in2 = "ВЛОГ",
-                k1 = "ХОРОШО_БЫТЬ_ВАМИ",
-                k2 = "ЧЕРНОВОЙ_АХИЛЛЕС",
-                out11 = "АЗЩЯ",
-                out12 = "СЮАЖ",
-                out21 = "БЗЩЧ",
-                out22 = "ТЮА_";
+            // Arrange
+            string plainText = "ОЛОЛО_КРИНЖ";
+            string key = "Х";
 
-            Assert.That(Caesar.EncriptSBlock(in1, k1), Is.EqualTo(out11), "Ошибка в методе Caesar.EncriptSBlock");
-            Assert.That(Caesar.EncriptSBlock(in1, k2), Is.EqualTo(out12), "Ошибка в методе Caesar.EncriptSBlock");
-            Assert.That(Caesar.EncriptSBlock(in2, k1), Is.EqualTo(out21), "Ошибка в методе Caesar.EncriptSBlock");
-            Assert.That(Caesar.EncriptSBlock(in2, k2), Is.EqualTo(out22), "Ошибка в методе Caesar.EncriptSBlock");
+            // Act
+            string encrypted = Caesar.Encrypt(plainText, key);
+            string decrypted = Caesar.Decrypt(encrypted, key);
+
+            // Assert
+            Assert.That(decrypted, Is.EqualTo(plainText));
         }
 
+        [Test]
+        public void Decrypt_WithZeroKey()
+        {
+            // Arrange
+            string cipherText = "ОЛОЛО_КРИНЖ";
+            string key = "_";
+
+            // Act
+            string result = Caesar.Decrypt(cipherText, key);
+
+            // Assert
+            Assert.That(result, Is.EqualTo(cipherText));
+        }
+
+        #endregion
+
+        #region Polyalphabetic Cipher Tests
+
+        [TestCase("ОЛОЛО_КРИНЖ", "Х", "ДЧРГЭГДАОЙШ")]
+        [TestCase("ОЛОЛО_КРИНЖ", "ПАНТЕОН", "ЯЭНЮЖЖ_ХОБН")]
+        public void PolyEncrypt(string textIn, string key, string textOut)
+        {
+            string result = Caesar.PolyEncrypt(textIn, key);
+
+            Assert.That(result, Is.EqualTo(textOut));
+        }
+
+        [TestCase("ОЛОЛО_КРИНЖ", "Х", "ДЧРГЭГДАОЙШ")]
+        [TestCase("ОЛОЛО_КРИНЖ", "ПАНТЕОН", "ЯЭНЮЖЖ_ХОБН")]
+        public void PolyDecrypt(string textOut, string key, string textIn)
+        {
+            string result = Caesar.PolyDecrypt(textIn, key);
+            Assert.That(result, Is.EqualTo(textOut));
+        }
+
+        #endregion
+
+        #region S-Block Cipher Tests
+
+        [TestCase("БЛОК", "ХОРОШО_БЫТЬ_ВАМИ", "АЗЩЯ")]
+        [TestCase("БЛОК", "ЧЕРНОВОЙ_АХИЛЛЕС", "СЮАЖ")]
+        [TestCase("ВЛОГ", "ХОРОШО_БЫТЬ_ВАМИ", "БЗЩЧ")]
+        [TestCase("ВЛОГ", "ЧЕРНОВОЙ_АХИЛЛЕС", "ТЮА_")]
+        public void EncriptSBlock(string textIn, string key, string textOut)
+        {
+            string result = Caesar.EncryptSBlock(textIn, key);
+
+            Assert.That(result, Is.EqualTo(textOut));
+        }
+
+        #endregion
     }
 }
