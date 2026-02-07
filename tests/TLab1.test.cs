@@ -14,10 +14,10 @@ namespace InformationSystemSecurity.tests
     {
         [Test]
         public void Alphabet_Text2Array_and_back() {
-            var a = Alphabet.Text2Array(Alphabet.ABC);
+            var a = Alphabet.Text2Array(Alphabet.AlphabetString);
             var b = Alphabet.Array2Text(a);
 
-            Assert.That(b, Is.EqualTo(Alphabet.ABC), "Ошибка в методах Text2Array и Array2Text");
+            Assert.That(b, Is.EqualTo(Alphabet.AlphabetString), "Ошибка в методах Text2Array и Array2Text");
         }
 
         [Test]
