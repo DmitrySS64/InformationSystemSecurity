@@ -77,4 +77,36 @@ public class AlphabetTests
         // Assert
         Assert.Equal(expected, result);
     }
+
+    [Fact]
+    public void SubtractTexts_WhenSubtractingTwoTexts1_ReturnsExpectedText()
+    {
+        //От длинного отнимается короткий
+        // Arrange
+        const string cipherText = "ИЖЬЯМАНЕ";
+        const string text2 = "ЕЖИК";
+        const string expected = "В_ТУМАНЕ";
+
+        // Act
+        string result = Alphabet.SubtractTexts(cipherText, text2);
+
+        // Assert
+        Assert.Equal(expected, result);
+    }
+
+    [Fact]
+    public void SubtractTexts_WhenSubtractingTwoTexts2_ReturnsExpectedText()
+    {
+        //от короткого отнимается длинный
+        // Arrange
+        const string cipherText = "ЕЖИК";
+        const string text2 = "ИЖЬЯМАНЕ";
+        const string expected = "Э_МЛТЯСЩ";
+
+        // Act
+        string result = Alphabet.SubtractTexts(cipherText, text2);
+
+        // Assert
+        Assert.Equal(expected, result);
+    }
 }

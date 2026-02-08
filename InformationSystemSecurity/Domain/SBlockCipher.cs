@@ -132,13 +132,14 @@ public class SBlockCipher
         if (_key.Length != KeySize)
             throw new ArgumentException("input_error");
         
-        var keyTmp = new StringBuilder();
+        var keyTmp = "";
         var keyExit = _key + _key; // удвоенный ключ
 
         for (var i = 0; i < BlockSize * 2; i++)
         {
             var slice = keyExit.Substring(i * 2, 4);
 
+            var aTmp = new StringBuilder();
             // Преобразуем в числовой массив
             var bTmp = Alphabet.Text2Array(slice);
 
@@ -146,9 +147,10 @@ public class SBlockCipher
             for (var k = 0; k < BlockSize; k++)
             {
                 var x = (2 * i + k) % 10;
-                var aTmp = (64 + k + _shiftVector[x] * bTmp[k]) % 32;
-                keyTmp.Append(Alphabet.Num2Char(aTmp));
+                var aTmpNum = (64 + k + _shiftVector[x] * bTmp[k]) % 32;
+                aTmp.Append(Alphabet.Num2Char(aTmpNum));
             }
+            keyTmp = Alphabet.AddTexts(keyTmp, aTmp.ToString());
         }
 
         return keyTmp.ToString();

@@ -98,10 +98,16 @@ public static class Alphabet
         if (maxLength == commonLength) 
             return new string(result);
 
-        // Если тексты разные по длине, добавляем оставшиеся символы из более длинного текста
-        for (var i = commonLength; i < maxLength; i++)
-            result[i] = longerText[i];
-        
+        //a - 0
+        //Если первый текст длинее второго, переписываем оставшиеся символы 
+        if (text1.Length > text2.Length)
+            for (var i = commonLength; i < maxLength; i++)
+                result[i] = longerText[i];
+        //0 - c
+        //Иначе отнимаем от '_' символы второго текста 
+        else
+            for(var i = commonLength; i < maxLength; i++)
+                result[i] =  SubtractChars('_', longerText[i]);
         return new string(result);
     }
 }
