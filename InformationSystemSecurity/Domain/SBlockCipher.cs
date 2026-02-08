@@ -1,0 +1,162 @@
+﻿using System.Text;
+
+namespace InformationSystemSecurity.domain;
+
+public class SBlockCipher
+{
+    private const int BlockSize = 4;
+    private const int KeySize = 16;
+    
+    private readonly int[] _shiftVector = [1, -1, 1, 2, -2, 1, 1, 3, -1, 2];
+    
+    private readonly ICipher _cipher;
+    private readonly string _key;
+    private readonly bool _roundKey;
+    private readonly bool _merge;
+
+    public SBlockCipher(ICipher cipher, string key, bool roundKey = false, bool merge = false)
+    {
+        _cipher = cipher;
+        if (key.Length != KeySize)
+            throw new ArgumentException($"Key must be {KeySize} characters long.");
+        
+        _key = key;
+        _roundKey = roundKey;
+        _merge = merge;
+    }
+
+    public string Encrypt(string text)
+    {
+        ValidateInput(text);
+        
+        var result = new StringBuilder();
+
+        for (var i = 0; i < text.Length; i += BlockSize)
+        {
+            var block = text.Substring(i, BlockSize);
+            
+            if (_merge)
+                block = MergeBlock(block, _key); // Первый мёрдж
+            
+            var keyForEncrypting = _roundKey
+                ? GenerateRoundKey()
+                : _key;
+            
+            var encryptedBlock = _cipher.Encrypt(block, keyForEncrypting);
+            
+            if (_merge)
+                encryptedBlock = MergeBlock(encryptedBlock, _key); // Второй мёрдж после щифрования
+            
+            result.Append(encryptedBlock);
+        }
+
+        return result.ToString();
+    }
+
+    public string Decrypt(string text)
+    {
+        ValidateInput(text);
+        
+        var result = new StringBuilder();
+
+        for (var i = 0; i < text.Length; i += BlockSize)
+        {
+            var block = text.Substring(i, BlockSize);
+            
+            if (_merge)
+                block = MergeBlock(block, _key, reverse: true); // Первый мёрдж
+            
+            var keyForDecrypting = _roundKey
+                ? GenerateRoundKey()
+                : _key;
+            
+            var decryptedBlock = _cipher.Decrypt(block, keyForDecrypting);
+            
+            if (_merge)
+                decryptedBlock = MergeBlock(decryptedBlock, _key, reverse: true); // Второй мёрдж после щифрования
+            
+            result.Append(decryptedBlock);
+        }
+
+        return result.ToString();
+    }
+    
+    public static string MergeBlock(string blockIn, string key, bool reverse = false)
+    {
+        if (blockIn.Length != BlockSize)
+            throw new ArgumentException("input_error");
+        
+        int[] m = [0, 1, 2, 3];
+        
+        var keyArray = Alphabet.Text2Array(key);
+  
+        var sum = 0; 
+        for (var i = 0; i < 16; i++) // Свёртка ключа в одно число
+        {
+            var sign = i % 2 == 0 
+                ? 1 
+                : -1;
+            sum = (24 + sum + sign * keyArray[i]) % 24;
+        }
+        
+        for (var k = 0; k < 3; k++) // Перемешивание массива m в зависимости ключа
+        {
+            var t = sum % (4 - k);
+            sum = (sum - t) / (4 - k);
+            
+            (m[k], m[k + t]) = (m[k + t], m[k]);
+        }
+        
+        var result = Alphabet.Text2Array(blockIn);
+
+        // Проход по массиву m в прямом или обратном порядке
+        var start = reverse ? 3 : 0;
+        var end = reverse ? -1 : 4;
+        var step = reverse ? -1 : 1;
+
+        for (var j = start; j != end; j += step)
+        {
+            var a = m[j & 3];
+            var b = m[(j + 1) & 3];
+            result[b] = reverse
+                ? (32 + result[b] - result[a]) % 32
+                : (result[b] + result[a]) % 32;
+        }
+
+        
+        return Alphabet.Array2Text(result);
+    }
+    
+    private string GenerateRoundKey()
+    {
+        if (_key.Length != KeySize)
+            throw new ArgumentException("input_error");
+        
+        var keyTmp = new StringBuilder();
+        var keyExit = _key + _key; // удвоенный ключ
+
+        for (var i = 0; i < BlockSize * 2; i++)
+        {
+            var slice = keyExit.Substring(i * 2, 4);
+
+            // Преобразуем в числовой массив
+            var bTmp = Alphabet.Text2Array(slice);
+
+            // Генерация нового блока
+            for (var k = 0; k < BlockSize; k++)
+            {
+                var x = (2 * i + k) % 10;
+                var aTmp = (64 + k + _shiftVector[x] * bTmp[k]) % 32;
+                keyTmp.Append(Alphabet.Num2Char(aTmp));
+            }
+        }
+
+        return keyTmp.ToString();
+    }
+    
+    private static void ValidateInput(string text)
+    {
+        if (text.Length % BlockSize != 0)
+            throw new ArgumentException($"Text length must be a multiple of {BlockSize} characters.");
+    }
+}

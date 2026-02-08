@@ -1,31 +1,51 @@
+using System.Text;
+using InformationSystemSecurity.domain.Enums;
+
 namespace InformationSystemSecurity.domain;
 
-public static class Caesar
+public class Caesar(CaesarMode mode = CaesarMode.Poly) : ICipher
 {
-    public static string Encrypt(string text, string key)
+    public string Encrypt(string text, string key)
+    {
+        return mode switch
+        {
+            CaesarMode.Simple => SimpleEncrypt(text, key),
+            CaesarMode.Poly => PolyEncrypt(text, key),
+            _ => throw new ArgumentOutOfRangeException()
+        };
+    }
+
+    public string Decrypt(string text, string key)
+    {
+        return mode switch
+        {
+            CaesarMode.Simple => SimpleDecrypt(text, key),
+            CaesarMode.Poly => PolyDecrypt(text, key),
+            _ => throw new ArgumentOutOfRangeException()
+        };
+    }
+
+    private static string SimpleEncrypt(string text, string key)
     {
         var keyChar = key[0];
-
         var chars = new char[text.Length];
         for (var i = 0; i < text.Length; i++)
             chars[i] = Alphabet.AddChars(text[i], keyChar);
-
         return new string(chars);
     }
-    public static string Decrypt(string text, string key)
+
+    private static string SimpleDecrypt(string text, string key)
     {
         var keyChar = key[0];
-
         var chars = new char[text.Length];
         for (var i = 0; i < text.Length; i++)
             chars[i] = Alphabet.SubtractChars(text[i], keyChar);
-
         return new string(chars);
     }
 
-    public static string PolyEncrypt(string text, string key)
+    private static string PolyEncrypt(string text, string key)
     {
-        var result = "";
+        var result = new StringBuilder();
         var keyState = '_';
 
         for (var i = 0; i < text.Length; i++)
@@ -33,14 +53,15 @@ public static class Caesar
             var currentTextChar = text[i];
             var keyPosition = i % key.Length;
             keyState = Alphabet.AddChars(keyState, key[keyPosition]);
-            result += Alphabet.AddChars(currentTextChar, keyState);
+            result.Append(Alphabet.AddChars(currentTextChar, keyState));
         }
 
-        return result;
+        return result.ToString();
     }
-    public static string PolyDecrypt(string text, string key)
+
+    private static string PolyDecrypt(string text, string key)
     {
-        var result = "";
+        var result = new StringBuilder();
         var keyState = '_';
 
         for (var i = 0; i < text.Length; i++)
@@ -48,18 +69,9 @@ public static class Caesar
             var currentTextChar = text[i];
             var keyPosition = i % key.Length;
             keyState = Alphabet.AddChars(keyState, key[keyPosition]);
-            result += Alphabet.SubtractChars(currentTextChar, keyState);
+            result.Append(Alphabet.SubtractChars(currentTextChar, keyState));
         }
 
-        return result;
-    }
-
-    public static string EncryptSBlock(string text, string key)
-    {
-        throw new NotImplementedException();
-    }
-    public static string DecryptSBlock(string text, string key)
-    {
-        throw new NotImplementedException();
+        return result.ToString();
     }
 }
