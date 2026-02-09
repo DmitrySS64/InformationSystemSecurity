@@ -8,11 +8,11 @@ public class AlphabetTests
     public void Text2Array_Then_Array2Text_ReturnsOriginalAlphabet()
     {
         // Arrange
-        string alphabetString = Alphabet.AlphabetString;
+        var alphabetString = Alphabet.AlphabetString;
 
         // Act
-        int[] a = Alphabet.Text2Array(alphabetString);
-        string b = Alphabet.Array2Text(a);
+        var a = alphabetString.ToNumArray();
+        var b = a.ToText();
 
         // Assert
         Assert.Equal(Alphabet.AlphabetString, b);
@@ -27,7 +27,7 @@ public class AlphabetTests
         const char expected = 'Е';
 
         // Act
-        char result = Alphabet.AddChars(a, b);
+        var result = Alphabet.AddChars(a, b);
 
         // Assert
         Assert.Equal(expected, result);
@@ -42,7 +42,7 @@ public class AlphabetTests
         const char c = 'Е';
 
         // Act
-        char result = Alphabet.SubtractChars(c, b);
+        var result = Alphabet.SubtractChars(c, b);
 
         // Assert
         Assert.Equal(expected, result);
@@ -57,7 +57,7 @@ public class AlphabetTests
         const string expected = "ИЖЬЯМАНЕ";
 
         // Act
-        string result = Alphabet.AddTexts(text1, text2);
+        var result = Alphabet.AddTexts(text1, text2);
 
         // Assert
         Assert.Equal(expected, result);
@@ -72,7 +72,7 @@ public class AlphabetTests
         const string expected = "ЕЖИК____";
 
         // Act
-        string result = Alphabet.SubtractTexts(cipherText, text2);
+        var result = Alphabet.SubtractTexts(cipherText, text2);
 
         // Assert
         Assert.Equal(expected, result);
@@ -88,7 +88,7 @@ public class AlphabetTests
         const string expected = "В_ТУМАНЕ";
 
         // Act
-        string result = Alphabet.SubtractTexts(cipherText, text2);
+        var result = Alphabet.SubtractTexts(cipherText, text2);
 
         // Assert
         Assert.Equal(expected, result);
@@ -104,7 +104,7 @@ public class AlphabetTests
         const string expected = "Э_МЛТЯСЩ";
 
         // Act
-        string result = Alphabet.SubtractTexts(cipherText, text2);
+        var result = Alphabet.SubtractTexts(cipherText, text2);
 
         // Assert
         Assert.Equal(expected, result);

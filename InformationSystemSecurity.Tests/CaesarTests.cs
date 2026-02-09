@@ -149,7 +149,7 @@ public class CaesarTests
     }
     
     [Fact]
-    public void SBlockEncryptWithShuffle_ReturnsExpectedCipherText()
+    public void SBlockEncryptWithRoundKey_ReturnsExpectedCipherText()
     {
         // Arrange
         const string plainText = "БЛОК";
@@ -168,7 +168,7 @@ public class CaesarTests
     }
     
     [Fact]
-    public void SBlockEncryptWithShuffleAndMerge_ReturnsExpectedCipherText()
+    public void SBlockEncryptWithRoundKeyAndMerge_ReturnsExpectedCipherText()
     {
         // Arrange
         const string plainText = "БЛОК";
