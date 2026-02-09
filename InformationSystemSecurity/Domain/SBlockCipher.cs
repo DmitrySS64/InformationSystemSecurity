@@ -88,7 +88,7 @@ public class SBlockCipher
         
         int[] m = [0, 1, 2, 3];
         
-        var keyArray = Alphabet.Text2Array(key);
+        var keyArray = key.ToNumArray();
   
         var sum = 0; 
         for (var i = 0; i < 16; i++) // Свёртка ключа в одно число
@@ -107,7 +107,7 @@ public class SBlockCipher
             (m[k], m[k + t]) = (m[k + t], m[k]);
         }
         
-        var result = Alphabet.Text2Array(blockIn);
+        var result = blockIn.ToNumArray();
 
         // Проход по массиву m в прямом или обратном порядке
         var start = reverse ? 3 : 0;
@@ -122,9 +122,8 @@ public class SBlockCipher
                 ? (32 + result[b] - result[a]) % 32
                 : (result[b] + result[a]) % 32;
         }
-
         
-        return Alphabet.Array2Text(result);
+        return result.ToText();
     }
     
     private string GenerateRoundKey()
@@ -141,19 +140,19 @@ public class SBlockCipher
 
             var aTmp = new StringBuilder();
             // Преобразуем в числовой массив
-            var bTmp = Alphabet.Text2Array(slice);
+            var bTmp = slice.ToNumArray();
 
             // Генерация нового блока
             for (var k = 0; k < BlockSize; k++)
             {
                 var x = (2 * i + k) % 10;
                 var aTmpNum = (64 + k + _shiftVector[x] * bTmp[k]) % 32;
-                aTmp.Append(Alphabet.Num2Char(aTmpNum));
+                aTmp.Append(aTmpNum.ToChar());
             }
             keyTmp = Alphabet.AddTexts(keyTmp, aTmp.ToString());
         }
 
-        return keyTmp.ToString();
+        return keyTmp;
     }
     
     private static void ValidateInput(string text)

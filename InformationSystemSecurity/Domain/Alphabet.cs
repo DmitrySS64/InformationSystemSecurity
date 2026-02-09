@@ -5,7 +5,7 @@ public static class Alphabet
     public const string AlphabetString = "_АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЫЬЭЮЯ";
     public static int AlphabetLength => AlphabetString.Length;
 
-    public static int Char2Num(char c)
+    public static int ToNum(this char c)
     {
         if (c == 95) 
             return 0;
@@ -16,53 +16,47 @@ public static class Alphabet
             : baseNumber;
     }
 
-    public static char Num2Char(int num)
+    public static char ToChar(this int num)
     {
         if (num == 0) 
             return '_';
 
         var charCode = num + 1039;
-        if (num > 26) // Учитваем "Ъ"
+        if (num > 26) // Учитываем "Ъ"
             charCode++; 
 
         return (char)charCode;
     }
         
-    public static int[] Text2Array(string text)
+    public static int[] ToNumArray(this string text)
     {
         if (string.IsNullOrEmpty(text)) 
             return [];
         
-        var result = text.Select(Char2Num).ToArray();
+        var result = text.Select(ToNum).ToArray();
 
         return result;
     }
 
-    public static string Array2Text(int[] nums)
+    public static string ToText(this int[] nums)
     {
         if (nums.Length == 0) 
             return "";
 
-        var chars = nums.Select(Num2Char).ToArray();
+        var chars = nums.Select(ToChar).ToArray();
         return new string(chars);
     }
 
     public static char AddChars(char c1, char c2)
     {
-        var firstNum = Char2Num(c1);
-        var secondNum = Char2Num(c2);
-        var resultNum = (firstNum + secondNum) % AlphabetLength;
-
-        return Num2Char(resultNum);
+        var resultNum = (c1.ToNum() + c2.ToNum()) % AlphabetLength;
+        return resultNum.ToChar();
     }
 
     public static char SubtractChars(char c1, char c2)
     {
-        var firstNum = Char2Num(c1);
-        var secondNum = Char2Num(c2);
-        var resultNum = (firstNum - secondNum + AlphabetLength) % AlphabetLength;
-
-        return Num2Char(resultNum);
+        var resultNum = (c1.ToNum() - c2.ToNum() + AlphabetLength) % AlphabetLength;
+        return resultNum.ToChar();
     }
 
     public static string AddTexts(string text1, string text2)
@@ -97,17 +91,20 @@ public static class Alphabet
         
         if (maxLength == commonLength) 
             return new string(result);
-
-        //a - 0
-        //Если первый текст длинее второго, переписываем оставшиеся символы 
+        
+        //Если первый текст длинее второго, переписываем оставшиеся символы (a - 0)
         if (text1.Length > text2.Length)
+        {
             for (var i = commonLength; i < maxLength; i++)
                 result[i] = longerText[i];
-        //0 - c
-        //Иначе отнимаем от '_' символы второго текста 
+        }
+        //Иначе отнимаем от '_' символы второго текста (0 - c)
         else
-            for(var i = commonLength; i < maxLength; i++)
-                result[i] =  SubtractChars('_', longerText[i]);
+        {
+            for (var i = commonLength; i < maxLength; i++)
+                result[i] = SubtractChars('_', longerText[i]);
+        }
+
         return new string(result);
     }
 }
