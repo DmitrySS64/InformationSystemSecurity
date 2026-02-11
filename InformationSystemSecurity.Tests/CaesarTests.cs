@@ -72,6 +72,86 @@ public class CaesarTests
         Assert.Equal(cipherText, result);
     }
     
+    [Theory]
+    [MemberData(nameof(TestUtils.GetCloseInputsTestData), MemberType = typeof(TestUtils))]
+    public void CaesarSimpleCloseInputsTest(string plainText, string modifiedPlainText, string key)
+    {
+        var caesar = new Caesar(mode: CaesarMode.Simple);
+        
+        // Act
+        var result1 = caesar.Encrypt(plainText, key);
+        var result2 = caesar.Encrypt(modifiedPlainText, key);
+
+        // Assert
+        var diffCount = TestUtils.CountDifferences(result1, result2);
+        Assert.True(diffCount > 1, $"Expected more than 1 differing character, but got {diffCount}. {result1}:{result2}");
+    }
+    
+    [Theory]
+    [MemberData(nameof(TestUtils.GetRotationTestData), MemberType = typeof(TestUtils))]
+    public void CaesarSimpleRotationTest(string plainText, string rotatedPlainText, string key)
+    {
+        var caesar = new Caesar(mode: CaesarMode.Simple);
+        
+        // Act
+        var result1 = caesar.Encrypt(plainText, key);
+        var result2 = caesar.Encrypt(rotatedPlainText, key);
+
+        // Assert: результат не является перестановкой (символы не те же)
+        var sorted1 = string.Concat(result1.OrderBy(c => c));
+        var sorted2 = string.Concat(result2.OrderBy(c => c));
+        Assert.NotEqual(sorted1, sorted2);
+    }
+
+    [Theory]
+    [MemberData(nameof(TestUtils.GetAdditiveHomomorphismData), MemberType = typeof(TestUtils))]
+    public void CaesarSimpleAdditiveHomomorphismTest(string textA, string textB, string key)
+    {
+        var caesar = new Caesar(mode: CaesarMode.Simple);
+
+        var sumCipher = Alphabet.AddTexts(caesar.Encrypt(textA, key), caesar.Encrypt(textB, key));
+        var sumPlain = Alphabet.AddTexts(textA, textB);
+        var cipherSumPlain = caesar.Encrypt(sumPlain, key);
+
+        Assert.NotEqual(sumCipher, cipherSumPlain);
+    }
+
+    [Theory]
+    [MemberData(nameof(TestUtils.GetKeyChangeTestData), MemberType = typeof(TestUtils))]
+    public void CaesarSimpleKeyChangeTest(string plainText, string key1, string key2)
+    {
+        var caesar = new Caesar(mode: CaesarMode.Simple);
+
+        var result1 = caesar.Encrypt(plainText, key1);
+        var result2 = caesar.Encrypt(plainText, key2);
+
+        Assert.NotEqual(result1, result2);
+    }
+
+    [Theory]
+    [MemberData(nameof(TestUtils.GetKeyRotationTestData), MemberType = typeof(TestUtils))]
+    public void CaesarSimpleKeyRotationTest(string plainText, string key, string rotatedKey)
+    {
+        var caesar = new Caesar(mode: CaesarMode.Simple);
+
+        var result1 = caesar.Encrypt(plainText, key);
+        var result2 = caesar.Encrypt(plainText, rotatedKey);
+
+        Assert.NotEqual(result1, result2);
+    }
+
+    [Theory]
+    [MemberData(nameof(TestUtils.GetKeyAdditionTestData), MemberType = typeof(TestUtils))]
+    public void CaesarSimpleKeyAdditionTest(string plainText, string key1, string key2)
+    {
+        var caesar = new Caesar(mode: CaesarMode.Simple);
+
+        var sumCipher = Alphabet.AddTexts(caesar.Encrypt(plainText, key1), caesar.Encrypt(plainText, key2));
+        var keySum = Alphabet.AddTexts(key1, key2);
+        var cipherKeySum = caesar.Encrypt(plainText, keySum);
+
+        Assert.NotEqual(sumCipher, cipherKeySum);
+    }
     #endregion
 
     #region Poly Caesar Tests
@@ -106,6 +186,86 @@ public class CaesarTests
         Assert.Equal(expectedPlainText, result);
     }
     
+    [Theory]
+    [MemberData(nameof(TestUtils.GetCloseInputsTestData), MemberType = typeof(TestUtils))]
+    public void CaesarPolyCloseInputsTest(string plainText, string modifiedPlainText, string key)
+    {
+        var caesar = new Caesar(mode: CaesarMode.Poly);
+        
+        // Act
+        var result1 = caesar.Encrypt(plainText, key);
+        var result2 = caesar.Encrypt(modifiedPlainText, key);
+
+        // Assert
+        var diffCount = TestUtils.CountDifferences(result1, result2);
+        Assert.True(diffCount > 1, $"Expected more than 1 differing character, but got {diffCount}. {result1}:{result2}");
+    }
+    
+    [Theory]
+    [MemberData(nameof(TestUtils.GetRotationTestData), MemberType = typeof(TestUtils))]
+    public void CaesarPolyRotationTest(string plainText, string rotatedPlainText, string key)
+    {
+        var caesar = new Caesar(mode: CaesarMode.Poly);
+        
+        // Act
+        var result1 = caesar.Encrypt(plainText, key);
+        var result2 = caesar.Encrypt(rotatedPlainText, key);
+
+        // Assert: результат не является перестановкой (символы не те же)
+        var sorted1 = string.Concat(result1.OrderBy(c => c));
+        var sorted2 = string.Concat(result2.OrderBy(c => c));
+        Assert.NotEqual(sorted1, sorted2);
+    }
+
+    [Theory]
+    [MemberData(nameof(TestUtils.GetAdditiveHomomorphismData), MemberType = typeof(TestUtils))]
+    public void CaesarPolyAdditiveHomomorphismTest(string textA, string textB, string key)
+    {
+        var caesar = new Caesar(mode: CaesarMode.Poly);
+
+        var sumCipher = Alphabet.AddTexts(caesar.Encrypt(textA, key), caesar.Encrypt(textB, key));
+        var sumPlain = Alphabet.AddTexts(textA, textB);
+        var cipherSumPlain = caesar.Encrypt(sumPlain, key);
+
+        Assert.NotEqual(sumCipher, cipherSumPlain);
+    }
+
+    [Theory]
+    [MemberData(nameof(TestUtils.GetKeyChangeTestData), MemberType = typeof(TestUtils))]
+    public void CaesarPolyKeyChangeTest(string plainText, string key1, string key2)
+    {
+        var caesar = new Caesar(mode: CaesarMode.Poly);
+
+        var result1 = caesar.Encrypt(plainText, key1);
+        var result2 = caesar.Encrypt(plainText, key2);
+
+        Assert.NotEqual(result1, result2);
+    }
+
+    [Theory]
+    [MemberData(nameof(TestUtils.GetKeyRotationTestData), MemberType = typeof(TestUtils))]
+    public void CaesarPolyKeyRotationTest(string plainText, string key, string rotatedKey)
+    {
+        var caesar = new Caesar(mode: CaesarMode.Poly);
+
+        var result1 = caesar.Encrypt(plainText, key);
+        var result2 = caesar.Encrypt(plainText, rotatedKey);
+
+        Assert.NotEqual(result1, result2);
+    }
+
+    [Theory]
+    [MemberData(nameof(TestUtils.GetKeyAdditionTestData), MemberType = typeof(TestUtils))]
+    public void CaesarPolyKeyAdditionTest(string plainText, string key1, string key2)
+    {
+        var caesar = new Caesar(mode: CaesarMode.Poly);
+
+        var sumCipher = Alphabet.AddTexts(caesar.Encrypt(plainText, key1), caesar.Encrypt(plainText, key2));
+        var keySum = Alphabet.AddTexts(key1, key2);
+        var cipherKeySum = caesar.Encrypt(plainText, keySum);
+
+        Assert.NotEqual(sumCipher, cipherKeySum);
+    }
     #endregion
 
     #region SBlock Caesar-Cipher Tests
@@ -116,15 +276,15 @@ public class CaesarTests
         // Arrange
         const string plainText = "БЛОК";
         const string key = "ХОРОШО_БЫТЬ_ВАМИ";
-        
+
         var caesar = new Caesar();
         var sBlockCipher = new SBlockCipher(caesar, key);
-        
+
         const string expected = "ЧРДП";
-        
+
         // Act
         var result = sBlockCipher.Encrypt(plainText);
-        
+
         // Assert
         Assert.Equal(expected, result);
     }
@@ -147,44 +307,210 @@ public class CaesarTests
         // Assert
         Assert.Equal(expected, result);
     }
-    
+
     [Fact]
     public void SBlockEncryptWithRoundKey_ReturnsExpectedCipherText()
     {
         // Arrange
         const string plainText = "БЛОК";
         const string key = "ХОРОШО_БЫТЬ_ВАМИ";
-        
+
         var caesar = new Caesar(mode: CaesarMode.Poly);
         var sBlockCipher = new SBlockCipher(caesar, key, roundKey: true);
-        
+
         const string expected = "АЗЩЯ";
-        
+
         // Act
         var result = sBlockCipher.Encrypt(plainText);
-        
+
         // Assert
         Assert.Equal(expected, result);
     }
-    
+
     [Fact]
     public void SBlockEncryptWithRoundKeyAndMerge_ReturnsExpectedCipherText()
     {
         // Arrange
         const string plainText = "БЛОК";
         const string key = "ХОРОШО_ВЫТЬ_ВАМИ";
-        
+
         var caesar = new Caesar(mode: CaesarMode.Poly);
         var sBlockCipher = new SBlockCipher(caesar, key, roundKey: true, merge: true);
-        
+
         const string expected = "УЫ_Ш";
-        
+
         // Act
         var result = sBlockCipher.Encrypt(plainText);
-        
+
         // Assert
         Assert.Equal(expected, result);
     }
-    
+
+    [Theory]
+    [MemberData(nameof(TestUtils.GetCloseInputsTestData), MemberType = typeof(TestUtils))]
+    public void SBlockCloseInputsTest(string plainText, string modifiedPlainText, string key)
+    {
+        var sBlockCipher = new SBlockCipher(new Caesar(), key, roundKey: true, merge: true);
+        // Act
+        var result1 = sBlockCipher.Encrypt(plainText);
+        var result2 = sBlockCipher.Encrypt(modifiedPlainText);
+
+        // Assert
+        var diffCount = TestUtils.CountDifferences(result1, result2);
+        Assert.True(diffCount > 1, $"Expected more than 1 differing character, but got {diffCount}");
+    }
+
+    [Theory]
+    [MemberData(nameof(TestUtils.GetRotationTestData), MemberType = typeof(TestUtils))]
+    public void SBlockRotationTest(string plainText, string rotatedPlainText, string key)
+    {
+        var sBlockCipher = new SBlockCipher(new Caesar(), key, roundKey: true, merge: true);
+        
+        // Act
+        var result1 = sBlockCipher.Encrypt(plainText);
+        var result2 = sBlockCipher.Encrypt(rotatedPlainText);
+
+        // Assert: результат не является перестановкой (символы не те же)
+        var sorted1 = string.Concat(result1.OrderBy(c => c));
+        var sorted2 = string.Concat(result2.OrderBy(c => c));
+        Assert.NotEqual(sorted1, sorted2);
+    }
+
+    [Theory]
+    [MemberData(nameof(TestUtils.GetAdditiveHomomorphismData), MemberType = typeof(TestUtils))]
+    public void SBlockAdditiveHomomorphismTest(string textA, string textB, string key)
+    {
+        var sBlockCipher = new SBlockCipher(new Caesar(), key, roundKey: true, merge: true);
+
+        var sumCipher = Alphabet.AddTexts(sBlockCipher.Encrypt(textA), sBlockCipher.Encrypt(textB));
+        var sumPlain = Alphabet.AddTexts(textA, textB);
+        var cipherSumPlain = sBlockCipher.Encrypt(sumPlain);
+
+        Assert.NotEqual(sumCipher, cipherSumPlain);
+    }
+
+    [Theory]
+    [MemberData(nameof(TestUtils.GetKeyChangeTestData), MemberType = typeof(TestUtils))]
+    public void SBlockKeyChangeTest(string plainText, string key1, string key2)
+    {
+        var cipher1 = new SBlockCipher(new Caesar(), key1, roundKey: true, merge: true);
+        var cipher2 = new SBlockCipher(new Caesar(), key2, roundKey: true, merge: true);
+
+        var result1 = cipher1.Encrypt(plainText);
+        var result2 = cipher2.Encrypt(plainText);
+
+        Assert.NotEqual(result1, result2);
+    }
+
+    [Theory]
+    [MemberData(nameof(TestUtils.GetKeyRotationTestData), MemberType = typeof(TestUtils))]
+    public void SBlockKeyRotationTest(string plainText, string key, string rotatedKey)
+    {
+        var cipher1 = new SBlockCipher(new Caesar(), key, roundKey: true, merge: true);
+        var cipher2 = new SBlockCipher(new Caesar(), rotatedKey, roundKey: true, merge: true);
+
+        var result1 = cipher1.Encrypt(plainText);
+        var result2 = cipher2.Encrypt(plainText);
+
+        Assert.NotEqual(result1, result2);
+    }
+
+    [Theory]
+    [MemberData(nameof(TestUtils.GetKeyAdditionTestData), MemberType = typeof(TestUtils))]
+    public void SBlockKeyAdditionTest(string plainText, string key1, string key2)
+    {
+        var cipher1 = new SBlockCipher(new Caesar(), key1, roundKey: true, merge: true);
+        var cipher2 = new SBlockCipher(new Caesar(), key2, roundKey: true, merge: true);
+
+        var sumCipher = Alphabet.AddTexts(cipher1.Encrypt(plainText), cipher2.Encrypt(plainText));
+        var keySum = Alphabet.AddTexts(key1, key2);
+        var cipherKeySum = new SBlockCipher(new Caesar(), keySum, roundKey: true, merge: true).Encrypt(plainText);
+
+        Assert.NotEqual(sumCipher, cipherKeySum);
+    }
+
+    [Theory]
+    [MemberData(nameof(TestUtils.GetCloseInputsTestData), MemberType = typeof(TestUtils))]
+    public void SBlockCloseInputsNoMergeTest(string plainText, string modifiedPlainText, string key)
+    {
+        var sBlockCipher = new SBlockCipher(new Caesar(), key, roundKey: true, merge: false);
+
+        var result1 = sBlockCipher.Encrypt(plainText);
+        var result2 = sBlockCipher.Encrypt(modifiedPlainText);
+
+        var diffCount = TestUtils.CountDifferences(result1, result2);
+        Assert.True(diffCount > 1, $"Expected more than 1 differing character, but got {diffCount}");
+    }
+
+    [Theory]
+    [MemberData(nameof(TestUtils.GetRotationTestData), MemberType = typeof(TestUtils))]
+    public void SBlockRotationNoMergeTest(string plainText, string rotatedPlainText, string key)
+    {
+        var sBlockCipher = new SBlockCipher(new Caesar(), key, roundKey: true, merge: false);
+        
+        // Act
+        var result1 = sBlockCipher.Encrypt(plainText);
+        var result2 = sBlockCipher.Encrypt(rotatedPlainText);
+
+        // Assert: результат не является перестановкой (символы не те же)
+        var sorted1 = string.Concat(result1.OrderBy(c => c));
+        var sorted2 = string.Concat(result2.OrderBy(c => c));
+        Assert.NotEqual(sorted1, sorted2);
+    }
+
+    [Theory]
+    [MemberData(nameof(TestUtils.GetAdditiveHomomorphismData), MemberType = typeof(TestUtils))]
+    public void SBlockAdditiveHomomorphismNoMergeTest(string textA, string textB, string key)
+    {
+        var sBlockCipher = new SBlockCipher(new Caesar(), key, roundKey: true, merge: false);
+
+        var sumCipher = Alphabet.AddTexts(sBlockCipher.Encrypt(textA), sBlockCipher.Encrypt(textB));
+        var sumPlain = Alphabet.AddTexts(textA, textB);
+        var cipherSumPlain = sBlockCipher.Encrypt(sumPlain);
+
+        Assert.NotEqual(sumCipher, cipherSumPlain);
+    }
+
+    [Theory]
+    [MemberData(nameof(TestUtils.GetKeyChangeTestData), MemberType = typeof(TestUtils))]
+    public void SBlockKeyChangeNoMergeTest(string plainText, string key1, string key2)
+    {
+        var cipher1 = new SBlockCipher(new Caesar(), key1, roundKey: true, merge: false);
+        var cipher2 = new SBlockCipher(new Caesar(), key2, roundKey: true, merge: false);
+
+        var result1 = cipher1.Encrypt(plainText);
+        var result2 = cipher2.Encrypt(plainText);
+
+        Assert.NotEqual(result1, result2);
+    }
+
+    [Theory]
+    [MemberData(nameof(TestUtils.GetKeyRotationTestData), MemberType = typeof(TestUtils))]
+    public void SBlockKeyRotationNoMergeTest(string plainText, string key, string rotatedKey)
+    {
+        var cipher1 = new SBlockCipher(new Caesar(), key, roundKey: true, merge: false);
+        var cipher2 = new SBlockCipher(new Caesar(), rotatedKey, roundKey: true, merge: false);
+
+        var result1 = cipher1.Encrypt(plainText);
+        var result2 = cipher2.Encrypt(plainText);
+
+        Assert.NotEqual(result1, result2);
+    }
+
+    [Theory]
+    [MemberData(nameof(TestUtils.GetKeyAdditionTestData), MemberType = typeof(TestUtils))]
+    public void SBlockKeyAdditionNoMergeTest(string plainText, string key1, string key2)
+    {
+        var cipher1 = new SBlockCipher(new Caesar(), key1, roundKey: true, merge: false);
+        var cipher2 = new SBlockCipher(new Caesar(), key2, roundKey: true, merge: false);
+
+        var sumCipher = Alphabet.AddTexts(cipher1.Encrypt(plainText), cipher2.Encrypt(plainText));
+        var keySum = Alphabet.AddTexts(key1, key2);
+        var cipherKeySum = new SBlockCipher(new Caesar(), keySum, roundKey: true, merge: false).Encrypt(plainText);
+
+        Assert.NotEqual(sumCipher, cipherKeySum);
+    }
+
     #endregion
 }
+
