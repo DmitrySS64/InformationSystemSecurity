@@ -25,7 +25,7 @@ public class SBlockTests
 
     [Theory]
     [MemberData(nameof(TestUtils.GetCloseInputsTestData), MemberType = typeof(TestUtils))]
-    public void CloseInputsTest(string plainText, string modifiedPlainText, string key)
+    public void CloseInputs_ResultsDiffer(string plainText, string modifiedPlainText, string key)
     {
         var result1 = SBlockCipher.MergeBlock(plainText, key);
         var result2 = SBlockCipher.MergeBlock(modifiedPlainText, key);
@@ -36,7 +36,7 @@ public class SBlockTests
 
     [Theory]
     [MemberData(nameof(TestUtils.GetRotationTestData), MemberType = typeof(TestUtils))]
-    public void RotationTest(string plainText, string rotatedPlainText, string key)
+    public void Rotation_NotPermutation(string plainText, string rotatedPlainText, string key)
     {
         var result1 = SBlockCipher.MergeBlock(plainText, key);
         var result2 = SBlockCipher.MergeBlock(rotatedPlainText, key);
@@ -48,7 +48,7 @@ public class SBlockTests
 
     [Theory]
     [MemberData(nameof(TestUtils.GetAdditiveHomomorphismData), MemberType = typeof(TestUtils))]
-    public void AdditiveHomomorphismTest(string textA, string textB, string key)
+    public void AdditiveHomomorphism_NotHomomorphic(string textA, string textB, string key)
     {
         var sumCipher = Alphabet.AddTexts(SBlockCipher.MergeBlock(textA, key), SBlockCipher.MergeBlock(textB, key));
         var sumPlain = Alphabet.AddTexts(textA, textB);
@@ -59,7 +59,7 @@ public class SBlockTests
 
     [Theory]
     [MemberData(nameof(TestUtils.GetKeyChangeTestData), MemberType = typeof(TestUtils))]
-    public void KeyChangeTest(string plainText, string key1, string key2)
+    public void KeyChange_ResultsDiffer(string plainText, string key1, string key2)
     {
         var result1 = SBlockCipher.MergeBlock(plainText, key1);
         var result2 = SBlockCipher.MergeBlock(plainText, key2);
@@ -69,7 +69,7 @@ public class SBlockTests
 
     [Theory]
     [MemberData(nameof(TestUtils.GetKeyRotationTestData), MemberType = typeof(TestUtils))]
-    public void KeyRotationTest(string plainText, string key, string rotatedKey)
+    public void KeyRotation_ResultsDiffer(string plainText, string key, string rotatedKey)
     {
         var result1 = SBlockCipher.MergeBlock(plainText, key);
         var result2 = SBlockCipher.MergeBlock(plainText, rotatedKey);
@@ -79,7 +79,7 @@ public class SBlockTests
 
     [Theory]
     [MemberData(nameof(TestUtils.GetKeyAdditionTestData), MemberType = typeof(TestUtils))]
-    public void KeyAdditionTest(string plainText, string key1, string key2)
+    public void KeyAddition_ResultsDiffer(string plainText, string key1, string key2)
     {
         var sumCipher = Alphabet.AddTexts(SBlockCipher.MergeBlock(plainText, key1), SBlockCipher.MergeBlock(plainText, key2));
         var keySum = Alphabet.AddTexts(key1, key2);

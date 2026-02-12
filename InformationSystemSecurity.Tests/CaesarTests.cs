@@ -74,7 +74,7 @@ public class CaesarTests
     
     [Theory]
     [MemberData(nameof(TestUtils.GetCloseInputsTestData), MemberType = typeof(TestUtils))]
-    public void CaesarSimpleCloseInputsTest(string plainText, string modifiedPlainText, string key)
+    public void CaesarSimpleCloseInputs_ResultsDiffer(string plainText, string modifiedPlainText, string key)
     {
         var caesar = new Caesar(mode: CaesarMode.Simple);
         
@@ -89,7 +89,7 @@ public class CaesarTests
     
     [Theory]
     [MemberData(nameof(TestUtils.GetRotationTestData), MemberType = typeof(TestUtils))]
-    public void CaesarSimpleRotationTest(string plainText, string rotatedPlainText, string key)
+    public void CaesarSimpleRotation_NotPermutation(string plainText, string rotatedPlainText, string key)
     {
         var caesar = new Caesar(mode: CaesarMode.Simple);
         
@@ -105,7 +105,7 @@ public class CaesarTests
 
     [Theory]
     [MemberData(nameof(TestUtils.GetAdditiveHomomorphismData), MemberType = typeof(TestUtils))]
-    public void CaesarSimpleAdditiveHomomorphismTest(string textA, string textB, string key)
+    public void CaesarSimpleAdditiveHomomorphism_NotHomomorphic(string textA, string textB, string key)
     {
         var caesar = new Caesar(mode: CaesarMode.Simple);
 
@@ -118,7 +118,7 @@ public class CaesarTests
 
     [Theory]
     [MemberData(nameof(TestUtils.GetKeyChangeTestData), MemberType = typeof(TestUtils))]
-    public void CaesarSimpleKeyChangeTest(string plainText, string key1, string key2)
+    public void CaesarSimpleKeyChange_ResultsDiffer(string plainText, string key1, string key2)
     {
         var caesar = new Caesar(mode: CaesarMode.Simple);
 
@@ -130,7 +130,7 @@ public class CaesarTests
 
     [Theory]
     [MemberData(nameof(TestUtils.GetKeyRotationTestData), MemberType = typeof(TestUtils))]
-    public void CaesarSimpleKeyRotationTest(string plainText, string key, string rotatedKey)
+    public void CaesarSimpleKeyRotation_ResultsDiffer(string plainText, string key, string rotatedKey)
     {
         var caesar = new Caesar(mode: CaesarMode.Simple);
 
@@ -142,7 +142,7 @@ public class CaesarTests
 
     [Theory]
     [MemberData(nameof(TestUtils.GetKeyAdditionTestData), MemberType = typeof(TestUtils))]
-    public void CaesarSimpleKeyAdditionTest(string plainText, string key1, string key2)
+    public void CaesarSimpleKeyAddition_ResultsDiffer(string plainText, string key1, string key2)
     {
         var caesar = new Caesar(mode: CaesarMode.Simple);
 
@@ -188,7 +188,7 @@ public class CaesarTests
     
     [Theory]
     [MemberData(nameof(TestUtils.GetCloseInputsTestData), MemberType = typeof(TestUtils))]
-    public void CaesarPolyCloseInputsTest(string plainText, string modifiedPlainText, string key)
+    public void CaesarPolyCloseInputs_ResultsDiffer(string plainText, string modifiedPlainText, string key)
     {
         var caesar = new Caesar(mode: CaesarMode.Poly);
         
@@ -203,7 +203,7 @@ public class CaesarTests
     
     [Theory]
     [MemberData(nameof(TestUtils.GetRotationTestData), MemberType = typeof(TestUtils))]
-    public void CaesarPolyRotationTest(string plainText, string rotatedPlainText, string key)
+    public void CaesarPolyRotation_NotPermutation(string plainText, string rotatedPlainText, string key)
     {
         var caesar = new Caesar(mode: CaesarMode.Poly);
         
@@ -219,7 +219,7 @@ public class CaesarTests
 
     [Theory]
     [MemberData(nameof(TestUtils.GetAdditiveHomomorphismData), MemberType = typeof(TestUtils))]
-    public void CaesarPolyAdditiveHomomorphismTest(string textA, string textB, string key)
+    public void CaesarPolyAdditiveHomomorphism_NotHomomorphic(string textA, string textB, string key)
     {
         var caesar = new Caesar(mode: CaesarMode.Poly);
 
@@ -232,7 +232,7 @@ public class CaesarTests
 
     [Theory]
     [MemberData(nameof(TestUtils.GetKeyChangeTestData), MemberType = typeof(TestUtils))]
-    public void CaesarPolyKeyChangeTest(string plainText, string key1, string key2)
+    public void CaesarPolyKeyChange_ResultsDiffer(string plainText, string key1, string key2)
     {
         var caesar = new Caesar(mode: CaesarMode.Poly);
 
@@ -244,7 +244,7 @@ public class CaesarTests
 
     [Theory]
     [MemberData(nameof(TestUtils.GetKeyRotationTestData), MemberType = typeof(TestUtils))]
-    public void CaesarPolyKeyRotationTest(string plainText, string key, string rotatedKey)
+    public void CaesarPolyKeyRotation_ResultsDiffer(string plainText, string key, string rotatedKey)
     {
         var caesar = new Caesar(mode: CaesarMode.Poly);
 
@@ -256,7 +256,7 @@ public class CaesarTests
 
     [Theory]
     [MemberData(nameof(TestUtils.GetKeyAdditionTestData), MemberType = typeof(TestUtils))]
-    public void CaesarPolyKeyAdditionTest(string plainText, string key1, string key2)
+    public void CaesarPolyKeyAddition_ResultsDiffer(string plainText, string key1, string key2)
     {
         var caesar = new Caesar(mode: CaesarMode.Poly);
 
@@ -348,7 +348,7 @@ public class CaesarTests
 
     [Theory]
     [MemberData(nameof(TestUtils.GetCloseInputsTestData), MemberType = typeof(TestUtils))]
-    public void SBlockCloseInputsTest(string plainText, string modifiedPlainText, string key)
+    public void SBlockCloseInputs_ResultsDiffer(string plainText, string modifiedPlainText, string key)
     {
         var sBlockCipher = new SBlockCipher(new Caesar(), key, roundKey: true, merge: true);
         // Act
@@ -362,7 +362,7 @@ public class CaesarTests
 
     [Theory]
     [MemberData(nameof(TestUtils.GetRotationTestData), MemberType = typeof(TestUtils))]
-    public void SBlockRotationTest(string plainText, string rotatedPlainText, string key)
+    public void SBlockRotation_NotPermutation(string plainText, string rotatedPlainText, string key)
     {
         var sBlockCipher = new SBlockCipher(new Caesar(), key, roundKey: true, merge: true);
         
@@ -378,7 +378,7 @@ public class CaesarTests
 
     [Theory]
     [MemberData(nameof(TestUtils.GetAdditiveHomomorphismData), MemberType = typeof(TestUtils))]
-    public void SBlockAdditiveHomomorphismTest(string textA, string textB, string key)
+    public void SBlockAdditiveHomomorphism_NotHomomorphic(string textA, string textB, string key)
     {
         var sBlockCipher = new SBlockCipher(new Caesar(), key, roundKey: true, merge: true);
 
@@ -391,7 +391,7 @@ public class CaesarTests
 
     [Theory]
     [MemberData(nameof(TestUtils.GetKeyChangeTestData), MemberType = typeof(TestUtils))]
-    public void SBlockKeyChangeTest(string plainText, string key1, string key2)
+    public void SBlockKeyChange_ResultsDiffer(string plainText, string key1, string key2)
     {
         var cipher1 = new SBlockCipher(new Caesar(), key1, roundKey: true, merge: true);
         var cipher2 = new SBlockCipher(new Caesar(), key2, roundKey: true, merge: true);
@@ -404,7 +404,7 @@ public class CaesarTests
 
     [Theory]
     [MemberData(nameof(TestUtils.GetKeyRotationTestData), MemberType = typeof(TestUtils))]
-    public void SBlockKeyRotationTest(string plainText, string key, string rotatedKey)
+    public void SBlockKeyRotation_ResultsDiffer(string plainText, string key, string rotatedKey)
     {
         var cipher1 = new SBlockCipher(new Caesar(), key, roundKey: true, merge: true);
         var cipher2 = new SBlockCipher(new Caesar(), rotatedKey, roundKey: true, merge: true);
@@ -417,7 +417,7 @@ public class CaesarTests
 
     [Theory]
     [MemberData(nameof(TestUtils.GetKeyAdditionTestData), MemberType = typeof(TestUtils))]
-    public void SBlockKeyAdditionTest(string plainText, string key1, string key2)
+    public void SBlockKeyAddition_ResultsDiffer(string plainText, string key1, string key2)
     {
         var cipher1 = new SBlockCipher(new Caesar(), key1, roundKey: true, merge: true);
         var cipher2 = new SBlockCipher(new Caesar(), key2, roundKey: true, merge: true);
@@ -431,7 +431,7 @@ public class CaesarTests
 
     [Theory]
     [MemberData(nameof(TestUtils.GetCloseInputsTestData), MemberType = typeof(TestUtils))]
-    public void SBlockCloseInputsNoMergeTest(string plainText, string modifiedPlainText, string key)
+    public void SBlockCloseInputsNoMerge_ResultsDiffer(string plainText, string modifiedPlainText, string key)
     {
         var sBlockCipher = new SBlockCipher(new Caesar(), key, roundKey: true, merge: false);
 
@@ -444,7 +444,7 @@ public class CaesarTests
 
     [Theory]
     [MemberData(nameof(TestUtils.GetRotationTestData), MemberType = typeof(TestUtils))]
-    public void SBlockRotationNoMergeTest(string plainText, string rotatedPlainText, string key)
+    public void SBlockRotationNoMerge_NotPermutation(string plainText, string rotatedPlainText, string key)
     {
         var sBlockCipher = new SBlockCipher(new Caesar(), key, roundKey: true, merge: false);
         
@@ -460,7 +460,7 @@ public class CaesarTests
 
     [Theory]
     [MemberData(nameof(TestUtils.GetAdditiveHomomorphismData), MemberType = typeof(TestUtils))]
-    public void SBlockAdditiveHomomorphismNoMergeTest(string textA, string textB, string key)
+    public void SBlockAdditiveHomomorphismNoMerge_NotHomomorphic(string textA, string textB, string key)
     {
         var sBlockCipher = new SBlockCipher(new Caesar(), key, roundKey: true, merge: false);
 
@@ -473,7 +473,7 @@ public class CaesarTests
 
     [Theory]
     [MemberData(nameof(TestUtils.GetKeyChangeTestData), MemberType = typeof(TestUtils))]
-    public void SBlockKeyChangeNoMergeTest(string plainText, string key1, string key2)
+    public void SBlockKeyChangeNoMerge_ResultsDiffer(string plainText, string key1, string key2)
     {
         var cipher1 = new SBlockCipher(new Caesar(), key1, roundKey: true, merge: false);
         var cipher2 = new SBlockCipher(new Caesar(), key2, roundKey: true, merge: false);
@@ -486,7 +486,7 @@ public class CaesarTests
 
     [Theory]
     [MemberData(nameof(TestUtils.GetKeyRotationTestData), MemberType = typeof(TestUtils))]
-    public void SBlockKeyRotationNoMergeTest(string plainText, string key, string rotatedKey)
+    public void SBlockKeyRotationNoMerge_ResultsDiffer(string plainText, string key, string rotatedKey)
     {
         var cipher1 = new SBlockCipher(new Caesar(), key, roundKey: true, merge: false);
         var cipher2 = new SBlockCipher(new Caesar(), rotatedKey, roundKey: true, merge: false);
@@ -499,7 +499,7 @@ public class CaesarTests
 
     [Theory]
     [MemberData(nameof(TestUtils.GetKeyAdditionTestData), MemberType = typeof(TestUtils))]
-    public void SBlockKeyAdditionNoMergeTest(string plainText, string key1, string key2)
+    public void SBlockKeyAdditionNoMerge_ResultsDiffer(string plainText, string key1, string key2)
     {
         var cipher1 = new SBlockCipher(new Caesar(), key1, roundKey: true, merge: false);
         var cipher2 = new SBlockCipher(new Caesar(), key2, roundKey: true, merge: false);
