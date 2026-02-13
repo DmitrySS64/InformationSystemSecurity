@@ -101,8 +101,9 @@ public class SBlockCipher
         
         for (var k = 0; k < 3; k++) // Перемешивание массива m в зависимости ключа
         {
-            var t = sum % (4 - k);
-            sum = (sum - t) / (4 - k);
+            var denom = 4 - k;
+            var t = ((sum % denom) + denom) % denom; // нормализация отрицательных значений
+            sum = (sum - t) / denom;
             
             (m[k], m[k + t]) = (m[k + t], m[k]);
         }
