@@ -3,7 +3,7 @@ using InformationSystemSecurity.domain.Enums;
 
 namespace InformationSystemSecurity.domain;
 
-public class Caesar(CaesarMode mode = CaesarMode.Poly) : ICipher
+public class Caesar(CaesarMode mode = CaesarMode.Core) : ICipher
 {
     public string Encrypt(string text, string key)
     {
@@ -11,6 +11,7 @@ public class Caesar(CaesarMode mode = CaesarMode.Poly) : ICipher
         {
             CaesarMode.Simple => SimpleEncrypt(text, key),
             CaesarMode.Poly => PolyEncrypt(text, key),
+            CaesarMode.Core => CoreEncrypt(primeText: text, auxText: key),
             _ => throw new ArgumentOutOfRangeException()
         };
     }
@@ -73,5 +74,10 @@ public class Caesar(CaesarMode mode = CaesarMode.Poly) : ICipher
         }
 
         return result.ToString();
+    }
+
+    private static string CoreEncrypt(string primeText, string auxText)
+    {
+        throw new NotImplementedException();
     }
 }

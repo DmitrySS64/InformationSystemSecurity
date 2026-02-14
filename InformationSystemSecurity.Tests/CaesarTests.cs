@@ -272,6 +272,12 @@ public class CaesarTests
         Assert.NotEqual(sumCipher, cipherKeySum);
     }
     #endregion
+    
+
+    public void CoreEncrypt_ReturnsExpectedCipherText(string primeText, string auxText, string expectedCipherText)
+    {
+        throw new NotImplementedException();
+    }
 
     #region SBlock Caesar-Cipher Tests
 
