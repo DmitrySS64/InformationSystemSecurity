@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using System.Text;
 using InformationSystemSecurity.domain.Enums;
 
@@ -78,6 +79,31 @@ public class Caesar(CaesarMode mode = CaesarMode.Core) : ICipher
 
     private static string CoreEncrypt(string primeText, string auxText)
     {
-        throw new NotImplementedException();
+        if (primeText.Length != 16 || auxText.Length != 16)
+        {
+            throw new ArgumentException();
+        }
+
+        int[] C1 = [1, 1, -1];
+        int[] C2 = [4, 3, 2, 1, -1, -2, -3, -4];
+
+        var aux = Alphabet.ToNumArray(auxText);
+        var prime = Alphabet.ToNumArray(primeText);
+        var tmp = 0;
+        var c1 = prime[2] % 3;
+        var c2 = prime[10 + c1] % 8;
+        var c3 = prime[c2 + 3] % 16;
+        var arr = new int[16];
+
+        for (var i = 0; i < 32; i++) {
+            var q = (c1 + i) % 3;
+            var j = (c2 + i) % 8;
+            var p = (c3 + i) % 16;
+            var l = i % 16;
+            tmp = (tmp + 64 + prime[p] + C1[q] * aux[l] + C2[j]) % 32;
+            arr[l] = tmp;
+        }
+
+        return Alphabet.ToText(arr);
     }
 }

@@ -272,12 +272,25 @@ public class CaesarTests
         Assert.NotEqual(sumCipher, cipherKeySum);
     }
     #endregion
-    
 
+    #region Caesar core
+
+    [Theory]
+    [InlineData("ХОРОШО_БЫТЬ_ВАМИ", "КЬЕРКЕГОР_ПРОПАЛ", "ЯИСООЬВХАТЭИЦЛЫС")]
+    [InlineData("КЬЕРКЕГОР_ПРОПАЛ", "ХОРОШО_БЫТЬ_ВАМИ", "ШТЦСЮОЫЕДКБСГБЧЗ")]
     public void CoreEncrypt_ReturnsExpectedCipherText(string primeText, string auxText, string expectedCipherText)
     {
-        throw new NotImplementedException();
+        // Arrange
+        var caesar = new Caesar(mode: CaesarMode.Core);
+
+        // Act
+        var result = caesar.Encrypt(primeText, auxText);
+
+        // Assert
+        Assert.Equal(expectedCipherText, result);
     }
+    
+    #endregion
 
     #region SBlock Caesar-Cipher Tests
 
