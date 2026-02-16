@@ -4,4 +4,5 @@ public enum CaesarMode
 {
     Simple = 0,
     Poly = 1,
+    Core = 2,
 }

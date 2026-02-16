@@ -1,9 +1,10 @@
+using System.Runtime.CompilerServices;
 using System.Text;
 using InformationSystemSecurity.domain.Enums;
 
 namespace InformationSystemSecurity.domain;
 
-public class Caesar(CaesarMode mode = CaesarMode.Poly) : ICipher
+public class Caesar(CaesarMode mode = CaesarMode.Core) : ICipher
 {
     public string Encrypt(string text, string key)
     {
@@ -11,6 +12,7 @@ public class Caesar(CaesarMode mode = CaesarMode.Poly) : ICipher
         {
             CaesarMode.Simple => SimpleEncrypt(text, key),
             CaesarMode.Poly => PolyEncrypt(text, key),
+            CaesarMode.Core => CoreEncrypt(primeText: text, auxText: key),
             _ => throw new ArgumentOutOfRangeException()
         };
     }
@@ -73,5 +75,34 @@ public class Caesar(CaesarMode mode = CaesarMode.Poly) : ICipher
         }
 
         return result.ToString();
+    }
+
+    private static string CoreEncrypt(string primeText, string auxText)
+    {
+        if (primeText.Length != 16 || auxText.Length != 16)
+            throw new ArgumentException("Each text must be 16 characters long.");
+
+        int[] C1 = [1, 1, -1];
+        int[] C2 = [4, 3, 2, 1, -1, -2, -3, -4];
+
+        var aux = auxText.ToNumArray();
+        var prime = primeText.ToNumArray();
+        var tmp = 0;
+        var c1 = prime[2] % 3;
+        var c2 = prime[10 + c1] % 8;
+        var c3 = prime[c2 + 3] % 16;
+        var arr = new int[16];
+
+        for (var i = 0; i < 32; i++) 
+        {
+            var q = (c1 + i) % 3;
+            var j = (c2 + i) % 8;
+            var p = (c3 + i) % 16;
+            var l = i % 16;
+            tmp = (tmp + 64 + prime[p] + C1[q] * aux[l] + C2[j]) % 32;
+            arr[l] = tmp;
+        }
+
+        return arr.ToText();
     }
 }

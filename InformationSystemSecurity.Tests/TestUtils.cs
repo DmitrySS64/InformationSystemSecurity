@@ -1,4 +1,5 @@
 using InformationSystemSecurity.domain;
+using InformationSystemSecurity.domain.Enums;
 
 namespace InformationSystemSecurity.tests;
 
@@ -329,5 +330,46 @@ public static class TestUtils
     private static string RotateText(string text, int shift)
     {
         return text[shift..] + text[..shift];
+    }
+
+    public static IEnumerable<object[]> GetCBlockTestData()
+    {
+        var entityStr = new string('_', 16);
+        yield return new object[]
+        {
+            new[] { "ХОРОШО_БЫТЬ_ВАМИ" },
+            CompressMode.Out16,
+            "ЯМЫШСХБ_ГФАМЭ_ЛЗ"
+        };
+        yield return new object[]
+        {
+            new[] { "ХОРОШО_БЫТЬ_ВАМИ" },
+            CompressMode.Out8,
+            "РВЭШАФМФ"
+        };
+        yield return new object[]
+        {
+            new[] { "ХОРОШО_БЫТЬ_ВАМИ", "КЬЕРКЕГОР_ПРОПАЛ" },
+            CompressMode.Out4,
+            "ЕЗЦР"
+        };
+        yield return new object[]
+        {
+            new[] { entityStr, entityStr, entityStr, entityStr},
+            CompressMode.Out4,
+            "ЭЧЧЯ"
+        };
+        yield return new object[]
+        {
+            new[] { entityStr, entityStr, entityStr, entityStr},
+            CompressMode.Out8,
+            "ЦНУЬЩХЬЭ"
+        };
+        yield return new object[]
+        {
+            new[] { entityStr, entityStr, entityStr, entityStr},
+            CompressMode.Out16,
+            "ЫЕРФЬЗВЖРЖЙЯИОСЮ"
+        };
     }
 }
