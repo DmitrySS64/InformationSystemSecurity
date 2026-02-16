@@ -301,7 +301,7 @@ public class CaesarTests
         const string plainText = "БЛОК";
         const string key = "ХОРОШО_БЫТЬ_ВАМИ";
 
-        var caesar = new Caesar();
+        var caesar = new Caesar(mode: CaesarMode.Poly);
         var sBlockCipher = new SBlockCipher(caesar, key);
 
         const string expected = "ЧРДП";
@@ -320,7 +320,7 @@ public class CaesarTests
         const string cipherText = "ЧРДП";
         const string key = "ХОРОШО_БЫТЬ_ВАМИ";
 
-        var caesar = new Caesar();
+        var caesar = new Caesar(mode: CaesarMode.Poly);
         var sBlockCipher = new SBlockCipher(caesar, key);
 
         const string expected = "БЛОК";
@@ -374,7 +374,7 @@ public class CaesarTests
     [MemberData(nameof(TestUtils.GetCloseInputsTestData), MemberType = typeof(TestUtils))]
     public void SBlockCloseInputs_ResultsDiffer(string plainText, string modifiedPlainText, string key)
     {
-        var sBlockCipher = new SBlockCipher(new Caesar(), key, roundKey: true, merge: true);
+        var sBlockCipher = new SBlockCipher(new Caesar(mode: CaesarMode.Poly), key, roundKey: true, merge: true);
         // Act
         var result1 = sBlockCipher.Encrypt(plainText);
         var result2 = sBlockCipher.Encrypt(modifiedPlainText);
@@ -389,7 +389,7 @@ public class CaesarTests
     [MemberData(nameof(TestUtils.GetRotationTestData), MemberType = typeof(TestUtils))]
     public void SBlockRotation_NotPermutation(string plainText, string rotatedPlainText, string key)
     {
-        var sBlockCipher = new SBlockCipher(new Caesar(), key, roundKey: true, merge: true);
+        var sBlockCipher = new SBlockCipher(new Caesar(mode: CaesarMode.Poly), key, roundKey: true, merge: true);
         
         // Act
         var result1 = sBlockCipher.Encrypt(plainText);
@@ -405,7 +405,7 @@ public class CaesarTests
     [MemberData(nameof(TestUtils.GetAdditiveHomomorphismData), MemberType = typeof(TestUtils))]
     public void SBlockAdditiveHomomorphism_NotHomomorphic(string textA, string textB, string key)
     {
-        var sBlockCipher = new SBlockCipher(new Caesar(), key, roundKey: true, merge: true);
+        var sBlockCipher = new SBlockCipher(new Caesar(mode: CaesarMode.Poly), key, roundKey: true, merge: true);
 
         var sumCipher = Alphabet.AddTexts(sBlockCipher.Encrypt(textA), sBlockCipher.Encrypt(textB));
         var sumPlain = Alphabet.AddTexts(textA, textB);
@@ -418,8 +418,8 @@ public class CaesarTests
     [MemberData(nameof(TestUtils.GetKeyChangeTestData), MemberType = typeof(TestUtils))]
     public void SBlockKeyChange_ResultsDiffer(string plainText, string key1, string key2)
     {
-        var cipher1 = new SBlockCipher(new Caesar(), key1, roundKey: true, merge: true);
-        var cipher2 = new SBlockCipher(new Caesar(), key2, roundKey: true, merge: true);
+        var cipher1 = new SBlockCipher(new Caesar(mode: CaesarMode.Poly), key1, roundKey: true, merge: true);
+        var cipher2 = new SBlockCipher(new Caesar(mode: CaesarMode.Poly), key2, roundKey: true, merge: true);
 
         var result1 = cipher1.Encrypt(plainText);
         var result2 = cipher2.Encrypt(plainText);
@@ -432,8 +432,8 @@ public class CaesarTests
     [MemberData(nameof(TestUtils.GetKeyRotationTestData), MemberType = typeof(TestUtils))]
     public void SBlockKeyRotation_ResultsDiffer(string plainText, string key, string rotatedKey)
     {
-        var cipher1 = new SBlockCipher(new Caesar(), key, roundKey: true, merge: true);
-        var cipher2 = new SBlockCipher(new Caesar(), rotatedKey, roundKey: true, merge: true);
+        var cipher1 = new SBlockCipher(new Caesar(mode: CaesarMode.Poly), key, roundKey: true, merge: true);
+        var cipher2 = new SBlockCipher(new Caesar(mode: CaesarMode.Poly), rotatedKey, roundKey: true, merge: true);
 
         var result1 = cipher1.Encrypt(plainText);
         var result2 = cipher2.Encrypt(plainText);
@@ -445,12 +445,12 @@ public class CaesarTests
     [MemberData(nameof(TestUtils.GetKeyAdditionTestData), MemberType = typeof(TestUtils))]
     public void SBlockKeyAddition_ResultsDiffer(string plainText, string key1, string key2)
     {
-        var cipher1 = new SBlockCipher(new Caesar(), key1, roundKey: true, merge: true);
-        var cipher2 = new SBlockCipher(new Caesar(), key2, roundKey: true, merge: true);
+        var cipher1 = new SBlockCipher(new Caesar(mode: CaesarMode.Poly), key1, roundKey: true, merge: true);
+        var cipher2 = new SBlockCipher(new Caesar(mode: CaesarMode.Poly), key2, roundKey: true, merge: true);
 
         var sumCipher = Alphabet.AddTexts(cipher1.Encrypt(plainText), cipher2.Encrypt(plainText));
         var keySum = Alphabet.AddTexts(key1, key2);
-        var cipherKeySum = new SBlockCipher(new Caesar(), keySum, roundKey: true, merge: true).Encrypt(plainText);
+        var cipherKeySum = new SBlockCipher(new Caesar(mode: CaesarMode.Poly), keySum, roundKey: true, merge: true).Encrypt(plainText);
 
         Assert.NotEqual(sumCipher, cipherKeySum);
     }
@@ -459,7 +459,7 @@ public class CaesarTests
     [MemberData(nameof(TestUtils.GetCloseInputsTestData), MemberType = typeof(TestUtils))]
     public void SBlockCloseInputsNoMerge_ResultsDiffer(string plainText, string modifiedPlainText, string key)
     {
-        var sBlockCipher = new SBlockCipher(new Caesar(), key, roundKey: true, merge: false);
+        var sBlockCipher = new SBlockCipher(new Caesar(mode: CaesarMode.Poly), key, roundKey: true, merge: false);
 
         var result1 = sBlockCipher.Encrypt(plainText);
         var result2 = sBlockCipher.Encrypt(modifiedPlainText);
@@ -473,7 +473,7 @@ public class CaesarTests
     [MemberData(nameof(TestUtils.GetRotationTestData), MemberType = typeof(TestUtils))]
     public void SBlockRotationNoMerge_NotPermutation(string plainText, string rotatedPlainText, string key)
     {
-        var sBlockCipher = new SBlockCipher(new Caesar(), key, roundKey: true, merge: false);
+        var sBlockCipher = new SBlockCipher(new Caesar(mode: CaesarMode.Poly), key, roundKey: true, merge: false);
         
         // Act
         var result1 = sBlockCipher.Encrypt(plainText);
@@ -489,7 +489,7 @@ public class CaesarTests
     [MemberData(nameof(TestUtils.GetAdditiveHomomorphismData), MemberType = typeof(TestUtils))]
     public void SBlockAdditiveHomomorphismNoMerge_NotHomomorphic(string textA, string textB, string key)
     {
-        var sBlockCipher = new SBlockCipher(new Caesar(), key, roundKey: true, merge: false);
+        var sBlockCipher = new SBlockCipher(new Caesar(mode: CaesarMode.Poly), key, roundKey: true, merge: false);
 
         var sumCipher = Alphabet.AddTexts(sBlockCipher.Encrypt(textA), sBlockCipher.Encrypt(textB));
         var sumPlain = Alphabet.AddTexts(textA, textB);
@@ -502,8 +502,8 @@ public class CaesarTests
     [MemberData(nameof(TestUtils.GetKeyChangeTestData), MemberType = typeof(TestUtils))]
     public void SBlockKeyChangeNoMerge_ResultsDiffer(string plainText, string key1, string key2)
     {
-        var cipher1 = new SBlockCipher(new Caesar(), key1, roundKey: true, merge: false);
-        var cipher2 = new SBlockCipher(new Caesar(), key2, roundKey: true, merge: false);
+        var cipher1 = new SBlockCipher(new Caesar(mode: CaesarMode.Poly), key1, roundKey: true, merge: false);
+        var cipher2 = new SBlockCipher(new Caesar(mode: CaesarMode.Poly), key2, roundKey: true, merge: false);
 
         var result1 = cipher1.Encrypt(plainText);
         var result2 = cipher2.Encrypt(plainText);
@@ -516,8 +516,8 @@ public class CaesarTests
     [MemberData(nameof(TestUtils.GetKeyRotationTestData), MemberType = typeof(TestUtils))]
     public void SBlockKeyRotationNoMerge_ResultsDiffer(string plainText, string key, string rotatedKey)
     {
-        var cipher1 = new SBlockCipher(new Caesar(), key, roundKey: true, merge: false);
-        var cipher2 = new SBlockCipher(new Caesar(), rotatedKey, roundKey: true, merge: false);
+        var cipher1 = new SBlockCipher(new Caesar(mode: CaesarMode.Poly), key, roundKey: true, merge: false);
+        var cipher2 = new SBlockCipher(new Caesar(mode: CaesarMode.Poly), rotatedKey, roundKey: true, merge: false);
 
         var result1 = cipher1.Encrypt(plainText);
         var result2 = cipher2.Encrypt(plainText);
@@ -529,12 +529,12 @@ public class CaesarTests
     [MemberData(nameof(TestUtils.GetKeyAdditionTestData), MemberType = typeof(TestUtils))]
     public void SBlockKeyAdditionNoMerge_ResultsDiffer(string plainText, string key1, string key2)
     {
-        var cipher1 = new SBlockCipher(new Caesar(), key1, roundKey: true, merge: false);
-        var cipher2 = new SBlockCipher(new Caesar(), key2, roundKey: true, merge: false);
+        var cipher1 = new SBlockCipher(new Caesar(mode: CaesarMode.Poly), key1, roundKey: true, merge: false);
+        var cipher2 = new SBlockCipher(new Caesar(mode: CaesarMode.Poly), key2, roundKey: true, merge: false);
 
         var sumCipher = Alphabet.AddTexts(cipher1.Encrypt(plainText), cipher2.Encrypt(plainText));
         var keySum = Alphabet.AddTexts(key1, key2);
-        var cipherKeySum = new SBlockCipher(new Caesar(), keySum, roundKey: true, merge: false).Encrypt(plainText);
+        var cipherKeySum = new SBlockCipher(new Caesar(mode: CaesarMode.Poly), keySum, roundKey: true, merge: false).Encrypt(plainText);
 
         Assert.NotEqual(sumCipher, cipherKeySum);
     }
@@ -547,7 +547,7 @@ public class CaesarTests
         // make test with plainText: "БЛОК", key1: "ИЖФВЧЫШЕУДШПЛННЯ"
         const string plainText = "БЛОК";
         const string key1 = "ИЖФВЧЫШЕУДШПЛННЯ";
-        var cipher = new SBlockCipher(new Caesar(), key1, true, true);
+        var cipher = new SBlockCipher(new Caesar(mode: CaesarMode.Poly), key1, true, true);
         var result = cipher.Encrypt(plainText);
     }
 }
