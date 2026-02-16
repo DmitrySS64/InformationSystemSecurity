@@ -1,5 +1,4 @@
 ﻿using InformationSystemSecurity.domain.Enums;
-using System.Security.Cryptography;
 
 namespace InformationSystemSecurity.domain;
 
@@ -10,13 +9,13 @@ public class CBlockCipher(ICipher cipher)
         if (textArray.Length is 0 or > 4)
             throw new ArgumentException("Input must be between 1 and 5 strings.");
 
-        var C = new string[4];
-        C[0] = "________________";
-        C[1] = "ПРОЖЕКТОР_ЧЕПУХИ";
-        C[2] = "КОЛЫХАТЬ_ПАРОДИЮ";
-        C[3] = "КАРМАННЫЙ_АТАМАН";
-
-        var compressed = string.Empty;
+        string[] C =
+        [
+            "________________", 
+            "ПРОЖЕКТОР_ЧЕПУХИ", 
+            "КОЛЫХАТЬ_ПАРОДИЮ",
+            "КАРМАННЫЙ_АТАМАН"
+        ];
         
         for (var i = 0; i < textArray.Length; i++)
         {
@@ -33,7 +32,7 @@ public class CBlockCipher(ICipher cipher)
         var confused = Confuse(part1, part2);
 
         var result = cipher.Encrypt(confused, part1);
-        compressed = Compress(result, outSize);
+        var compressed = Compress(result, outSize);
 
         return compressed;
     }
@@ -41,21 +40,16 @@ public class CBlockCipher(ICipher cipher)
     //TODO: вернуть private
     public static string Confuse(string text1, string text2)
     {
-        var arr1 = Alphabet.ToNumArray(text1);
-        var arr2 = Alphabet.ToNumArray(text2);
+        var arr1 = text1.ToNumArray();
+        var arr2 = text2.ToNumArray();
 
         for (var i = 0; i < 16; i++)
         {
-            if (arr1[i] > arr2[i])
-            {
-                arr1[i] = (arr1[i] + i) % 32;
-            }
-            else 
-            {
-                arr1[i] = (arr2[i] + i) % 32;
-            }
+            arr1[i] = arr1[i] > arr2[i]
+                ? (arr1[i] + i) % 32
+                : (arr2[i] + i) % 32;
         }
-        return Alphabet.ToText(arr1);
+        return arr1.ToText();
     }
 
     //TODO: вернуть private

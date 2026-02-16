@@ -12,7 +12,7 @@ public class Sponge(ICipher cipher)
     public string GetHash(string message)
     {
         var state = new string[5][];
-        for (int i = 0; i < 5; i++)
+        for (var i = 0; i < 5; i++)
             state[i] = Enumerable.Repeat("____", 5).ToArray();
 
         var @out = new StringBuilder();
@@ -51,10 +51,10 @@ public class Sponge(ICipher cipher)
 
         var X = new string[5];
 
-        for (int i = 0; i < 5; i++)
+        for (var i = 0; i < 5; i++)
         {
             X[i] = "____";
-            for (int j = 0; j < 5; j++)
+            for (var j = 0; j < 5; j++)
             {
                 X[i] = Alphabet.AddTexts(X[i], state[i][j]);
             }
@@ -100,10 +100,8 @@ public class Sponge(ICipher cipher)
             var X = "____";
 
             for (var j = 0; j < 5; j++)
-            {
                 X = Alphabet.AddTexts(X, state[j][i]);
-            }
-
+            
             var q = (i + 1) % 5;
             for (var j = 0; j < 5; j++)
             {
@@ -116,7 +114,7 @@ public class Sponge(ICipher cipher)
 
     public static string[][] ShiftRows(string[][] state)
     {
-        if (state == null || state.Length != 5 || state.Any(row => row?.Length != 5))
+        if (state is not { Length: 5 } || state.Any(row => row.Length != 5))
             throw new ArgumentException("State must be a 5x5 matrix");
 
         var result = new string[5][];
@@ -139,15 +137,14 @@ public class Sponge(ICipher cipher)
     public static string[][] ShatterBlocks(string[][] state)
     {
         for (var i = 0; i < 5; i++)
-        {
             state[i][i] = ShiftBlock(state[i][i]);
-        }
+        
         return state;
     }
     
     private static string ShiftBlock(string block)
     {
-        var numbers = Alphabet.ToNumArray(block);
+        var numbers = block.ToNumArray();
         var shifted = new int[4];
 
         for (var i = 0; i < 4; i++)
@@ -156,6 +153,6 @@ public class Sponge(ICipher cipher)
             shifted[newPos] = numbers[i];
         }
 
-        return Alphabet.ToText(shifted);
+        return shifted.ToText();
     }
 }

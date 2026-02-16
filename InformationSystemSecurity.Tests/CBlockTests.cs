@@ -21,10 +21,9 @@ public class CBlockTests
     [MemberData(nameof(TestUtils.GetCBlockTestData), MemberType = typeof(TestUtils))]
     public void CBlock_ReturnsExpectedCipherText(string[] array, CompressMode outSize, string expected)
     {
-        var chiper_Caesar = new Caesar(CaesarMode.Core);
-        var chiper_CBlock = new CBlockCipher(chiper_Caesar);
+        var cipherCBlock = new CBlockCipher(new Caesar(CaesarMode.Core));
         
-        var result = chiper_CBlock.Encrypt(array, outSize);
+        var result = cipherCBlock.Encrypt(array, outSize);
 
         Assert.Equal(result, expected);
     }
