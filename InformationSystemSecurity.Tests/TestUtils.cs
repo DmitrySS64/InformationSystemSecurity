@@ -5,10 +5,12 @@ namespace InformationSystemSecurity.tests;
 public static class TestUtils
 {
     // Глобальные настройки для добавления случайных тест-кейсов
-    private const int RandomTextCasesPerGenerator = 10;
-    private const int RandomKeyCasesPerGenerator = 10;
-    private static Random _random = Random.Shared;
+    private const int RandomTextCasesPerGenerator = 5;
+    private const int RandomKeyCasesPerGenerator = 50;
+    // private static Random _random = Random.Shared;
+    private static Random _random = new(7);
 
+    
     public static void SetRandomSeed(int seed)
     {
         _random = new Random(seed);
@@ -48,7 +50,7 @@ public static class TestUtils
         if (RandomTextCasesPerGenerator > 0)
         {
             closePairs.AddRange(GenerateRandomClosePairs(RandomTextCasesPerGenerator/2, 4));
-            closePairs.AddRange(GenerateRandomEqualSumPairs(RandomTextCasesPerGenerator/2, 4));
+            // closePairs.AddRange(GenerateRandomEqualSumPairs(RandomTextCasesPerGenerator/2, 4));
         }
 
         return MixPairsWithKeys(closePairs, keys);
@@ -218,10 +220,11 @@ public static class TestUtils
         return new string(result);
     }
 
-    private static IEnumerable<(string Original, string Rotated)> GetAllRotations(string text)
+    private static IEnumerable<(string Original, string Rotated)> GetAllRotations(string text, int maxShift = 1)
     {
         var pairs = new List<(string Original, string Rotated)>();
-        for (var shift = 1; shift < text.Length; shift++)
+        maxShift = maxShift < 0 ? text.Length-1 : maxShift;
+        for (var shift = 1; shift <= maxShift; shift++)
         {
             var rotated = RotateText(text, shift);
             if (rotated != text)

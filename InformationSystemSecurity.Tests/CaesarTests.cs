@@ -83,8 +83,9 @@ public class CaesarTests
         var result2 = caesar.Encrypt(modifiedPlainText, key);
 
         // Assert
+        var textDiff = TestUtils.CountDifferences(plainText, modifiedPlainText);
         var diffCount = TestUtils.CountDifferences(result1, result2);
-        Assert.True(diffCount > 1, $"Expected more than 1 differing character, but got {diffCount}. {result1}:{result2}");
+        Assert.True(diffCount > textDiff, $"Expected more than {textDiff} differing character, but got {diffCount}. {result1}:{result2}");
     }
     
     [Theory]
@@ -124,8 +125,9 @@ public class CaesarTests
 
         var result1 = caesar.Encrypt(plainText, key1);
         var result2 = caesar.Encrypt(plainText, key2);
-
-        Assert.NotEqual(result1, result2);
+        
+        var diffCount = TestUtils.CountDifferences(result1, result2);
+        Assert.True(diffCount > 1, $"Expected more than 1 differing character, but got {diffCount}. {result1}:{result2}");
     }
 
     [Theory]
@@ -197,8 +199,9 @@ public class CaesarTests
         var result2 = caesar.Encrypt(modifiedPlainText, key);
 
         // Assert
+        var textDiff = TestUtils.CountDifferences(plainText, modifiedPlainText);
         var diffCount = TestUtils.CountDifferences(result1, result2);
-        Assert.True(diffCount > 1, $"Expected more than 1 differing character, but got {diffCount}. {result1}:{result2}");
+        Assert.True(diffCount > textDiff, $"Expected more than {textDiff} differing character, but got {diffCount}. {result1}:{result2}");
     }
     
     [Theory]
@@ -238,8 +241,10 @@ public class CaesarTests
 
         var result1 = caesar.Encrypt(plainText, key1);
         var result2 = caesar.Encrypt(plainText, key2);
+        
+        var diff = TestUtils.CountDifferences(result1, result2);
 
-        Assert.NotEqual(result1, result2);
+        Assert.True(diff > 1, $"Expected more than 1 differing character, but got {diff}. {result1}:{result2}");
     }
 
     [Theory]
@@ -356,8 +361,9 @@ public class CaesarTests
         var result2 = sBlockCipher.Encrypt(modifiedPlainText);
 
         // Assert
+        var textDiff = TestUtils.CountDifferences(plainText, modifiedPlainText);
         var diffCount = TestUtils.CountDifferences(result1, result2);
-        Assert.True(diffCount > 1, $"Expected more than 1 differing character, but got {diffCount}");
+        Assert.True(diffCount > textDiff, $"Expected more than {textDiff} differing character, but got {diffCount}. {result1}:{result2}");
     }
 
     [Theory]
@@ -399,7 +405,8 @@ public class CaesarTests
         var result1 = cipher1.Encrypt(plainText);
         var result2 = cipher2.Encrypt(plainText);
 
-        Assert.NotEqual(result1, result2);
+        var diffCount = TestUtils.CountDifferences(result1, result2);
+        Assert.True(diffCount > 1, $"Expected more than 1 differing character, but got {diffCount}. {result1}:{result2}");
     }
 
     [Theory]
@@ -438,8 +445,9 @@ public class CaesarTests
         var result1 = sBlockCipher.Encrypt(plainText);
         var result2 = sBlockCipher.Encrypt(modifiedPlainText);
 
+        var textDiff = TestUtils.CountDifferences(plainText, modifiedPlainText);
         var diffCount = TestUtils.CountDifferences(result1, result2);
-        Assert.True(diffCount > 1, $"Expected more than 1 differing character, but got {diffCount}");
+        Assert.True(diffCount > textDiff, $"Expected more than {textDiff} differing character, but got {diffCount}. {result1}:{result2}");
     }
 
     [Theory]
@@ -481,7 +489,8 @@ public class CaesarTests
         var result1 = cipher1.Encrypt(plainText);
         var result2 = cipher2.Encrypt(plainText);
 
-        Assert.NotEqual(result1, result2);
+        var diffCount = TestUtils.CountDifferences(result1, result2);
+        Assert.True(diffCount > 1, $"Expected more than 1 differing character, but got {diffCount}. {result1}:{result2}");
     }
 
     [Theory]
@@ -512,5 +521,15 @@ public class CaesarTests
     }
 
     #endregion
+
+    [Fact]
+    public void TestTest()
+    {
+        // make test with plainText: "БЛОК", key1: "ИЖФВЧЫШЕУДШПЛННЯ"
+        const string plainText = "БЛОК";
+        const string key1 = "ИЖФВЧЫШЕУДШПЛННЯ";
+        var cipher = new SBlockCipher(new Caesar(), key1, true, true);
+        var result = cipher.Encrypt(plainText);
+    }
 }
 
