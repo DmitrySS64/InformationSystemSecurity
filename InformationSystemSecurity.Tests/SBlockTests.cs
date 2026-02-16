@@ -64,7 +64,8 @@ public class SBlockTests
         var result1 = SBlockCipher.MergeBlock(plainText, key1);
         var result2 = SBlockCipher.MergeBlock(plainText, key2);
 
-        Assert.NotEqual(result1, result2);
+        var diffCount = TestUtils.CountDifferences(result1, result2);
+        Assert.True(diffCount > 1, $"Expected more than 1 differing character, but got {diffCount}. {result1}:{result2}");
     }
 
     [Theory]
