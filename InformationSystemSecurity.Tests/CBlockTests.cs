@@ -27,5 +27,18 @@ public class CBlockTests
 
         Assert.Equal(result, expected);
     }
-}
 
+    [Theory]
+    [MemberData(nameof(TestUtils.GetCBlockSensitivityTestData), MemberType = typeof(TestUtils))]
+    public void CBlock_CloseInputs(string[] baseArray, string[] variantArray,
+        CompressMode outSize, int minDifference)
+    {
+        var cipherCBlock = new CBlockCipher(new Caesar(CaesarMode.Core));
+        var baseline = cipherCBlock.Encrypt(baseArray, outSize);
+        var changed = cipherCBlock.Encrypt(variantArray, outSize);
+
+        var diff = TestUtils.CountDifferences(baseline, changed);
+        Assert.True(diff >= minDifference,
+            $"Expected >={minDifference} differences (mode={outSize}), got {diff}. Base='{string.Join(',', baseArray)}', Variant='{string.Join(',', variantArray)}'");
+    }
+}

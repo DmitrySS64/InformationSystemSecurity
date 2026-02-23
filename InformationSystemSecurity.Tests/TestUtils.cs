@@ -50,7 +50,7 @@ public static class TestUtils
 
         if (RandomTextCasesPerGenerator > 0)
         {
-            closePairs.AddRange(GenerateRandomClosePairs(RandomTextCasesPerGenerator/2, 4));
+            closePairs.AddRange(GenerateRandomClosePairs(RandomTextCasesPerGenerator / 2, 4));
             // closePairs.AddRange(GenerateRandomEqualSumPairs(RandomTextCasesPerGenerator/2, 4));
         }
 
@@ -335,41 +335,106 @@ public static class TestUtils
     public static IEnumerable<object[]> GetCBlockTestData()
     {
         var entityStr = new string('_', 16);
-        yield return new object[]
-        {
+        yield return
+        [
             new[] { "ХОРОШО_БЫТЬ_ВАМИ" },
             CompressMode.Out16,
             "ЯМЫШСХБ_ГФАМЭ_ЛЗ"
-        };
-        yield return new object[]
-        {
+        ];
+        yield return
+        [
             new[] { "ХОРОШО_БЫТЬ_ВАМИ" },
             CompressMode.Out8,
             "РВЭШАФМФ"
-        };
-        yield return new object[]
-        {
+        ];
+        yield return
+        [
             new[] { "ХОРОШО_БЫТЬ_ВАМИ", "КЬЕРКЕГОР_ПРОПАЛ" },
             CompressMode.Out4,
             "ЕЗЦР"
-        };
-        yield return new object[]
-        {
+        ];
+        yield return
+        [
             new[] { entityStr, entityStr, entityStr, entityStr},
             CompressMode.Out4,
             "ЭЧЧЯ"
-        };
-        yield return new object[]
-        {
+        ];
+        yield return
+        [
             new[] { entityStr, entityStr, entityStr, entityStr},
             CompressMode.Out8,
             "ЦНУЬЩХЬЭ"
-        };
-        yield return new object[]
-        {
+        ];
+        yield return
+        [
             new[] { entityStr, entityStr, entityStr, entityStr},
             CompressMode.Out16,
             "ЫЕРФЬЗВЖРЖЙЯИОСЮ"
+        ];
+    }
+
+    public static IEnumerable<object[]> GetCBlockSensitivityTestData()
+    {
+        var textsLists = new List<List<string>>
+        {
+            new()
+            {
+                "ХОРОШО_БЫТЬ_ВАМИ",
+            },
+            new()
+            {
+                "ХОРОШО_БЫТЬ_ВАМИ"
+            },
+            new()
+            {
+                "_______________А",
+                "А_______________",
+                "_______А________",
+                "________________",
+            },
+            new()
+            {
+                "ХОРОШО_БЫТЬ_ВАМИ",
+                "КЬЕРКЕГОР_ПРОПАЛ"
+            }
+            
         };
+        var modifiedTextsLists = new List<List<string>>
+        {
+            new()
+            {
+                "ХОРОШО_БЫТЬ_ВАМИ",
+                "________________"
+            },
+            new()
+            {
+                "ХОРОШО_БЫТЬ_ВАМИ",
+                "________А_______"
+            },
+            new()
+            {
+                "_______________А",
+                "________________",
+                "________________",
+                "________________",
+            },
+            new()
+            {
+                "ЧЕРНЫЙ_АББАТ_ПОЛ",
+                "ХОРОШО_БЫТЬ_ВАМИ",
+                "КЬЕРКЕГОР_ПРОПАЛ"
+            }
+            
+        };
+
+        for (var i = 0; i < textsLists.Count; i++)
+        {
+            var keys = textsLists[i].ToArray();
+            var modifiedKeys = modifiedTextsLists[i].ToArray();
+            yield return [keys, modifiedKeys, CompressMode.Out16, 10];
+            yield return [keys, modifiedKeys, CompressMode.Out8, 5];
+            yield return [keys, modifiedKeys, CompressMode.Out4, 3];
+        }
+
     }
 }

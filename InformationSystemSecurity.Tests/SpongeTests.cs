@@ -1,4 +1,5 @@
 ﻿using InformationSystemSecurity.domain;
+using InformationSystemSecurity.domain.Enums;
 
 namespace InformationSystemSecurity.tests;
 
@@ -97,10 +98,10 @@ public class SpongeTests
             ["ЫТК_", "____", "ФЭД_", "ЫТК_", "ДМФ_"]
         };
 
-        var chiperCaesar = new Caesar(domain.Enums.CaesarMode.Core);
-        var chiperSponge = new Sponge(chiperCaesar);
+        var cipherCaesar = new Caesar(CaesarMode.Core);
+        var cipherSponge = new Sponge(cipherCaesar);
 
-        var result = chiperSponge.Absorb(state, @in);
+        var result = cipherSponge.Absorb(state, @in);
 
         Assert.Equal(result, expected);
     }
@@ -128,10 +129,10 @@ public class SpongeTests
         };
         var expectedBlock = "УУЦК";
 
-        var chiperCaesar = new Caesar(domain.Enums.CaesarMode.Core);
-        var chiperSponge = new Sponge(chiperCaesar);
+        var cipherCaesar = new Caesar(CaesarMode.Core);
+        var cipherSponge = new Sponge(cipherCaesar);
 
-        var (result, resultBlock) = chiperSponge.Squeeze(state);
+        var (result, resultBlock) = cipherSponge.Squeeze(state);
 
         Assert.Equal(expected, result);
         Assert.Equal(expectedBlock, resultBlock);
@@ -141,10 +142,10 @@ public class SpongeTests
     [InlineData("КАТЕГОРИЧЕСКИЙ_ИМПЕРАТИВ", "_ДВЖГЭРЬВВЬЛЕЩНЯУУ_РТБПЮЯЯЩКЭЮЦПЭКЩЫЛКЯДЛДИЫКШМ_НИЧБЩКЬУЛДСФЛЧТЕ")]
     public void GetHash(string plainText, string expected)
     {
-        var chiperCaesar = new Caesar(domain.Enums.CaesarMode.Core);
-        var chiperSponge = new Sponge(chiperCaesar);
+        var cipherCaesar = new Caesar(CaesarMode.Core);
+        var cipherSponge = new Sponge(cipherCaesar);
 
-        var result = chiperSponge.GetHash(plainText);
+        var result = cipherSponge.GetHash(plainText);
 
         Assert.Equal(expected, result);
     }
@@ -155,10 +156,10 @@ public class SpongeTests
         var massege = new string('_', 4 * 16);
         var expected = "ПСФНЫЕ";
 
-        var chiperCaesar = new Caesar(domain.Enums.CaesarMode.Core);
-        var chiperSponge = new Sponge(chiperCaesar);
+        var cipherCaesar = new Caesar(CaesarMode.Core);
+        var cipherSponge = new Sponge(cipherCaesar);
 
-        var result = chiperSponge.GetHash(massege);
+        var result = cipherSponge.GetHash(massege);
 
         Assert.Equal(expected, result[..6]);
     }
