@@ -1,9 +1,10 @@
 namespace InformationSystemSecurity.domain;
 
-public static class Alphabet
+public static class Converter
 {
     public const string AlphabetString = "_АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЫЬЭЮЯ";
     public static int AlphabetLength => AlphabetString.Length;
+    public const int BlockSize = 4;
 
     public static int ToNum(this char c)
     {
@@ -45,6 +46,20 @@ public static class Alphabet
 
         var chars = nums.Select(ToChar).ToArray();
         return new string(chars);
+    }
+    
+    public static ulong ToNum(this string block)
+    {
+        if (block.Length != BlockSize)
+            throw new ArgumentException($"Block must be {BlockSize} characters long.");
+        
+        // TODO
+    }
+    
+    public static string ToBlock(this ulong num)
+    {
+        // TODO
+        // функцию div отдельно не нужно создавать - используем C#
     }
 
     public static char AddChars(char c1, char c2)
@@ -106,5 +121,21 @@ public static class Alphabet
         }
 
         return new string(result);
+    }
+    
+    // (см. push_reg) Вроде должно работать на уровне бинарных операций, но надо потестить
+    // Если работает, то block2bin и bin2block вроде не нужны
+    public static ulong PushBit(this ulong num, byte bit)
+    {
+        num = (num << 1) | bit;
+        num &= (1L << 20) - 1;
+        return num;
+    }
+
+    // (см. taps2bin)
+    public static ulong ToBinary(this int[] tapPositions)
+    {
+        // todo: тут просто поставить единицы в заданных позициях и получить бинарное число
+        // 100% можно сделать в пару строк, а не как в маткаде - можно у ИИ спросить, если что
     }
 }

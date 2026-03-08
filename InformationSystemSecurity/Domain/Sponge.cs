@@ -5,8 +5,6 @@ namespace InformationSystemSecurity.domain;
 
 public class Sponge(ICipher cipher)
 {
-    private const int BlockSize = 4;
-
     private readonly CBlockCipher _blockCipher = new CBlockCipher(cipher);
     
     public string GetHash(string message)
@@ -44,8 +42,8 @@ public class Sponge(ICipher cipher)
     
     public string[][] Absorb(string[][] state, string block)
     {
-        if (block.Length != BlockSize)
-            throw new ArgumentException($"Block must be {BlockSize} characters long.");
+        if (block.Length != Converter.BlockSize)
+            throw new ArgumentException($"Block must be {Converter.BlockSize} characters long.");
 
         var string2 = string.Concat(block, state[0][0], block, state[0][0]);
 
@@ -56,7 +54,7 @@ public class Sponge(ICipher cipher)
             X[i] = "____";
             for (var j = 0; j < 5; j++)
             {
-                X[i] = Alphabet.AddTexts(X[i], state[i][j]);
+                X[i] = Converter.AddTexts(X[i], state[i][j]);
             }
         }
         var string1 = string.Concat(X[0], X[1], X[2], X[3]);
@@ -76,7 +74,7 @@ public class Sponge(ICipher cipher)
             X[i] = "____";
             for (var j = 0; j < 5; j++)
             {
-                X[i] = Alphabet.AddTexts(X[i], state[i][j]);
+                X[i] = Converter.AddTexts(X[i], state[i][j]);
             }
         }
 
@@ -100,13 +98,13 @@ public class Sponge(ICipher cipher)
             var X = "____";
 
             for (var j = 0; j < 5; j++)
-                X = Alphabet.AddTexts(X, state[j][i]);
+                X = Converter.AddTexts(X, state[j][i]);
             
             var q = (i + 1) % 5;
             for (var j = 0; j < 5; j++)
             {
-                var tmp = Alphabet.AddTexts(X, state[j][q]);
-                state[j][q] = Alphabet.SubtractTexts(tmp, state[j][i]);
+                var tmp = Converter.AddTexts(X, state[j][q]);
+                state[j][q] = Converter.SubtractTexts(tmp, state[j][i]);
             }
         }
         return state;

@@ -2,20 +2,20 @@
 
 namespace InformationSystemSecurity.tests;
 
-public class AlphabetTests
+public class ConverterTests
 {
     [Fact]
     public void Text2Array_Then_Array2Text_ReturnsOriginalAlphabet()
     {
         // Arrange
-        var alphabetString = Alphabet.AlphabetString;
+        var alphabetString = Converter.AlphabetString;
 
         // Act
         var a = alphabetString.ToNumArray();
         var b = a.ToText();
 
         // Assert
-        Assert.Equal(Alphabet.AlphabetString, b);
+        Assert.Equal(Converter.AlphabetString, b);
     }
 
     [Fact]
@@ -27,7 +27,7 @@ public class AlphabetTests
         const char expected = 'Е';
 
         // Act
-        var result = Alphabet.AddChars(a, b);
+        var result = Converter.AddChars(a, b);
 
         // Assert
         Assert.Equal(expected, result);
@@ -42,7 +42,7 @@ public class AlphabetTests
         const char c = 'Е';
 
         // Act
-        var result = Alphabet.SubtractChars(c, b);
+        var result = Converter.SubtractChars(c, b);
 
         // Assert
         Assert.Equal(expected, result);
@@ -57,7 +57,7 @@ public class AlphabetTests
         const string expected = "ИЖЬЯМАНЕ";
 
         // Act
-        var result = Alphabet.AddTexts(text1, text2);
+        var result = Converter.AddTexts(text1, text2);
 
         // Assert
         Assert.Equal(expected, result);
@@ -72,7 +72,7 @@ public class AlphabetTests
         const string expected = "ЕЖИК____";
 
         // Act
-        var result = Alphabet.SubtractTexts(cipherText, text2);
+        var result = Converter.SubtractTexts(cipherText, text2);
 
         // Assert
         Assert.Equal(expected, result);
@@ -88,7 +88,7 @@ public class AlphabetTests
         const string expected = "В_ТУМАНЕ";
 
         // Act
-        var result = Alphabet.SubtractTexts(cipherText, text2);
+        var result = Converter.SubtractTexts(cipherText, text2);
 
         // Assert
         Assert.Equal(expected, result);
@@ -104,7 +104,7 @@ public class AlphabetTests
         const string expected = "Э_МЛТЯСЩ";
 
         // Act
-        var result = Alphabet.SubtractTexts(cipherText, text2);
+        var result = Converter.SubtractTexts(cipherText, text2);
 
         // Assert
         Assert.Equal(expected, result);

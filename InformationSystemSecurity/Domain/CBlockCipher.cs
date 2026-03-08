@@ -22,10 +22,10 @@ public class CBlockCipher(ICipher cipher)
             if (textArray[i].Length != 16)
                 throw new ArgumentException("Each string must be 16 characters long.");
 
-            C[i] = Alphabet.AddTexts(C[i], textArray[i]);
+            C[i] = Converter.AddTexts(C[i], textArray[i]);
         }
 
-        C[1] = Alphabet.AddTexts(C[1], textArray[0]);
+        C[1] = Converter.AddTexts(C[1], textArray[0]);
 
         var part1 = cipher.Encrypt(C[0], C[2]);
         var part2 = cipher.Encrypt(C[3], C[1]);
@@ -68,13 +68,13 @@ public class CBlockCipher(ICipher cipher)
 
         return mode switch
         {
-            CompressMode.Out8 => Alphabet.AddTexts(
+            CompressMode.Out8 => Converter.AddTexts(
                 string.Concat(a1, a3), 
                 string.Concat(a2, a4)
             ),
-            CompressMode.Out4 => Alphabet.AddTexts(
-                Alphabet.SubtractTexts(a1, a3), 
-                Alphabet.SubtractTexts(a2, a4)
+            CompressMode.Out4 => Converter.AddTexts(
+                Converter.SubtractTexts(a1, a3), 
+                Converter.SubtractTexts(a2, a4)
             ),
             _ => throw new ArgumentException("Invalid compression mode.")
         };

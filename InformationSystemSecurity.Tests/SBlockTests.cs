@@ -50,8 +50,8 @@ public class SBlockTests
     [MemberData(nameof(TestUtils.GetAdditiveHomomorphismData), MemberType = typeof(TestUtils))]
     public void AdditiveHomomorphism_NotHomomorphic(string textA, string textB, string key)
     {
-        var sumCipher = Alphabet.AddTexts(SBlockCipher.MergeBlock(textA, key), SBlockCipher.MergeBlock(textB, key));
-        var sumPlain = Alphabet.AddTexts(textA, textB);
+        var sumCipher = Converter.AddTexts(SBlockCipher.MergeBlock(textA, key), SBlockCipher.MergeBlock(textB, key));
+        var sumPlain = Converter.AddTexts(textA, textB);
         var cipherSumPlain = SBlockCipher.MergeBlock(sumPlain, key);
 
         Assert.NotEqual(sumCipher, cipherSumPlain);
@@ -82,8 +82,8 @@ public class SBlockTests
     [MemberData(nameof(TestUtils.GetKeyAdditionTestData), MemberType = typeof(TestUtils))]
     public void KeyAddition_ResultsDiffer(string plainText, string key1, string key2)
     {
-        var sumCipher = Alphabet.AddTexts(SBlockCipher.MergeBlock(plainText, key1), SBlockCipher.MergeBlock(plainText, key2));
-        var keySum = Alphabet.AddTexts(key1, key2);
+        var sumCipher = Converter.AddTexts(SBlockCipher.MergeBlock(plainText, key1), SBlockCipher.MergeBlock(plainText, key2));
+        var keySum = Converter.AddTexts(key1, key2);
         var cipherKeySum = SBlockCipher.MergeBlock(plainText, keySum);
 
         Assert.NotEqual(sumCipher, cipherKeySum);
