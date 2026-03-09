@@ -276,8 +276,8 @@ public class CaesarTests
     #region Caesar core
 
     [Theory]
-    [InlineData("ХОРОШО_БЫТЬ_ВАМИ", "КЬЕРКЕГОР_ПРОПАЛ", "ЯИСООЬВХАТЭИЦЛЫС")]
-    [InlineData("КЬЕРКЕГОР_ПРОПАЛ", "ХОРОШО_БЫТЬ_ВАМИ", "ШТЦСЮОЫЕДКБСГБЧЗ")]
+    [InlineData("ХОРОШО_БЫТЬ_ВАМИ", "КЬЕРКЕГОР_ПРОПАЛ", "ЗЗБХЛТЧЯЯПОЦЦЖЙР")]
+    [InlineData("КЬЕРКЕГОР_ПРОПАЛ", "ХОРОШО_БЫТЬ_ВАМИ", "ЕЭЭЦХИЧЖБДСАУХОВ")]
     public void CoreEncrypt_ReturnsExpectedCipherText(string primeText, string auxText, string expectedCipherText)
     {
         // Arrange

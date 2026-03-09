@@ -6,9 +6,9 @@ namespace InformationSystemSecurity.tests;
 public class CBlockTests
 {
     [Theory]
-    [InlineData("ХОРОШО_БЫТЬ_ВАМИ", "КЬЕРКЕГОР_ПРОПАЛ", "ХЭТУЭУЙХВЬЕЬЫЭЫЫ")]
-    [InlineData("ХОРОШО_БЫТЬ_ВАМИ", "ХОРОШО_ПРОБРОСИЛ", "ХПТСЭУЕЦВЬЕЬЫЯЫЫ")]
-    [InlineData("ХОРОШО_БЫТЬ_ВАМИ", "ХОРОШО_БЫТЬ_ВАМИ", "ХПТСЭУЕИВЬЕКОНЫЧ")]
+    [InlineData("ХОРОШО_БЫТЬ_ВАМИ", "КЬЕРКЕГОР_ПРОПАЛ", "ЦЗЙУАИНЖООСММНИП")]
+    [InlineData("ХОРОШО_БЫТЬ_ВАМИ", "ХОРОШО_ПРОБРОСИЛ", "БНФПОСЕИОЮГММСРП")]
+    [InlineData("ХОРОШО_БЫТЬ_ВАМИ", "ХОРОШО_БЫТЬ_ВАМИ", "БНФПОСЕМШБЮКФПФЙ")]
     public void Confuse_ReturnsExpectedText(string inputText1, string inputText2, string expected)
     {
         var result = CBlockCipher.Confuse(inputText1, inputText2);
