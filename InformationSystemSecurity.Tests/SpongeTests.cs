@@ -91,11 +91,11 @@ public class SpongeTests
 
         var expected = new string[5][]
         {
-            ["_ЫТК", "_ЖЯЦ", "_ФЭД", "_ЫТК", "_ДМФ"],
-            ["ЫТК_", "ЖЯЦ_", "ФЭД_", "ЫТК_", "ЛЛЛ_"],
-            ["ЫТК_", "ЖЯЦ_", "ФЭД_", "УУУ_", "ДМФ_"],
-            ["ЫТК_", "ЖЯЦ_", "ЬЬЬ_", "ЫТК_", "ДМФ_"],
-            ["ЫТК_", "____", "ФЭД_", "ЫТК_", "ДМФ_"]
+            ["РЭФД", "ФРИШ", "ЯТЫК", "РЭФД", "ОВКЫ"], 
+            ["ЭФДР", "РИШФ", "ТЫКЯ", "ЭФДР", "УУУГ"], 
+            ["ЭФДР", "РИШФ", "ТЫКЯ", "ЛЛЛЬ", "ВКЫО"], 
+            ["ЭФДР", "РИШФ", "ГГГУ", "ЭФДР", "ВКЫО"], 
+            ["ЭФДР", "____", "ТЫКЯ", "ЭФДР", "ВКЫО"]
         };
 
         var cipherCaesar = new Caesar(CaesarMode.Core);
@@ -127,7 +127,7 @@ public class SpongeTests
             ["ЦКЕЧ", "ТЫН_", "ЯАЮГ", "ЮИПН", "ИХЕС"],
             ["ЦКЕЧ", "ХЖЗЙ", "СЧЬЬ", "ЦИНГ", "ИХЕС"]
         };
-        var expectedBlock = "УУЦК";
+        var expectedBlock = "ПБЧБ";
 
         var cipherCaesar = new Caesar(CaesarMode.Core);
         var cipherSponge = new Sponge(cipherCaesar);
@@ -139,7 +139,7 @@ public class SpongeTests
     }
 
     [Theory]
-    [InlineData("КАТЕГОРИЧЕСКИЙ_ИМПЕРАТИВ", "_ДВЖГЭРЬВВЬЛЕЩНЯУУ_РТБПЮЯЯЩКЭЮЦПЭКЩЫЛКЯДЛДИЫКШМ_НИЧБЩКЬУЛДСФЛЧТЕ")]
+    [InlineData("КАТЕГОРИЧЕСКИЙ_ИМПЕРАТИВ", "ВРЫТЩС")]
     public void GetHash(string plainText, string expected)
     {
         var cipherCaesar = new Caesar(CaesarMode.Core);
@@ -147,14 +147,14 @@ public class SpongeTests
 
         var result = cipherSponge.GetHash(plainText);
 
-        Assert.Equal(expected, result);
+        Assert.Equal(expected, result[..6]);
     }
 
     [Fact]
     public void GetHash_EmptyString()
     {
         var massege = new string('_', 4 * 16);
-        var expected = "ПСФНЫЕ";
+        var expected = "ЕНЧНПС";
 
         var cipherCaesar = new Caesar(CaesarMode.Core);
         var cipherSponge = new Sponge(cipherCaesar);

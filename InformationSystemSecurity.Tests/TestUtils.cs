@@ -339,37 +339,37 @@ public static class TestUtils
         [
             new[] { "ХОРОШО_БЫТЬ_ВАМИ" },
             CompressMode.Out16,
-            "ЯМЫШСХБ_ГФАМЭ_ЛЗ"
+            "РИОМИЗ_ЬЕШНЙЗНОЖ"
         ];
         yield return
         [
             new[] { "ХОРОШО_БЫТЬ_ВАМИ" },
             CompressMode.Out8,
-            "РВЭШАФМФ"
+            "ЩРОИНЖЭР"
         ];
         yield return
         [
-            new[] { "ХОРОШО_БЫТЬ_ВАМИ", "КЬЕРКЕГОР_ПРОПАЛ" },
+            new[] { "ЧЕРНЫЙ_АББАТ_ПОЛ", "ХОРОШО_БЫТЬ_ВАМИ", "КЬЕРКЕГОР_ПРОПАЛ" },
             CompressMode.Out4,
-            "ЕЗЦР"
+            "ТНЗЭ"
         ];
         yield return
         [
             new[] { entityStr, entityStr, entityStr, entityStr},
             CompressMode.Out4,
-            "ЭЧЧЯ"
+            "Ч_ЕК"
         ];
         yield return
         [
             new[] { entityStr, entityStr, entityStr, entityStr},
             CompressMode.Out8,
-            "ЦНУЬЩХЬЭ"
+            "ШИНТАИЗЗ"
         ];
         yield return
         [
             new[] { entityStr, entityStr, entityStr, entityStr},
             CompressMode.Out16,
-            "ЫЕРФЬЗВЖРЖЙЯИОСЮ"
+            "БКЧЗЦЮХКЫЛТШЕЭФО"
         ];
     }
 

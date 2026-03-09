@@ -22,10 +22,12 @@ public class CBlockCipher(ICipher cipher)
             if (textArray[i].Length != 16)
                 throw new ArgumentException("Each string must be 16 characters long.");
 
-            C[i] = Converter.AddTexts(C[i], textArray[i]);
+            C[i] = Alphabet.AddTexts(C[i], textArray[i]);
         }
 
-        C[1] = Converter.AddTexts(C[1], textArray[0]);
+        C = MixInputs(C);
+
+        //C[1] = Alphabet.AddTexts(C[1], textArray[0]);
 
         var part1 = cipher.Encrypt(C[0], C[2]);
         var part2 = cipher.Encrypt(C[3], C[1]);
@@ -49,11 +51,15 @@ public class CBlockCipher(ICipher cipher)
                 ? (arr1[i] + i) % 32
                 : (arr2[i] + i) % 32;
         }
-        return arr1.ToText();
+
+        var tmp = arr1.ToText();
+        var t1 = Alphabet.AddTexts(tmp, text1);
+        var t2 = Alphabet.AddTexts(t1, text2);
+        return t2;
     }
 
-    //TODO: вернуть private
-    public static string Compress(string text, CompressMode mode)
+    
+    private static string Compress(string text, CompressMode mode)
     {
         if (mode == CompressMode.Out16)
             return text;
@@ -68,15 +74,31 @@ public class CBlockCipher(ICipher cipher)
 
         return mode switch
         {
-            CompressMode.Out8 => Converter.AddTexts(
+            CompressMode.Out8 => Alphabet.AddTexts(
                 string.Concat(a1, a3), 
                 string.Concat(a2, a4)
             ),
-            CompressMode.Out4 => Converter.AddTexts(
-                Converter.SubtractTexts(a1, a3), 
-                Converter.SubtractTexts(a2, a4)
+            CompressMode.Out4 => Alphabet.AddTexts(
+                Alphabet.SubtractTexts(a1, a3), 
+                Alphabet.SubtractTexts(a2, a4)
             ),
             _ => throw new ArgumentException("Invalid compression mode.")
         };
+    }
+
+    private static string[] MixInputs(string[] textArray)
+    {
+        var in1 = textArray[0];
+        var in2 = textArray[1];
+        var in3 = textArray[2];
+        var in4 = textArray[3];
+
+        var out1 = Alphabet.AddTexts(in1, in2);
+        var out2 = Alphabet.SubtractTexts(in1, in2);
+        var out3 = Alphabet.AddTexts(out2, Alphabet.AddTexts(in3, in4));
+        var out4 = Alphabet.AddTexts(out1, Alphabet.SubtractTexts(in3, in4));
+
+
+        return [ out1, out2, out3, out4 ];
     }
 }
