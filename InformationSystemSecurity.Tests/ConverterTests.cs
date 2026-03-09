@@ -109,4 +109,32 @@ public class ConverterTests
         // Assert
         Assert.Equal(expected, result);
     }
+
+    [Fact]
+    public void ToNum_ValidBlock_ReturnsCorrectNumber()
+    {
+        // Arrange
+        const string block = "АБВГ";
+        const ulong expected = 34916;
+
+        // Act
+        ulong result = block.ToNum();
+
+        // Assert
+        Assert.Equal(expected, result);
+    }
+
+    [Fact]
+    public void ToBlock_ValidNumber_ReturnsCorrectBlock()
+    {
+        // Arrange
+        const ulong number = 34916;
+        const string expected = "АБВГ";
+
+        // Act
+        string result = number.ToBlock();
+
+        // Assert
+        Assert.Equal(expected, result);
+    }
 }

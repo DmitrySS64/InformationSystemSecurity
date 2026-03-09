@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace InformationSystemSecurity.domain;
 
 public static class Converter
@@ -52,14 +54,33 @@ public static class Converter
     {
         if (block.Length != BlockSize)
             throw new ArgumentException($"Block must be {BlockSize} characters long.");
-        
-        // TODO
+
+        ulong pos = 1;
+        ulong output = 0;
+
+        var tmp = block.ToNumArray();
+        for (var i = BlockSize - 1; i >= 0; i--)
+        {
+            output += pos * (ulong)tmp[i];
+            pos *= 32;
+        }
+        return output;
     }
     
     public static string ToBlock(this ulong num)
     {
         // TODO
         // функцию div отдельно не нужно создавать - используем C#
+        var result = new StringBuilder(BlockSize);
+
+        for (int i = 0; i < BlockSize; i++)
+        {
+            var digit = (int)(num % 32);
+            result.Insert(0, digit.ToChar());
+            num /= 32;
+        }
+
+        return result.ToString();
     }
 
     public static char AddChars(char c1, char c2)
@@ -128,7 +149,7 @@ public static class Converter
     public static ulong PushBit(this ulong num, byte bit)
     {
         num = (num << 1) | bit;
-        num &= (1L << 20) - 1;
+        num &= 0xFFFFFUL;
         return num;
     }
 
@@ -137,5 +158,47 @@ public static class Converter
     {
         // todo: тут просто поставить единицы в заданных позициях и получить бинарное число
         // 100% можно сделать в пару строк, а не как в маткаде - можно у ИИ спросить, если что
+
+        ulong result = 0;
+        foreach (var position in tapPositions) { 
+            if (position >= 0 && position < 64) 
+                result |= 1UL << position;
+        }
+
+        return result;
+    }
+
+
+    /// <summary>
+    /// Преобразует 20-битное число в массив из 20 бит (ulong)
+    /// </summary>
+    public static ulong[] ToBits(this ulong value)
+    {
+        var bits = new ulong[20];
+        for (int i = 0; i < 20; i++)
+        {
+            bits[i] = (value >> i) & 1;
+        }
+        return bits;
+    }
+
+    /// <summary>
+    /// Преобразует массив из 20 бит в 4-символьный блок
+    /// </summary>
+    public static string ToBlock(this ulong[] bits)
+    {
+        if (bits.Length != 20)
+            throw new ArgumentException("Array must have 20 bits");
+
+        // Собираем 20 бит в одно число
+        ulong value = 0;
+        for (int i = 0; i < 20; i++)
+        {
+            if (bits[i] == 1)
+                value |= 1UL << i;
+        }
+
+        // Конвертируем число в блок (предполагаем, что есть метод ToBlock)
+        return value.ToBlock(); // Используем существующий extension метод
     }
 }
