@@ -35,13 +35,13 @@ public class AsLfsr
         for (var i = 0; i < states.Length; i++)
             lsfrSet[i] = Lfsr.Push(states[i], taps[i]);
 
-        var lsfr0Bit19 = lsfrSet[0].GetBit(19) == 1;
+        var lsfr0Bit = (lsfrSet[0] & 1) == 1;
 
         ulong stream;
-        if (!lsfr0Bit19)
-            stream = lsfrSet[1].GetBit(19);
+        if (!lsfr0Bit)
+            stream = lsfrSet[1] & 1;
         else
-            stream = lsfrSet[2].GetBit(19);
+            stream = lsfrSet[2] & 1;
 
         return new AsLfsrResult
         {

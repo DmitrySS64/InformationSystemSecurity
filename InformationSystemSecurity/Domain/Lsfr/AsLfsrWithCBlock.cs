@@ -41,14 +41,7 @@ public class AsLfsrWithCBlock
                 }
                 else
                 {
-                    var bits = t.Stream;
-                    for (var i = 0; i < 20; i++)
-                    {
-                        var streamBit = bits.GetBit(i);
-                        var tmpBit = tmp.GetBit(i);
-                        var bit = (streamBit + tmpBit) & 1;
-                        tmp |= bit << i;
-                    }
+                    tmp ^= t.Stream;
                 }
             }
             _stream += tmp.ToBlock();
@@ -60,7 +53,6 @@ public class AsLfsrWithCBlock
     // см. initialize_PRNG в "общее"
     private ulong[][] InitState(string seed)
     {
-
         var array = new string[4] {
             "ПЕРВОЕ_АКТЕРСТВО",
             "ВТОРОЙ_ДАЛЬТОНИК",
@@ -89,7 +81,7 @@ public class AsLfsrWithCBlock
                 tmp = Converter.AddTexts(tmp, TMP.ToString());
             }
 
-            init[i] = tmp.Substring(4, 12);
+            init[i] = TMP.ToString().Substring(4, 12);
         }
 
         // дальше часть идёт из C_AS_LSFR_next (стр. 54), так как нет смысла разбивать это на 2 функции,
@@ -114,4 +106,41 @@ public class AsLfsrWithCBlock
         return state;
     }
 
+
+    public static string[] InitPRNG(string seed)
+    {
+        var cBlock = new CBlockCipher(new Caesar(CaesarMode.Core));
+        var array = new string[4] {
+            "ПЕРВОЕ_АКТЕРСТВО",
+            "ВТОРОЙ_ДАЛЬТОНИК",
+            "ТРЕТЬЯ_САДОВНИЦА",
+            "ЧЕТВЕРТЫЙ_ГОБЛИН"
+        };
+
+        var value = new string[4];
+        for (int i = 0; i < 4; i++)
+        {
+            value[i] = cBlock.Encrypt([array[i], seed], CompressMode.Out16);
+        }
+
+        var secret = cBlock.Encrypt(value, CompressMode.Out16);
+        var init = new string[4];
+
+        for (int i = 0; i < 4; i++)
+        {
+            var tmp = value[i];
+            var TMP = new StringBuilder();
+
+            for (int j = 0; j < 4; j++)
+            {
+                tmp = Converter.AddTexts(tmp, array[i]);
+                TMP.Append(cBlock.Encrypt([tmp, secret], CompressMode.Out4));
+                tmp = Converter.AddTexts(tmp, TMP.ToString());
+            }
+
+            init[i] = TMP.ToString().Substring(4, 12);
+        }
+
+        return init;
+    }
 }

@@ -13,8 +13,8 @@ public class Lfsr
         for (int i = 0; i < 20; i++)
         {
             state = Push(state, taps);
-            var bit = state.GetBit(19);
-            stream |= bit << i;
+            var bit = state & 1;
+            stream.PushBit((byte)bit);
             //stream = (stream << 1) | bit;
         }
         return new LfsrResult { State = state, Stream = stream };

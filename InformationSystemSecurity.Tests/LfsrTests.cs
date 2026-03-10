@@ -21,7 +21,7 @@ public class LfsrTests
 
     [Fact]
     public void TapsToBin() {
-        int[] input = [19, 16];
+        int[] input = [20, 17];
         ulong expected = 0b_1001_0000_0000_0000_0000UL;
 
         var result = input.ToBinary();
@@ -198,10 +198,23 @@ public class LfsrTests
 
 
         var expectedStream = "СХЫЫЛЮЕФЦИСМГУЮФ";
+        var expectedState00 = 0b_1110_1101_1011_1100_1100uL;
 
         var result = lfsr.GetNext();
 
+        Assert.Equal(expectedState00.ToBinaryString(), result.State[0][0].ToBinaryString());
         Assert.Equal(expectedStream, result.Stream);
+    }
+
+    [Fact]
+    public void InitPRNG() {
+        var in1 = "ХОРОШО_БЫТЬ_ВАМИ";
+
+        var expected = "ЕТБЕЬАФЛЮФОЫ";
+
+        var result = AsLfsrWithCBlock.InitPRNG(in1);
+
+        Assert.Equal(expected, result[0]);
     }
 }
 

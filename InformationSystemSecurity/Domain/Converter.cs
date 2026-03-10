@@ -166,9 +166,10 @@ public static class Converter
         // 100% можно сделать в пару строк, а не как в маткаде - можно у ИИ спросить, если что
 
         ulong result = 0;
-        foreach (var position in tapPositions) { 
-            if (position >= 0 && position < 64) 
-                result |= 1UL << position;
+        foreach (var position in tapPositions) {
+            var pos = position - 1;
+            if (pos >= 0 && pos < 64) 
+                result |= 1UL << pos;
         }
 
         return result;
