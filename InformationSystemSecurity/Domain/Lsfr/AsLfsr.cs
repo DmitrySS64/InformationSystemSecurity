@@ -1,4 +1,5 @@
-﻿using InformationSystemSecurity.domain.Models;
+﻿using InformationSystemSecurity.domain;
+using InformationSystemSecurity.domain.Models;
 
 namespace InformationSystemSecurity.Domain.Lsfr;
 
@@ -7,14 +8,14 @@ public class AsLfsr
     //Некорректный stream
     public static AsLfsrResult GetNext(ulong[] states, ulong[] taps)
     {
-        ulong outputBit = 0;
+        var outputBit = 0uL;
 
         for (int i = 0; i < 20; i++)
         {
             var tmp = Push(states, taps);
 
             states = tmp.States;
-            outputBit = (outputBit << 1) | tmp.Stream;
+            outputBit.PushBit((byte)tmp.Stream);
         }
 
         return new AsLfsrResult
@@ -33,14 +34,14 @@ public class AsLfsr
         var lsfrSet = new ulong[states.Length];
         for (var i = 0; i < states.Length; i++)
             lsfrSet[i] = Lfsr.Push(states[i], taps[i]);
-   
-        bool lsfr0Bit19 = ((lsfrSet[0] >> 19 ) & 1) == 1;
+
+        var lsfr0Bit19 = lsfrSet[0].GetBit(19) == 1;
 
         ulong stream;
-        if (lsfr0Bit19)
-            stream = (lsfrSet[1] >> 19) & 1;
+        if (!lsfr0Bit19)
+            stream = lsfrSet[1].GetBit(19);
         else
-            stream = (lsfrSet[2] >> 19) & 1;
+            stream = lsfrSet[2].GetBit(19);
 
         return new AsLfsrResult
         {

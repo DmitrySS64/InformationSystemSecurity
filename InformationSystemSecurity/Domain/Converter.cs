@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace InformationSystemSecurity.domain;
 
@@ -146,11 +147,16 @@ public static class Converter
     
     // (см. push_reg) Вроде должно работать на уровне бинарных операций, но надо потестить
     // Если работает, то block2bin и bin2block вроде не нужны
-    public static ulong PushBit(this ulong num, byte bit)
+    public static ulong PushBit(this ref ulong num, byte bit)
     {
         num = (num << 1) | bit;
         num &= 0xFFFFFUL;
         return num;
+    }
+
+    public static ulong GetBit(this ulong value, int pos)
+    {
+        return (value >> pos) & 1;
     }
 
     // (см. taps2bin)
@@ -168,37 +174,12 @@ public static class Converter
         return result;
     }
 
-
-    /// <summary>
-    /// Преобразует 20-битное число в массив из 20 бит (ulong)
-    /// </summary>
-    public static ulong[] ToBits(this ulong value)
+    public static string ToBinaryString(this ulong value)
     {
-        var bits = new ulong[20];
-        for (int i = 0; i < 20; i++)
-        {
-            bits[i] = (value >> i) & 1;
-        }
-        return bits;
-    }
+        string binary = Convert.ToString((long)value, 2);
+        int padding = (4 - binary.Length % 4) % 4;
+        binary = binary.PadLeft(binary.Length + padding, '0');
 
-    /// <summary>
-    /// Преобразует массив из 20 бит в 4-символьный блок
-    /// </summary>
-    public static string ToBlock(this ulong[] bits)
-    {
-        if (bits.Length != 20)
-            throw new ArgumentException("Array must have 20 bits");
-
-        // Собираем 20 бит в одно число
-        ulong value = 0;
-        for (int i = 0; i < 20; i++)
-        {
-            if (bits[i] == 1)
-                value |= 1UL << i;
-        }
-
-        // Конвертируем число в блок (предполагаем, что есть метод ToBlock)
-        return value.ToBlock(); // Используем существующий extension метод
+        return "0b" + Regex.Replace(binary, ".{4}", "$0_").TrimEnd('_');
     }
 }

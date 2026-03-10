@@ -28,7 +28,7 @@ public class AsLfsrWithCBlock
     {
         for (var j = 0; j < 4; j++)
         {
-            ulong[] tmp = new ulong[20];
+            var tmp = 0UL;
 
             for (var k = 0; k < 4; k++)
             {
@@ -37,14 +37,17 @@ public class AsLfsrWithCBlock
                 _state[k] = t.States;
                 if (k == 0)
                 {
-                    tmp = t.Stream.ToBits();
+                    tmp = t.Stream;
                 }
                 else
                 {
-                    var bits = t.Stream.ToBits();
+                    var bits = t.Stream;
                     for (var i = 0; i < 20; i++)
                     {
-                        tmp[i] = (bits[i] + tmp[i]) % 2;
+                        var streamBit = bits.GetBit(i);
+                        var tmpBit = tmp.GetBit(i);
+                        var bit = (streamBit + tmpBit) & 1;
+                        tmp |= bit << i;
                     }
                 }
             }

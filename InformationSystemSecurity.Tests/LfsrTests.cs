@@ -1,6 +1,5 @@
 ﻿using InformationSystemSecurity.domain;
 using InformationSystemSecurity.Domain.Lsfr;
-using System.Text.RegularExpressions;
 
 namespace InformationSystemSecurity.tests;
 
@@ -67,7 +66,7 @@ public class LfsrTests
         var resultStream2 = tmp2.Stream.ToBlock();
 
         Assert.Equal(expected1, resultState1);
-        Assert.Equal(tmp1.State, tmp1.Stream);
+        Assert.Equal(tmp1.State.ToBinaryString(), tmp1.Stream.ToBinaryString());
         Assert.Equal(expected2, resultState2);
         Assert.Equal(expected1, resultStream1);
         Assert.Equal(expected2, resultStream2);
@@ -103,16 +102,22 @@ public class LfsrTests
             0b_1101_1000_1111_0111_0111UL,
             0b_1101_1110_1110_1111_1110UL
         };
+        ulong expectedStream1 = 1;
+        ulong expectedStream2 = 1;
         ulong expectedStream3 = 0;
 
         var out1 = AsLfsr.Push(SSet, TSet);
         var out2 = AsLfsr.Push(out1.States, TSet);
-        var result = AsLfsr.Push(out2.States, TSet);
+        var out3 = AsLfsr.Push(out2.States, TSet);
 
         Assert.Equal(expectedStates1, out1.States);
+        Assert.Equal(expectedStream1, out1.Stream);
+
         Assert.Equal(expectedStates2, out2.States);
-        Assert.Equal(expectedStates3, result.States);
-        Assert.Equal(expectedStream3, result.Stream);
+        Assert.Equal(expectedStream2, out2.Stream);
+        
+        Assert.Equal(expectedStates3, out3.States);
+        Assert.Equal(expectedStream3, out3.Stream);
     }
 
     [Fact]
@@ -142,7 +147,7 @@ public class LfsrTests
         var result = AsLfsr.GetNext(SSet, TSet);
 
         Assert.Equal(expectedStates, result.States);
-        Assert.Equal(expectedStream, result.Stream);
+        Assert.Equal(expectedStream.ToBinaryString(), result.Stream.ToBinaryString());
     }
 
     [Fact]
