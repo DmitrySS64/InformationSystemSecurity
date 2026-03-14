@@ -20,7 +20,7 @@ public class Sponge(ICipher cipher)
         var output = new StringBuilder();
 
         // Padding
-        var K = 4 - message.Length % 4;
+        var K = 4 - (message.Length % 4);
         if (K < 4)
         {
             message += new string('_', K);
@@ -44,19 +44,20 @@ public class Sponge(ICipher cipher)
         return output.ToString();
     }
     
-    public string[][] Absorb(string[][] state, string block)
+    public string[][] Absorb(string[][] inState, string block)
     {
         if (block.Length != Converter.BlockSize)
             throw new ArgumentException($"Block must be {Converter.BlockSize} characters long.");
 
+        var state = CopyState(inState);
         var string1 = string.Concat(block, state[0][0], block, state[0][0]);
 
-        var X = new string[4];
+        var X = new string[5];
 
-        for (var i = 0; i < 4; i++)
+        for (var i = 0; i < 5; i++)
         {
             X[i] = "____";
-            for (var j = 0; j < 4; j++)
+            for (var j = 0; j < 5; j++)
             {
                 X[i] = Converter.AddTexts(X[i], state[i][j]);
             }
@@ -68,8 +69,9 @@ public class Sponge(ICipher cipher)
         return PermuteState(state);
     }
     
-    public (string[][] ResultState, string ResultBlock) Squeeze(string[][] state)
+    public (string[][] ResultState, string ResultBlock) Squeeze(string[][] inState)
     {
+        var state = CopyState(inState);
         state = PermuteState(state);
 
         var X = new string[5];
@@ -156,5 +158,19 @@ public class Sponge(ICipher cipher)
         }
 
         return shifted.ToText();
+    }
+
+    private static string[][] CopyState(string[][] state)
+    {
+        var copy = new string[5][];
+        for (var i = 0; i < 5; i++)
+        {
+            copy[i] = new string[5];
+            for (var j = 0; j < 5; j++)
+            {
+                copy[i][j] = state[i][j];
+            }
+        }
+        return copy;
     }
 }
