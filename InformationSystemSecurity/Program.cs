@@ -1,4 +1,4 @@
-﻿using InformationSystemSecurity.Tools;
+﻿using InformationSystemSecurity.Tools.StatsCollectors;
 
 const int collectN = 10000;
 const string collectSeed = "САЛАМКА_БАЛАЛАМКА_БОРИСКА_СОСИСКА";
@@ -6,7 +6,7 @@ const char collectTarget = 'С';
 const int collectPos = 7;
 const int asLfsrMonobitSeed = 7;
 
-string[] cmdArgs = Environment.GetCommandLineArgs();
+var cmdArgs = Environment.GetCommandLineArgs();
 
 if (Array.Exists(cmdArgs, a => a == "--collect-hash-stats"))
 {
@@ -14,11 +14,11 @@ if (Array.Exists(cmdArgs, a => a == "--collect-hash-stats"))
 }
 else if (Array.Exists(cmdArgs, a => a == "--collect-aslfsr-monobit"))
 {
-    LfsrNistTests.CollectAndPrintAsLfsrMonobitStats(asLfsrMonobitSeed);
+    LfsrStatsCollector.CollectAndPrintAsLfsrMonobitStats(asLfsrMonobitSeed);
 }
 else if (Array.Exists(cmdArgs, a => a == "--collect-aslfsr-max-ones"))
 {
-    LfsrNistTests.CollectAndPrintAsLfsrMaxOnesStats(asLfsrMonobitSeed);
+    LfsrStatsCollector.CollectAndPrintAsLfsrMaxOnesStats(asLfsrMonobitSeed);
 }
 else
 {

@@ -118,7 +118,7 @@ public class ConverterTests
         const ulong expected = 34916;
 
         // Act
-        ulong result = block.ToNum();
+        var result = block.ToNum();
 
         // Assert
         Assert.Equal(expected, result);
@@ -132,9 +132,34 @@ public class ConverterTests
         const string expected = "АБВГ";
 
         // Act
-        string result = number.ToBlock();
+        var result = number.ToBlock();
 
         // Assert
+        Assert.Equal(expected, result);
+    }
+    
+    [Theory]
+    [InlineData("____", 0)]
+    [InlineData("___А", 1)]
+    [InlineData("__Б_", 0b_100_0000UL)]
+    [InlineData("__БГ", 0b_100_0100UL)]
+    public void ToNum_ReturnsCorrectBinaryBlock(string input, ulong expected)
+    {
+        // Act
+        var result = input.ToNum();
+
+        // Assert
+        Assert.Equal(expected, result);
+    }
+    
+    [Fact]
+    public void ToBinary_ReturnsCorrectBinary() 
+    {
+        int[] input = [20, 17];
+        const ulong expected = 0b_1001_0000_0000_0000_0000UL;
+
+        var result = input.ToBinary();
+
         Assert.Equal(expected, result);
     }
 }

@@ -1,7 +1,7 @@
 using InformationSystemSecurity.domain;
 using InformationSystemSecurity.domain.Enums;
 
-namespace InformationSystemSecurity.tests;
+namespace InformationSystemSecurity.Tests.Common;
 
 public static class TestUtils
 {

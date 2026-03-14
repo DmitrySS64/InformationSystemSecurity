@@ -9,7 +9,7 @@ public class SpongeTests
     public void Mix_Col()
     {
         var state = new string[5][];
-        for (int i = 0; i < 5; i++)
+        for (var i = 0; i < 5; i++)
             state[i] = Enumerable.Repeat("____", 5).ToArray();
 
         state[1][0] = "__А_";
@@ -84,7 +84,7 @@ public class SpongeTests
     public void Absorb() 
     {
         var state = new string[5][];
-        for (int i = 0; i < 5; i++)
+        for (var i = 0; i < 5; i++)
             state[i] = Enumerable.Repeat("____", 5).ToArray();
 
         var @in = "_А__";

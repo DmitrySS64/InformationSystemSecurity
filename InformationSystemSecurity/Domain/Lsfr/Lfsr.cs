@@ -6,16 +6,14 @@ namespace InformationSystemSecurity.Domain.Lsfr;
 
 public class Lfsr
 {
-    //Сломан Stream
     public static LfsrResult GetNext(ulong state, ulong taps)
     {
         ulong stream = 0;
-        for (int i = 0; i < 20; i++)
+        for (var i = 0; i < 20; i++)
         {
             state = Push(state, taps);
             var bit = state & 1;
             stream.PushBit((byte)bit);
-            //stream = (stream << 1) | bit;
         }
         return new LfsrResult { State = state, Stream = stream };
     }

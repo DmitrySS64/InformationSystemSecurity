@@ -4,9 +4,9 @@ using System.Text;
 using InformationSystemSecurity.domain;
 using InformationSystemSecurity.Domain.Lsfr;
 
-namespace InformationSystemSecurity.Tools;
+namespace InformationSystemSecurity.Tools.StatsCollectors;
 
-public static class LfsrNistTests
+public static class LfsrStatsCollector
 {
     private const int DefaultSeedCount = 200;
     private const int DefaultOutputsPerSeed = 200;

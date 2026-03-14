@@ -3,7 +3,7 @@ using System.Text;
 using InformationSystemSecurity.domain;
 using InformationSystemSecurity.domain.Enums;
 
-namespace InformationSystemSecurity.Tools;
+namespace InformationSystemSecurity.Tools.StatsCollectors;
 
 public static class SpongeHashStatsCollector
 {

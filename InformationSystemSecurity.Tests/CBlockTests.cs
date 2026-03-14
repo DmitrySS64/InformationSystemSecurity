@@ -1,5 +1,6 @@
 ﻿using InformationSystemSecurity.domain;
 using InformationSystemSecurity.domain.Enums;
+using InformationSystemSecurity.Tests.Common;
 
 namespace InformationSystemSecurity.tests;
 

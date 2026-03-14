@@ -74,7 +74,7 @@ public static class Converter
         // функцию div отдельно не нужно создавать - используем C#
         var result = new StringBuilder(BlockSize);
 
-        for (int i = 0; i < BlockSize; i++)
+        for (var i = 0; i < BlockSize; i++)
         {
             var digit = (int)(num % 32);
             result.Insert(0, digit.ToChar());
@@ -145,30 +145,20 @@ public static class Converter
         return new string(result);
     }
     
-    // (см. push_reg) Вроде должно работать на уровне бинарных операций, но надо потестить
-    // Если работает, то block2bin и bin2block вроде не нужны
     public static ulong PushBit(this ref ulong num, byte bit)
     {
         num = (num << 1) | bit;
         num &= 0xFFFFFUL;
         return num;
     }
-
-    public static ulong GetBit(this ulong value, int pos)
-    {
-        return (value >> pos) & 1;
-    }
-
-    // (см. taps2bin)
+    
     public static ulong ToBinary(this int[] tapPositions)
     {
-        // todo: тут просто поставить единицы в заданных позициях и получить бинарное число
-        // 100% можно сделать в пару строк, а не как в маткаде - можно у ИИ спросить, если что
-
         ulong result = 0;
-        foreach (var position in tapPositions) {
+        foreach (var position in tapPositions) 
+        {
             var pos = position - 1;
-            if (pos >= 0 && pos < 64) 
+            if (pos is >= 0 and < 64) 
                 result |= 1UL << pos;
         }
 
@@ -177,8 +167,8 @@ public static class Converter
 
     public static string ToBinaryString(this ulong value)
     {
-        string binary = Convert.ToString((long)value, 2);
-        int padding = (4 - binary.Length % 4) % 4;
+        var binary = Convert.ToString((long)value, 2);
+        var padding = (4 - binary.Length % 4) % 4;
         binary = binary.PadLeft(binary.Length + padding, '0');
 
         return "0b" + Regex.Replace(binary, ".{4}", "$0_").TrimEnd('_');

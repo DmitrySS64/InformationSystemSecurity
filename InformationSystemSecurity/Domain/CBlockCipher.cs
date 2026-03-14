@@ -36,9 +36,8 @@ public class CBlockCipher(ICipher cipher)
 
         return compressed;
     }
-
-    //TODO: вернуть private
-    public static string Confuse(string text1, string text2)
+    
+    internal static string Confuse(string text1, string text2)
     {
         var arr1 = text1.ToNumArray();
         var arr2 = text2.ToNumArray();

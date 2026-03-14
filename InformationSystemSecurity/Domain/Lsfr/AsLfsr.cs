@@ -5,12 +5,11 @@ namespace InformationSystemSecurity.Domain.Lsfr;
 
 public class AsLfsr
 {
-    //Некорректный stream
     public static AsLfsrResult GetNext(ulong[] states, ulong[] taps)
     {
         var outputBit = 0uL;
 
-        for (int i = 0; i < 20; i++)
+        for (var i = 0; i < 20; i++)
         {
             var tmp = Push(states, taps);
 
@@ -25,7 +24,6 @@ public class AsLfsr
         };
     }
     
-    //Некорректный stream
     public static AsLfsrResult Push(ulong[] states, ulong[] taps)
     {
         if (states.Length != 3 || taps.Length != 3)
