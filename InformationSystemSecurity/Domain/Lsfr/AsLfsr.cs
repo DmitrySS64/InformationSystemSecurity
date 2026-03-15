@@ -14,7 +14,7 @@ public class AsLfsr
             var tmp = Push(states, taps);
 
             states = tmp.States;
-            outputBit.PushBit((byte)tmp.Stream);
+            outputBit.PushBitToLeft((byte)tmp.Stream);
         }
 
         return new AsLfsrResult

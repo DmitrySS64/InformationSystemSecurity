@@ -13,7 +13,7 @@ public class Lfsr
         {
             state = Push(state, taps);
             var bit = state & 1;
-            stream.PushBit((byte)bit);
+            stream.PushBitToLeft((byte)bit);
         }
         return new LfsrResult { State = state, Stream = stream };
     }
@@ -24,7 +24,7 @@ public class Lfsr
 
         var feedback = (byte)(BitOperations.PopCount(tmp) % 2);
         
-        state.PushBit(feedback);
+        state.PushBitToLeft(feedback);
 
         return state;
     }

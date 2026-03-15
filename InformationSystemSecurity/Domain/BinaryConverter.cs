@@ -4,7 +4,12 @@ namespace InformationSystemSecurity.domain;
 
 public static class BinaryConverter
 {
-    public static ulong PushBit(this ref ulong num, byte bit)
+    public static ulong Shift(this ref ulong num, int shift)
+    {
+        // TODO: см. binary_shift в ТГ
+    }
+    
+    public static ulong PushBitToLeft(this ref ulong num, byte bit)
     {
         num = (num << 1) | bit;
         num &= 0xFFFFFUL;
@@ -42,6 +47,9 @@ public static class BinaryConverter
     // см. subblocks_xor
     private static string BlockXor(string blockA, string blockB)
     {
+        if (blockA.Length != TextConverter.BlockSize || blockB.Length != TextConverter.BlockSize)
+            throw new ArgumentException($"Blocks must be {TextConverter.BlockSize} characters long.");
+
         // TODO: как и в предыдщей лр, не нужны никакие dec2bin, просто работаем с бинарными
     }
 }
