@@ -1,9 +1,13 @@
+using System.Text;
+using System.Text.RegularExpressions;
+
 namespace InformationSystemSecurity.domain;
 
-public static class Alphabet
+public static class Converter
 {
     public const string AlphabetString = "_АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЫЬЭЮЯ";
     public static int AlphabetLength => AlphabetString.Length;
+    public const int BlockSize = 4;
 
     public static int ToNum(this char c)
     {
@@ -45,6 +49,39 @@ public static class Alphabet
 
         var chars = nums.Select(ToChar).ToArray();
         return new string(chars);
+    }
+    
+    public static ulong ToNum(this string block)
+    {
+        if (block.Length != BlockSize)
+            throw new ArgumentException($"Block must be {BlockSize} characters long.");
+
+        ulong pos = 1;
+        ulong output = 0;
+
+        var tmp = block.ToNumArray();
+        for (var i = BlockSize - 1; i >= 0; i--)
+        {
+            output += pos * (ulong)tmp[i];
+            pos *= 32;
+        }
+        return output;
+    }
+    
+    public static string ToBlock(this ulong num)
+    {
+        // TODO
+        // функцию div отдельно не нужно создавать - используем C#
+        var result = new StringBuilder(BlockSize);
+
+        for (var i = 0; i < BlockSize; i++)
+        {
+            var digit = (int)(num % 32);
+            result.Insert(0, digit.ToChar());
+            num /= 32;
+        }
+
+        return result.ToString();
     }
 
     public static char AddChars(char c1, char c2)
@@ -106,5 +143,34 @@ public static class Alphabet
         }
 
         return new string(result);
+    }
+    
+    public static ulong PushBit(this ref ulong num, byte bit)
+    {
+        num = (num << 1) | bit;
+        num &= 0xFFFFFUL;
+        return num;
+    }
+    
+    public static ulong ToBinary(this int[] tapPositions)
+    {
+        ulong result = 0;
+        foreach (var position in tapPositions) 
+        {
+            var pos = position - 1;
+            if (pos is >= 0 and < 64) 
+                result |= 1UL << pos;
+        }
+
+        return result;
+    }
+
+    public static string ToBinaryString(this ulong value)
+    {
+        var binary = Convert.ToString((long)value, 2);
+        var padding = (4 - binary.Length % 4) % 4;
+        binary = binary.PadLeft(binary.Length + padding, '0');
+
+        return "0b" + Regex.Replace(binary, ".{4}", "$0_").TrimEnd('_');
     }
 }

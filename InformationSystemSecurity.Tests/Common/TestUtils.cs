@@ -1,7 +1,7 @@
 using InformationSystemSecurity.domain;
 using InformationSystemSecurity.domain.Enums;
 
-namespace InformationSystemSecurity.tests;
+namespace InformationSystemSecurity.Tests.Common;
 
 public static class TestUtils
 {
@@ -210,7 +210,7 @@ public static class TestUtils
 
     private static string GenerateRandomText(int length)
     {
-        var alphabet = Alphabet.AlphabetString;
+        var alphabet = Converter.AlphabetString;
         var result = new char[length];
         for (var i = 0; i < length; i++)
         {
@@ -248,7 +248,7 @@ public static class TestUtils
 
             while (newChar == originalChar)
             {
-                newChar = Alphabet.AlphabetString[_random.Next(Alphabet.AlphabetLength)];
+                newChar = Converter.AlphabetString[_random.Next(Converter.AlphabetLength)];
             }
 
             var modified = baseText.ToCharArray();
@@ -277,8 +277,8 @@ public static class TestUtils
             var numA = chars[indexA].ToNum();
             var numB = chars[indexB].ToNum();
 
-            numA = (numA - 1 + Alphabet.AlphabetLength) % Alphabet.AlphabetLength;
-            numB = (numB + 1) % Alphabet.AlphabetLength;
+            numA = (numA - 1 + Converter.AlphabetLength) % Converter.AlphabetLength;
+            numB = (numB + 1) % Converter.AlphabetLength;
 
             chars[indexA] = numA.ToChar();
             chars[indexB] = numB.ToChar();
@@ -339,37 +339,37 @@ public static class TestUtils
         [
             new[] { "ХОРОШО_БЫТЬ_ВАМИ" },
             CompressMode.Out16,
-            "ЯМЫШСХБ_ГФАМЭ_ЛЗ"
+            "РИОМИЗ_ЬЕШНЙЗНОЖ"
         ];
         yield return
         [
             new[] { "ХОРОШО_БЫТЬ_ВАМИ" },
             CompressMode.Out8,
-            "РВЭШАФМФ"
+            "ЩРОИНЖЭР"
         ];
         yield return
         [
-            new[] { "ХОРОШО_БЫТЬ_ВАМИ", "КЬЕРКЕГОР_ПРОПАЛ" },
+            new[] { "ЧЕРНЫЙ_АББАТ_ПОЛ", "ХОРОШО_БЫТЬ_ВАМИ", "КЬЕРКЕГОР_ПРОПАЛ" },
             CompressMode.Out4,
-            "ЕЗЦР"
+            "ТНЗЭ"
         ];
         yield return
         [
             new[] { entityStr, entityStr, entityStr, entityStr},
             CompressMode.Out4,
-            "ЭЧЧЯ"
+            "Ч_ЕК"
         ];
         yield return
         [
             new[] { entityStr, entityStr, entityStr, entityStr},
             CompressMode.Out8,
-            "ЦНУЬЩХЬЭ"
+            "ШИНТАИЗЗ"
         ];
         yield return
         [
             new[] { entityStr, entityStr, entityStr, entityStr},
             CompressMode.Out16,
-            "ЫЕРФЬЗВЖРЖЙЯИОСЮ"
+            "БКЧЗЦЮХКЫЛТШЕЭФО"
         ];
     }
 

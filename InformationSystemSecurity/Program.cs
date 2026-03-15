@@ -1,15 +1,24 @@
-﻿using InformationSystemSecurity.Tools;
+﻿using InformationSystemSecurity.Tools.StatsCollectors;
 
 const int collectN = 10000;
 const string collectSeed = "САЛАМКА_БАЛАЛАМКА_БОРИСКА_СОСИСКА";
 const char collectTarget = 'С';
 const int collectPos = 7;
+const int asLfsrMonobitSeed = 7;
 
-string[] cmdArgs = Environment.GetCommandLineArgs();
+var cmdArgs = Environment.GetCommandLineArgs();
 
 if (Array.Exists(cmdArgs, a => a == "--collect-hash-stats"))
 {
     SpongeHashStatsCollector.CollectAndPrintStats(collectSeed, collectN, collectTarget, collectPos);
+}
+else if (Array.Exists(cmdArgs, a => a == "--collect-aslfsr-monobit"))
+{
+    LfsrStatsCollector.CollectAndPrintAsLfsrMonobitStats(asLfsrMonobitSeed);
+}
+else if (Array.Exists(cmdArgs, a => a == "--collect-aslfsr-max-ones"))
+{
+    LfsrStatsCollector.CollectAndPrintAsLfsrMaxOnesStats(asLfsrMonobitSeed);
 }
 else
 {

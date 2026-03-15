@@ -1,4 +1,3 @@
-using System.Runtime.CompilerServices;
 using System.Text;
 using InformationSystemSecurity.domain.Enums;
 
@@ -32,7 +31,7 @@ public class Caesar(CaesarMode mode = CaesarMode.Core) : ICipher
         var keyChar = key[0];
         var chars = new char[text.Length];
         for (var i = 0; i < text.Length; i++)
-            chars[i] = Alphabet.AddChars(text[i], keyChar);
+            chars[i] = Converter.AddChars(text[i], keyChar);
         return new string(chars);
     }
 
@@ -41,7 +40,7 @@ public class Caesar(CaesarMode mode = CaesarMode.Core) : ICipher
         var keyChar = key[0];
         var chars = new char[text.Length];
         for (var i = 0; i < text.Length; i++)
-            chars[i] = Alphabet.SubtractChars(text[i], keyChar);
+            chars[i] = Converter.SubtractChars(text[i], keyChar);
         return new string(chars);
     }
 
@@ -54,8 +53,8 @@ public class Caesar(CaesarMode mode = CaesarMode.Core) : ICipher
         {
             var currentTextChar = text[i];
             var keyPosition = i % key.Length;
-            keyState = Alphabet.AddChars(keyState, key[keyPosition]);
-            result.Append(Alphabet.AddChars(currentTextChar, keyState));
+            keyState = Converter.AddChars(keyState, key[keyPosition]);
+            result.Append(Converter.AddChars(currentTextChar, keyState));
         }
 
         return result.ToString();
@@ -70,8 +69,8 @@ public class Caesar(CaesarMode mode = CaesarMode.Core) : ICipher
         {
             var currentTextChar = text[i];
             var keyPosition = i % key.Length;
-            keyState = Alphabet.AddChars(keyState, key[keyPosition]);
-            result.Append(Alphabet.SubtractChars(currentTextChar, keyState));
+            keyState = Converter.AddChars(keyState, key[keyPosition]);
+            result.Append(Converter.SubtractChars(currentTextChar, keyState));
         }
 
         return result.ToString();
@@ -82,24 +81,28 @@ public class Caesar(CaesarMode mode = CaesarMode.Core) : ICipher
         if (primeText.Length != 16 || auxText.Length != 16)
             throw new ArgumentException("Each text must be 16 characters long.");
 
-        int[] C1 = [1, 1, -1];
-        int[] C2 = [4, 3, 2, 1, -1, -2, -3, -4];
+        int[] C1 = [1, -1, 1, -1, 1, -1, 1];
+        int[] C2 = [1, -1, 1, -1, 1];
 
         var aux = auxText.ToNumArray();
         var prime = primeText.ToNumArray();
         var tmp = 0;
-        var c1 = prime[2] % 3;
-        var c2 = prime[10 + c1] % 8;
-        var c3 = prime[c2 + 3] % 16;
+        var t1 = 0;
+        foreach (var i in aux) { 
+            t1 += i;
+        }
+        var c1 = t1 % 7;
+        var c2 = prime[2 * c1 + 1] % 5;
+        var c3 = (prime[2 * c2] + prime[2 * c1]) % 16;
         var arr = new int[16];
 
-        for (var i = 0; i < 32; i++) 
+        for (var i = 0; i < 16; i++)
         {
-            var q = (c1 + i) % 3;
-            var j = (c2 + i) % 8;
+            var q = (c1 + i) % 7;
+            var j = (c2 + i) % 5;
             var p = (c3 + i) % 16;
             var l = i % 16;
-            tmp = (tmp + 64 + prime[p] + C1[q] * aux[l] + C2[j]) % 32;
+            tmp = (tmp + 64 + prime[p] + C1[q] * C2[j] * aux[l]) % 32;
             arr[l] = tmp;
         }
 

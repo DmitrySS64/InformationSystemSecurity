@@ -22,10 +22,10 @@ public class CBlockCipher(ICipher cipher)
             if (textArray[i].Length != 16)
                 throw new ArgumentException("Each string must be 16 characters long.");
 
-            C[i] = Alphabet.AddTexts(C[i], textArray[i]);
+            C[i] = Converter.AddTexts(C[i], textArray[i]);
         }
 
-        C[1] = Alphabet.AddTexts(C[1], textArray[0]);
+        C = MixInputs(C);
 
         var part1 = cipher.Encrypt(C[0], C[2]);
         var part2 = cipher.Encrypt(C[3], C[1]);
@@ -36,9 +36,8 @@ public class CBlockCipher(ICipher cipher)
 
         return compressed;
     }
-
-    //TODO: вернуть private
-    public static string Confuse(string text1, string text2)
+    
+    internal static string Confuse(string text1, string text2)
     {
         var arr1 = text1.ToNumArray();
         var arr2 = text2.ToNumArray();
@@ -49,11 +48,15 @@ public class CBlockCipher(ICipher cipher)
                 ? (arr1[i] + i) % 32
                 : (arr2[i] + i) % 32;
         }
-        return arr1.ToText();
+
+        var tmp = arr1.ToText();
+        var t1 = Converter.AddTexts(tmp, text1);
+        var t2 = Converter.AddTexts(t1, text2);
+        return t2;
     }
 
-    //TODO: вернуть private
-    public static string Compress(string text, CompressMode mode)
+    
+    private static string Compress(string text, CompressMode mode)
     {
         if (mode == CompressMode.Out16)
             return text;
@@ -68,15 +71,31 @@ public class CBlockCipher(ICipher cipher)
 
         return mode switch
         {
-            CompressMode.Out8 => Alphabet.AddTexts(
+            CompressMode.Out8 => Converter.AddTexts(
                 string.Concat(a1, a3), 
                 string.Concat(a2, a4)
             ),
-            CompressMode.Out4 => Alphabet.AddTexts(
-                Alphabet.SubtractTexts(a1, a3), 
-                Alphabet.SubtractTexts(a2, a4)
+            CompressMode.Out4 => Converter.AddTexts(
+                Converter.SubtractTexts(a1, a3),
+                Converter.SubtractTexts(a2, a4)
             ),
             _ => throw new ArgumentException("Invalid compression mode.")
         };
+    }
+
+    private static string[] MixInputs(string[] textArray)
+    {
+        var in1 = textArray[0];
+        var in2 = textArray[1];
+        var in3 = textArray[2];
+        var in4 = textArray[3];
+
+        var out1 = Converter.AddTexts(in1, in2);
+        var out2 = Converter.SubtractTexts(in1, in2);
+        var out3 = Converter.AddTexts(out2, Converter.AddTexts(in3, in4));
+        var out4 = Converter.AddTexts(out1, Converter.SubtractTexts(in3, in4));
+
+
+        return [ out1, out2, out3, out4 ];
     }
 }

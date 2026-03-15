@@ -3,7 +3,7 @@ using System.Text;
 using InformationSystemSecurity.domain;
 using InformationSystemSecurity.domain.Enums;
 
-namespace InformationSystemSecurity.Tools;
+namespace InformationSystemSecurity.Tools.StatsCollectors;
 
 public static class SpongeHashStatsCollector
 {
@@ -14,8 +14,8 @@ public static class SpongeHashStatsCollector
             throw new ArgumentException("n must be positive", nameof(n));
         }
 
-        var alphabet = Alphabet.AlphabetString;
-        var alphaLen = Alphabet.AlphabetLength;
+        var alphabet = Converter.AlphabetString;
+        var alphaLen = Converter.AlphabetLength;
 
         const int expectedHashLen = 64;
 
