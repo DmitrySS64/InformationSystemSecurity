@@ -14,8 +14,8 @@ public static class SpongeHashStatsCollector
             throw new ArgumentException("n must be positive", nameof(n));
         }
 
-        var alphabet = Converter.AlphabetString;
-        var alphaLen = Converter.AlphabetLength;
+        var alphabet = TextConverter.AlphabetString;
+        var alphaLen = TextConverter.AlphabetLength;
 
         const int expectedHashLen = 64;
 

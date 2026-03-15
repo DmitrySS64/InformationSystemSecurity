@@ -2,20 +2,20 @@
 
 namespace InformationSystemSecurity.tests;
 
-public class ConverterTests
+public class TextConverterTests
 {
     [Fact]
     public void Text2Array_Then_Array2Text_ReturnsOriginalAlphabet()
     {
         // Arrange
-        var alphabetString = Converter.AlphabetString;
+        var alphabetString = TextConverter.AlphabetString;
 
         // Act
         var a = alphabetString.ToNumArray();
         var b = a.ToText();
 
         // Assert
-        Assert.Equal(Converter.AlphabetString, b);
+        Assert.Equal(TextConverter.AlphabetString, b);
     }
 
     [Fact]
@@ -27,7 +27,7 @@ public class ConverterTests
         const char expected = 'Е';
 
         // Act
-        var result = Converter.AddChars(a, b);
+        var result = TextConverter.AddChars(a, b);
 
         // Assert
         Assert.Equal(expected, result);
@@ -42,7 +42,7 @@ public class ConverterTests
         const char c = 'Е';
 
         // Act
-        var result = Converter.SubtractChars(c, b);
+        var result = TextConverter.SubtractChars(c, b);
 
         // Assert
         Assert.Equal(expected, result);
@@ -57,7 +57,7 @@ public class ConverterTests
         const string expected = "ИЖЬЯМАНЕ";
 
         // Act
-        var result = Converter.AddTexts(text1, text2);
+        var result = TextConverter.AddTexts(text1, text2);
 
         // Assert
         Assert.Equal(expected, result);
@@ -72,7 +72,7 @@ public class ConverterTests
         const string expected = "ЕЖИК____";
 
         // Act
-        var result = Converter.SubtractTexts(cipherText, text2);
+        var result = TextConverter.SubtractTexts(cipherText, text2);
 
         // Assert
         Assert.Equal(expected, result);
@@ -88,7 +88,7 @@ public class ConverterTests
         const string expected = "В_ТУМАНЕ";
 
         // Act
-        var result = Converter.SubtractTexts(cipherText, text2);
+        var result = TextConverter.SubtractTexts(cipherText, text2);
 
         // Assert
         Assert.Equal(expected, result);
@@ -104,7 +104,7 @@ public class ConverterTests
         const string expected = "Э_МЛТЯСЩ";
 
         // Act
-        var result = Converter.SubtractTexts(cipherText, text2);
+        var result = TextConverter.SubtractTexts(cipherText, text2);
 
         // Assert
         Assert.Equal(expected, result);

@@ -31,7 +31,7 @@ public class Caesar(CaesarMode mode = CaesarMode.Core) : ICipher
         var keyChar = key[0];
         var chars = new char[text.Length];
         for (var i = 0; i < text.Length; i++)
-            chars[i] = Converter.AddChars(text[i], keyChar);
+            chars[i] = TextConverter.AddChars(text[i], keyChar);
         return new string(chars);
     }
 
@@ -40,7 +40,7 @@ public class Caesar(CaesarMode mode = CaesarMode.Core) : ICipher
         var keyChar = key[0];
         var chars = new char[text.Length];
         for (var i = 0; i < text.Length; i++)
-            chars[i] = Converter.SubtractChars(text[i], keyChar);
+            chars[i] = TextConverter.SubtractChars(text[i], keyChar);
         return new string(chars);
     }
 
@@ -53,8 +53,8 @@ public class Caesar(CaesarMode mode = CaesarMode.Core) : ICipher
         {
             var currentTextChar = text[i];
             var keyPosition = i % key.Length;
-            keyState = Converter.AddChars(keyState, key[keyPosition]);
-            result.Append(Converter.AddChars(currentTextChar, keyState));
+            keyState = TextConverter.AddChars(keyState, key[keyPosition]);
+            result.Append(TextConverter.AddChars(currentTextChar, keyState));
         }
 
         return result.ToString();
@@ -69,8 +69,8 @@ public class Caesar(CaesarMode mode = CaesarMode.Core) : ICipher
         {
             var currentTextChar = text[i];
             var keyPosition = i % key.Length;
-            keyState = Converter.AddChars(keyState, key[keyPosition]);
-            result.Append(Converter.SubtractChars(currentTextChar, keyState));
+            keyState = TextConverter.AddChars(keyState, key[keyPosition]);
+            result.Append(TextConverter.SubtractChars(currentTextChar, keyState));
         }
 
         return result.ToString();

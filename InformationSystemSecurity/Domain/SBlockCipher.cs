@@ -30,9 +30,9 @@ public class SBlockCipher
         
         var result = new StringBuilder();
 
-        for (var i = 0; i < text.Length; i += Converter.BlockSize)
+        for (var i = 0; i < text.Length; i += TextConverter.BlockSize)
         {
-            var block = text.Substring(i, Converter.BlockSize);
+            var block = text.Substring(i, TextConverter.BlockSize);
             
             if (_merge)
                 block = MergeBlock(block, _key); // Первый мёрдж
@@ -58,9 +58,9 @@ public class SBlockCipher
         
         var result = new StringBuilder();
 
-        for (var i = 0; i < text.Length; i += Converter.BlockSize)
+        for (var i = 0; i < text.Length; i += TextConverter.BlockSize)
         {
-            var block = text.Substring(i, Converter.BlockSize);
+            var block = text.Substring(i, TextConverter.BlockSize);
             
             if (_merge)
                 block = MergeBlock(block, _key, reverse: true); // Первый мёрдж
@@ -82,7 +82,7 @@ public class SBlockCipher
     
     public static string MergeBlock(string blockIn, string key, bool reverse = false)
     {
-        if (blockIn.Length != Converter.BlockSize)
+        if (blockIn.Length != TextConverter.BlockSize)
             throw new ArgumentException("input_error");
         
         int[] m = [0, 1, 2, 3];
@@ -134,7 +134,7 @@ public class SBlockCipher
         var keyTmp = "";
         var keyExit = _key + _key; // удвоенный ключ
 
-        for (var i = 0; i < Converter.BlockSize * 2; i++)
+        for (var i = 0; i < TextConverter.BlockSize * 2; i++)
         {
             var slice = keyExit.Substring(i * 2, 4);
 
@@ -143,13 +143,13 @@ public class SBlockCipher
             var bTmp = slice.ToNumArray();
 
             // Генерация нового блока
-            for (var k = 0; k < Converter.BlockSize; k++)
+            for (var k = 0; k < TextConverter.BlockSize; k++)
             {
                 var x = (2 * i + k) % 10;
                 var aTmpNum = (64 + k + _shiftVector[x] * bTmp[k]) % 32;
                 aTmp.Append(aTmpNum.ToChar());
             }
-            keyTmp = Converter.AddTexts(keyTmp, aTmp.ToString());
+            keyTmp = TextConverter.AddTexts(keyTmp, aTmp.ToString());
         }
 
         return keyTmp;
@@ -157,7 +157,7 @@ public class SBlockCipher
     
     private static void ValidateInput(string text)
     {
-        if (text.Length % Converter.BlockSize != 0)
-            throw new ArgumentException($"Text length must be a multiple of {Converter.BlockSize} characters.");
+        if (text.Length % TextConverter.BlockSize != 0)
+            throw new ArgumentException($"Text length must be a multiple of {TextConverter.BlockSize} characters.");
     }
 }

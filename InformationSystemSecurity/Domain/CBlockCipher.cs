@@ -22,7 +22,7 @@ public class CBlockCipher(ICipher cipher)
             if (textArray[i].Length != 16)
                 throw new ArgumentException("Each string must be 16 characters long.");
 
-            C[i] = Converter.AddTexts(C[i], textArray[i]);
+            C[i] = TextConverter.AddTexts(C[i], textArray[i]);
         }
 
         C = MixInputs(C);
@@ -50,8 +50,8 @@ public class CBlockCipher(ICipher cipher)
         }
 
         var tmp = arr1.ToText();
-        var t1 = Converter.AddTexts(tmp, text1);
-        var t2 = Converter.AddTexts(t1, text2);
+        var t1 = TextConverter.AddTexts(tmp, text1);
+        var t2 = TextConverter.AddTexts(t1, text2);
         return t2;
     }
 
@@ -71,13 +71,13 @@ public class CBlockCipher(ICipher cipher)
 
         return mode switch
         {
-            CompressMode.Out8 => Converter.AddTexts(
+            CompressMode.Out8 => TextConverter.AddTexts(
                 string.Concat(a1, a3), 
                 string.Concat(a2, a4)
             ),
-            CompressMode.Out4 => Converter.AddTexts(
-                Converter.SubtractTexts(a1, a3),
-                Converter.SubtractTexts(a2, a4)
+            CompressMode.Out4 => TextConverter.AddTexts(
+                TextConverter.SubtractTexts(a1, a3),
+                TextConverter.SubtractTexts(a2, a4)
             ),
             _ => throw new ArgumentException("Invalid compression mode.")
         };
@@ -90,10 +90,10 @@ public class CBlockCipher(ICipher cipher)
         var in3 = textArray[2];
         var in4 = textArray[3];
 
-        var out1 = Converter.AddTexts(in1, in2);
-        var out2 = Converter.SubtractTexts(in1, in2);
-        var out3 = Converter.AddTexts(out2, Converter.AddTexts(in3, in4));
-        var out4 = Converter.AddTexts(out1, Converter.SubtractTexts(in3, in4));
+        var out1 = TextConverter.AddTexts(in1, in2);
+        var out2 = TextConverter.SubtractTexts(in1, in2);
+        var out3 = TextConverter.AddTexts(out2, TextConverter.AddTexts(in3, in4));
+        var out4 = TextConverter.AddTexts(out1, TextConverter.SubtractTexts(in3, in4));
 
 
         return [ out1, out2, out3, out4 ];

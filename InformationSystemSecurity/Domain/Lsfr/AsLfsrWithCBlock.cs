@@ -70,9 +70,9 @@ public class AsLfsrWithCBlock
 
             for (var j = 0; j < 4; j++)
             {
-                currentValue = Converter.AddTexts(currentValue, array[i]);
+                currentValue = TextConverter.AddTexts(currentValue, array[i]);
                 tempBuilder.Append(_cBlock.Encrypt([currentValue, secret], CompressMode.Out4));
-                currentValue = Converter.AddTexts(currentValue, tempBuilder.ToString());
+                currentValue = TextConverter.AddTexts(currentValue, tempBuilder.ToString());
             }
 
             init[i] = tempBuilder.ToString().Substring(4, 12);

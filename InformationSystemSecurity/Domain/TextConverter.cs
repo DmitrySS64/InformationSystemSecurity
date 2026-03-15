@@ -1,9 +1,8 @@
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace InformationSystemSecurity.domain;
 
-public static class Converter
+public static class TextConverter
 {
     public const string AlphabetString = "_АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЫЬЭЮЯ";
     public static int AlphabetLength => AlphabetString.Length;
@@ -70,8 +69,6 @@ public static class Converter
     
     public static string ToBlock(this ulong num)
     {
-        // TODO
-        // функцию div отдельно не нужно создавать - используем C#
         var result = new StringBuilder(BlockSize);
 
         for (var i = 0; i < BlockSize; i++)
@@ -143,34 +140,5 @@ public static class Converter
         }
 
         return new string(result);
-    }
-    
-    public static ulong PushBit(this ref ulong num, byte bit)
-    {
-        num = (num << 1) | bit;
-        num &= 0xFFFFFUL;
-        return num;
-    }
-    
-    public static ulong ToBinary(this int[] tapPositions)
-    {
-        ulong result = 0;
-        foreach (var position in tapPositions) 
-        {
-            var pos = position - 1;
-            if (pos is >= 0 and < 64) 
-                result |= 1UL << pos;
-        }
-
-        return result;
-    }
-
-    public static string ToBinaryString(this ulong value)
-    {
-        var binary = Convert.ToString((long)value, 2);
-        var padding = (4 - binary.Length % 4) % 4;
-        binary = binary.PadLeft(binary.Length + padding, '0');
-
-        return "0b" + Regex.Replace(binary, ".{4}", "$0_").TrimEnd('_');
     }
 }
