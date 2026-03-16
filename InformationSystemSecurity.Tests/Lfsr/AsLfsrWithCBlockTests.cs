@@ -31,4 +31,25 @@ public class AsLfsrWithCBlockTests
         Assert.Equal(expectedState00.ToBinaryString(), result.State[0][0].ToBinaryString());
         Assert.Equal(expectedStream, result.Stream);
     }
+    
+    [Fact]
+    public void ProduceRoundKeys_ReturnsExpectedKeys()
+    {
+        const string key = "ПОЛИМАТ_ТЕХНОБОГ";
+        var expected = new[] 
+        {
+            "ФУБЧЖЙЗХЛ_ОЭУРВО",
+            "ЯЯРСКПЬВУСЫВЧГГД",
+            "ДКЙЛОС_С_ЕОЗФСИБ",
+            "МУМФОТМОЯДЕЦЦУЧЛ",
+            "БИХЖЩФЗЦРИУАЭАДЛ",
+            "БЬЙЬЮЯФРЮЗЯ_ТГФЕ"
+        };
+
+        var lfsr = new AsLfsrWithCBlock(key);
+        
+        var result = lfsr.ProduceRoundKeys(6);
+
+        Assert.Equal(expected, result);
+    }
 }

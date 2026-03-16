@@ -210,7 +210,7 @@ public static class TestUtils
 
     private static string GenerateRandomText(int length)
     {
-        var alphabet = Converter.AlphabetString;
+        var alphabet = TextConverter.AlphabetString;
         var result = new char[length];
         for (var i = 0; i < length; i++)
         {
@@ -248,7 +248,7 @@ public static class TestUtils
 
             while (newChar == originalChar)
             {
-                newChar = Converter.AlphabetString[_random.Next(Converter.AlphabetLength)];
+                newChar = TextConverter.AlphabetString[_random.Next(TextConverter.AlphabetLength)];
             }
 
             var modified = baseText.ToCharArray();
@@ -277,8 +277,8 @@ public static class TestUtils
             var numA = chars[indexA].ToNum();
             var numB = chars[indexB].ToNum();
 
-            numA = (numA - 1 + Converter.AlphabetLength) % Converter.AlphabetLength;
-            numB = (numB + 1) % Converter.AlphabetLength;
+            numA = (numA - 1 + TextConverter.AlphabetLength) % TextConverter.AlphabetLength;
+            numB = (numB + 1) % TextConverter.AlphabetLength;
 
             chars[indexA] = numA.ToChar();
             chars[indexB] = numB.ToChar();

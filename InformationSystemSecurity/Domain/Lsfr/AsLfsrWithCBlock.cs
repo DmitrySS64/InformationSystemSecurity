@@ -13,11 +13,12 @@ public class AsLfsrWithCBlock
     private readonly CBlockCipher _cBlock;
     
     // Инициализация вынесена в консутруктор
-    public AsLfsrWithCBlock(string seed, ulong[][] taps)
+    public AsLfsrWithCBlock(string seed, ulong[][]? taps = null)
     {
         if (seed.Length != 16)
             throw new ArgumentException("Seed must be 16 characters long");
-        
+        if (taps == null) taps = GetDefaultTaps();
+
         _taps = taps;
         _cBlock = new CBlockCipher(new Caesar(CaesarMode.Core));
         _state = InitState(seed);
@@ -26,6 +27,7 @@ public class AsLfsrWithCBlock
 
     public AsLfsrWithCBlockResult GetNext()
     {
+        _stream = "";
         for (var j = 0; j < 4; j++)
         {
             var tmp = 0UL;
@@ -44,6 +46,15 @@ public class AsLfsrWithCBlock
         }
 
         return new AsLfsrWithCBlockResult(_state, _stream);
+    }
+    
+    public string[] ProduceRoundKeys(int resultKeyCount)
+    {
+        var rawResults = new AsLfsrWithCBlockResult[resultKeyCount];
+        for (var i = 0; i < resultKeyCount; i++)
+            rawResults[i] = GetNext();
+
+        return rawResults.Select(x => x.Stream).ToArray();
     }
     
     private ulong[][] InitState(string seed)
@@ -70,9 +81,9 @@ public class AsLfsrWithCBlock
 
             for (var j = 0; j < 4; j++)
             {
-                currentValue = Converter.AddTexts(currentValue, array[i]);
+                currentValue = TextConverter.AddTexts(currentValue, array[i]);
                 tempBuilder.Append(_cBlock.Encrypt([currentValue, secret], CompressMode.Out4));
-                currentValue = Converter.AddTexts(currentValue, tempBuilder.ToString());
+                currentValue = TextConverter.AddTexts(currentValue, tempBuilder.ToString());
             }
 
             init[i] = tempBuilder.ToString().Substring(4, 12);
@@ -90,5 +101,19 @@ public class AsLfsrWithCBlock
         }
 
         return state;
+    }
+    
+    internal static ulong[][] GetDefaultTaps()
+    {
+        var first = new[] { 19, 18 }.ToBinary();
+        var second = new[] { 18, 7 }.ToBinary();
+
+        return 
+        [
+            [first, second, new[] { 17, 3 }.ToBinary()],
+            [first, second, new[] { 16, 14, 13, 11 }.ToBinary()],
+            [first, second, new[] { 15, 13, 12, 10 }.ToBinary()],
+            [first, second, new[] { 14, 5, 3, 1 }.ToBinary()]
+        ];
     }
 }

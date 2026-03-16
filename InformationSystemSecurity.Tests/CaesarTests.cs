@@ -111,8 +111,8 @@ public class CaesarTests
     {
         var caesar = new Caesar(mode: CaesarMode.Simple);
 
-        var sumCipher = Converter.AddTexts(caesar.Encrypt(textA, key), caesar.Encrypt(textB, key));
-        var sumPlain = Converter.AddTexts(textA, textB);
+        var sumCipher = TextConverter.AddTexts(caesar.Encrypt(textA, key), caesar.Encrypt(textB, key));
+        var sumPlain = TextConverter.AddTexts(textA, textB);
         var cipherSumPlain = caesar.Encrypt(sumPlain, key);
 
         Assert.NotEqual(sumCipher, cipherSumPlain);
@@ -149,8 +149,8 @@ public class CaesarTests
     {
         var caesar = new Caesar(mode: CaesarMode.Simple);
 
-        var sumCipher = Converter.AddTexts(caesar.Encrypt(plainText, key1), caesar.Encrypt(plainText, key2));
-        var keySum = Converter.AddTexts(key1, key2);
+        var sumCipher = TextConverter.AddTexts(caesar.Encrypt(plainText, key1), caesar.Encrypt(plainText, key2));
+        var keySum = TextConverter.AddTexts(key1, key2);
         var cipherKeySum = caesar.Encrypt(plainText, keySum);
 
         Assert.NotEqual(sumCipher, cipherKeySum);
@@ -227,8 +227,8 @@ public class CaesarTests
     {
         var caesar = new Caesar(mode: CaesarMode.Poly);
 
-        var sumCipher = Converter.AddTexts(caesar.Encrypt(textA, key), caesar.Encrypt(textB, key));
-        var sumPlain = Converter.AddTexts(textA, textB);
+        var sumCipher = TextConverter.AddTexts(caesar.Encrypt(textA, key), caesar.Encrypt(textB, key));
+        var sumPlain = TextConverter.AddTexts(textA, textB);
         var cipherSumPlain = caesar.Encrypt(sumPlain, key);
 
         Assert.NotEqual(sumCipher, cipherSumPlain);
@@ -266,8 +266,8 @@ public class CaesarTests
     {
         var caesar = new Caesar(mode: CaesarMode.Poly);
 
-        var sumCipher = Converter.AddTexts(caesar.Encrypt(plainText, key1), caesar.Encrypt(plainText, key2));
-        var keySum = Converter.AddTexts(key1, key2);
+        var sumCipher = TextConverter.AddTexts(caesar.Encrypt(plainText, key1), caesar.Encrypt(plainText, key2));
+        var keySum = TextConverter.AddTexts(key1, key2);
         var cipherKeySum = caesar.Encrypt(plainText, keySum);
 
         Assert.NotEqual(sumCipher, cipherKeySum);
@@ -408,8 +408,8 @@ public class CaesarTests
     {
         var sBlockCipher = new SBlockCipher(new Caesar(mode: CaesarMode.Poly), key, roundKey: true, merge: true);
 
-        var sumCipher = Converter.AddTexts(sBlockCipher.Encrypt(textA), sBlockCipher.Encrypt(textB));
-        var sumPlain = Converter.AddTexts(textA, textB);
+        var sumCipher = TextConverter.AddTexts(sBlockCipher.Encrypt(textA), sBlockCipher.Encrypt(textB));
+        var sumPlain = TextConverter.AddTexts(textA, textB);
         var cipherSumPlain = sBlockCipher.Encrypt(sumPlain);
 
         Assert.NotEqual(sumCipher, cipherSumPlain);
@@ -449,8 +449,8 @@ public class CaesarTests
         var cipher1 = new SBlockCipher(new Caesar(mode: CaesarMode.Poly), key1, roundKey: true, merge: true);
         var cipher2 = new SBlockCipher(new Caesar(mode: CaesarMode.Poly), key2, roundKey: true, merge: true);
 
-        var sumCipher = Converter.AddTexts(cipher1.Encrypt(plainText), cipher2.Encrypt(plainText));
-        var keySum = Converter.AddTexts(key1, key2);
+        var sumCipher = TextConverter.AddTexts(cipher1.Encrypt(plainText), cipher2.Encrypt(plainText));
+        var keySum = TextConverter.AddTexts(key1, key2);
         var cipherKeySum = new SBlockCipher(new Caesar(mode: CaesarMode.Poly), keySum, roundKey: true, merge: true).Encrypt(plainText);
 
         Assert.NotEqual(sumCipher, cipherKeySum);
@@ -492,8 +492,8 @@ public class CaesarTests
     {
         var sBlockCipher = new SBlockCipher(new Caesar(mode: CaesarMode.Poly), key, roundKey: true, merge: false);
 
-        var sumCipher = Converter.AddTexts(sBlockCipher.Encrypt(textA), sBlockCipher.Encrypt(textB));
-        var sumPlain = Converter.AddTexts(textA, textB);
+        var sumCipher = TextConverter.AddTexts(sBlockCipher.Encrypt(textA), sBlockCipher.Encrypt(textB));
+        var sumPlain = TextConverter.AddTexts(textA, textB);
         var cipherSumPlain = sBlockCipher.Encrypt(sumPlain);
 
         Assert.NotEqual(sumCipher, cipherSumPlain);
@@ -533,8 +533,8 @@ public class CaesarTests
         var cipher1 = new SBlockCipher(new Caesar(mode: CaesarMode.Poly), key1, roundKey: true, merge: false);
         var cipher2 = new SBlockCipher(new Caesar(mode: CaesarMode.Poly), key2, roundKey: true, merge: false);
 
-        var sumCipher = Converter.AddTexts(cipher1.Encrypt(plainText), cipher2.Encrypt(plainText));
-        var keySum = Converter.AddTexts(key1, key2);
+        var sumCipher = TextConverter.AddTexts(cipher1.Encrypt(plainText), cipher2.Encrypt(plainText));
+        var keySum = TextConverter.AddTexts(key1, key2);
         var cipherKeySum = new SBlockCipher(new Caesar(mode: CaesarMode.Poly), keySum, roundKey: true, merge: false).Encrypt(plainText);
 
         Assert.NotEqual(sumCipher, cipherKeySum);

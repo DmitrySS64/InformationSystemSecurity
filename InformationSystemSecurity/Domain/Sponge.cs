@@ -7,7 +7,7 @@ public class Sponge(ICipher cipher)
 {
     private readonly CBlockCipher _blockCipher = new CBlockCipher(cipher);
     
-    //TODO: починить 
+
     public string GetHash(string message)
     {
         var state = new string[5][];
@@ -46,20 +46,20 @@ public class Sponge(ICipher cipher)
     
     public string[][] Absorb(string[][] inState, string block)
     {
-        if (block.Length != Converter.BlockSize)
-            throw new ArgumentException($"Block must be {Converter.BlockSize} characters long.");
+        if (block.Length != TextConverter.BlockSize)
+            throw new ArgumentException($"Block must be {TextConverter.BlockSize} characters long.");
 
         var state = CopyState(inState);
         var string1 = string.Concat(block, state[0][0], block, state[0][0]);
 
         var X = new string[5];
 
-        for (var i = 0; i < 5; i++)
+        for (var i = 0; i < 4; i++)
         {
             X[i] = "____";
             for (var j = 0; j < 5; j++)
             {
-                X[i] = Converter.AddTexts(X[i], state[i][j]);
+                X[i] = TextConverter.AddTexts(X[i], state[i][j]);
             }
         }
         var string2 = string.Concat(X[0], X[1], X[2], X[3]);
@@ -80,7 +80,7 @@ public class Sponge(ICipher cipher)
             X[i] = "____";
             for (var j = 0; j < 5; j++)
             {
-                X[i] = Converter.AddTexts(X[i], state[i][j]);
+                X[i] = TextConverter.AddTexts(X[i], state[i][j]);
             }
         }
 
@@ -104,13 +104,13 @@ public class Sponge(ICipher cipher)
             var X = "____";
 
             for (var j = 0; j < 5; j++)
-                X = Converter.AddTexts(X, state[j][i]);
+                X = TextConverter.AddTexts(X, state[j][i]);
             
             var q = (i + 1) % 5;
             for (var j = 0; j < 5; j++)
             {
-                var tmp = Converter.AddTexts(X, state[j][q]);
-                state[j][q] = Converter.SubtractTexts(tmp, state[j][i]);
+                var tmp = TextConverter.AddTexts(X, state[j][q]);
+                state[j][q] = TextConverter.SubtractTexts(tmp, state[j][i]);
             }
         }
         return state;
