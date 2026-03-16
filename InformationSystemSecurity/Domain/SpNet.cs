@@ -9,7 +9,7 @@ public class SpNet
 
     public SpNet()
     {
-        _sBlock = new SBlockCipher(new Caesar(Enums.CaesarMode.Core), new string('А', 16), true, true);
+        _sBlock = new SBlockCipher(new Caesar(Enums.CaesarMode.Poly), new string('А', 16), true, true);
     }
 
     public string Encrypt(string text, string[] keySet, int roundCount)

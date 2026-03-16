@@ -22,7 +22,7 @@ public class SpNetTests
     {
         var _spNet = new domain.SpNet();
 
-        var result = _spNet.RoundInverse(@in, key, round);
+        var result = _spNet.RoundForward(@in, key, round);
         result = _spNet.RoundInverse(result, key, round);
 
         Assert.Equal(@in, result);
@@ -32,21 +32,28 @@ public class SpNetTests
     public void ProduceRoundKeysLfsrSet()
     {
         var key = "ПОЛИМАТ_ТЕХНОБОГ";
-        var expected = "ФУБЧЖЙЗХЛ_ОЭУРВО";
+        var expected = new string[] {
+            "ФУБЧЖЙЗХЛ_ОЭУРВО",
+            "ЯЯРСКПЬВУСЫВЧГГД",
+            "ДКЙЛОС_С_ЕОЗФСИБ",
+            "МУМФОТМОЯДЕЦЦУЧЛ",
+            "БИХЖЩФЗЦРИУАЭАДЛ",
+            "БЬЙЬЮЯФРЮЗЯ_ТГФЕ"
+        };
 
         var lfsr = new AsLfsrWithCBlock(key);
         
         var result = lfsr.ProduceRoundKeys(6);
 
-        Assert.Equal(expected, result[0]);
+        Assert.Equal(expected, result);
     }
 
     [Fact]
-    public void Encrypt()
+    public void EncryptAndDecryptWithLfsrSet()
     {
         var @in = "КОРЫСТЬ_СЛОНА_ЭХ";
         var key = "МТВ_ВСЕ_ЕЩЕ_ТЛЕН";
-        var expected = "ДЕДЭЫЩРЬАБЕЖЛЩЕ";
+        var expected = "ДЕДЭЫЯЩРЬАБЕЖЛЩЕ";
 
         var lfsr = new AsLfsrWithCBlock(key);
 

@@ -131,7 +131,7 @@ public class SBlockCipher
     private string GenerateRoundKey()
     {
         if (_key.Length != KeySize)
-            throw new ArgumentException("input_error");
+            throw new ArgumentException($"input_error: {_key}");
         
         var keyTmp = "";
         var keyExit = _key + _key; // удвоенный ключ

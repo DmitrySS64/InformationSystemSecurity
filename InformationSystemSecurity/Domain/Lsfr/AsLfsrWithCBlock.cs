@@ -27,6 +27,7 @@ public class AsLfsrWithCBlock
 
     public AsLfsrWithCBlockResult GetNext()
     {
+        _stream = "";
         for (var j = 0; j < 4; j++)
         {
             var tmp = 0UL;
