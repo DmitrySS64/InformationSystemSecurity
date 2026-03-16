@@ -1,14 +1,55 @@
+using System.Numerics;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace InformationSystemSecurity.domain;
 
 public static class BinaryConverter
 {
-    public static ulong Shift(this ref ulong num, int shift)
+    public static ulong Shift(this ref ulong num, int shift, int bitLength = 0)
     {
-        // TODO: см. binary_shift в ТГ
+        if (bitLength == 0 || bitLength >= 64)
+        {
+            // Если bitLength не указан, используем эффективную длину
+            bitLength = 64 - BitOperations.LeadingZeroCount(num);
+            if (bitLength == 0) return num;
+        }
+
+        shift = -shift;
+        shift %= bitLength;
+        if (shift < 0)
+        {
+            shift += bitLength;
+        }
+        if (shift == 0) return num;
+
+        var mask = (bitLength == 64) ? ulong.MaxValue : (1uL << bitLength) - 1;
+
+        num &= mask;
+        num = ((num << shift) | (num >> (bitLength - shift))) & mask;
+        return num;
     }
-    
+
+    public static BigInteger Shift(this ref BigInteger num, int shift, int bitLength = 80)
+    {
+        // Нормализуем сдвиг
+        shift = -shift;
+        shift %= bitLength;
+        if (shift < 0)
+            shift += bitLength;
+
+        if (shift == 0) return num;
+
+        // Создаем маску для эффективной длины
+        BigInteger mask = (BigInteger.One << bitLength) - 1;
+
+        num &= mask;
+        // Циклический сдвиг
+        num = ((num << shift) | (num >> (bitLength - shift))) & mask;
+        return num;
+    }
+
+
     public static ulong PushBitToLeft(this ref ulong num, byte bit)
     {
         num = (num << 1) | bit;
@@ -41,7 +82,18 @@ public static class BinaryConverter
     // см. block_xor (на самом деле, приходят не блоками)
     public static string TextXor(string textA, string textB)
     {
-        // TODO: ... use BlockXor
+        var blockCount = textA.Length / TextConverter.BlockSize;
+
+        var result = new StringBuilder();
+        for (var i = 0; i < blockCount; i++)
+        {
+            var blockA = textA.Substring(i * TextConverter.BlockSize, TextConverter.BlockSize);
+            var blockB = textB.Substring(i * TextConverter.BlockSize, TextConverter.BlockSize);
+
+            result.Append(BlockXor(blockA, blockB));
+        }
+
+        return result.ToString();
     }
 
     // см. subblocks_xor
@@ -50,6 +102,11 @@ public static class BinaryConverter
         if (blockA.Length != TextConverter.BlockSize || blockB.Length != TextConverter.BlockSize)
             throw new ArgumentException($"Blocks must be {TextConverter.BlockSize} characters long.");
 
-        // TODO: как и в предыдщей лр, не нужны никакие dec2bin, просто работаем с бинарными
+        ulong binBlockA = blockA.ToNum();
+        ulong binBlockB = blockB.ToNum();
+
+        var XOR = binBlockA ^ binBlockB;
+        
+        return XOR.ToBlock();
     }
 }

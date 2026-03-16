@@ -1,32 +1,63 @@
-﻿using System.Text;
+﻿using System.Runtime.ExceptionServices;
+using System.Text;
 
 namespace InformationSystemSecurity.domain;
 
 public class SpNet
 {
     private readonly SBlockCipher _sBlock = null!;
-        
+
+    public SpNet()
+    {
+        _sBlock = new SBlockCipher(new Caesar(Enums.CaesarMode.Core), new string('А', 16), true, true);
+    }
+
     public string Encrypt(string text, string[] keySet, int roundCount)
     {
         //TODO: см. frw_SPNet
-    } 
+        for (var i = 0; i < roundCount; i++)
+        {
+            text = RoundForward(text, keySet[i], i);
+        }
+
+        return text;
+    }
     
     public string Decrypt(string text, string[] keySet, int roundCount)
     {
         //TODO: см. inv_SPNet
+        for (var i = roundCount - 1; i >= 0; i--)
+        {
+            text = RoundInverse(text, keySet[i], i);
+        }
+        return text;
     } 
     
-    internal string RoundForward(string text, string key, int roundNumber)
+    public string RoundForward(string text, string key, int roundNumber)
     {
         var sBlockResult = new string[4];
-        // TODO
-        ...
+        _sBlock.setKey(key);
+        for (var i = 0; i < 4; i++)
+        {
+            var block = text.Substring(i * 4, 4);
+            sBlockResult[i] = _sBlock.Encrypt(block);
+        }
         var pBlockResult = PBlockCipher.Encrypt(string.Concat(sBlockResult), roundNumber);
         return BinaryConverter.TextXor(pBlockResult, key);
     }
     
-    internal string RoundInverse(string text, string key, int roundNumber)
+    public string RoundInverse(string text, string key, int roundNumber)
     {
-        // TODO
+        var sBlockResult = new string[4];
+        _sBlock.setKey(key);
+        var xorResult = BinaryConverter.TextXor(text, key);
+        var pBlockResult = PBlockCipher.Decrypt(xorResult, roundNumber);
+        for (var i = 0; i < 4; i++)
+        {
+            var block = pBlockResult.Substring(i * 4, 4);
+            sBlockResult[i] = _sBlock.Decrypt(block);
+        }
+
+        return string.Concat(sBlockResult);
     }
 }

@@ -13,11 +13,12 @@ public class AsLfsrWithCBlock
     private readonly CBlockCipher _cBlock;
     
     // Инициализация вынесена в консутруктор
-    public AsLfsrWithCBlock(string seed, ulong[][] taps)
+    public AsLfsrWithCBlock(string seed, ulong[][]? taps = null)
     {
         if (seed.Length != 16)
             throw new ArgumentException("Seed must be 16 characters long");
-        
+        if (taps == null) taps = GetDefaultTaps();
+
         _taps = taps;
         _cBlock = new CBlockCipher(new Caesar(CaesarMode.Core));
         _state = InitState(seed);
@@ -50,7 +51,7 @@ public class AsLfsrWithCBlock
     public string[] ProduceRoundKeys(int resultKeyCount)
     {
         var rawResults = new AsLfsrWithCBlockResult[resultKeyCount];
-        for (var i = 0; i < resultKeyCount - 1; i++)
+        for (var i = 0; i < resultKeyCount; i++)
             rawResults[i] = GetNext();
 
         return rawResults.Select(x => x.Stream).ToArray();

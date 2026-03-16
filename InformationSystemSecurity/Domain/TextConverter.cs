@@ -1,3 +1,4 @@
+using System.Numerics;
 using System.Text;
 
 namespace InformationSystemSecurity.domain;
@@ -66,7 +67,20 @@ public static class TextConverter
         }
         return output;
     }
-    
+
+    public static BigInteger ToBigInteger(this string text)
+    {
+        BigInteger result = 0;
+        var tmp = text.ToNumArray();
+
+        for (var i = 0; i < tmp.Length; i++)
+        {
+            result = result * AlphabetLength + tmp[i];
+        }
+
+        return result;
+    }
+
     public static string ToBlock(this ulong num)
     {
         var result = new StringBuilder(BlockSize);
@@ -76,6 +90,20 @@ public static class TextConverter
             var digit = (int)(num % 32);
             result.Insert(0, digit.ToChar());
             num /= 32;
+        }
+
+        return result.ToString();
+    }
+
+    public static string ToText(this BigInteger num, int expectedLength = BlockSize * 4)
+    {
+        var result = new StringBuilder(expectedLength);
+
+        for (var i = 0; i < expectedLength; i++)
+        {
+            var digit = (int)(num % AlphabetLength);
+            result.Insert(0, digit.ToChar());
+            num /= AlphabetLength;
         }
 
         return result.ToString();

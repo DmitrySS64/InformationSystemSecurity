@@ -6,16 +6,28 @@ public class PBlockCipher
     {
         if (text.Length != 16)
             throw new ArgumentException("Input text must be 16 characters long.");
-        
-        //TODO: исп. MagicSquare.GetDefaultSet()[roundNumber % 3]
-        // LB2B и B2LB, думаю, не нужны, так как мы можем работать с бинарными, там пара строк выйдет
+
+        var square = MagicSquare.GetDefaultSet()[roundNumber % 3];
+        var j = 4 * (roundNumber % 4) + 2;
+
+        var tmp = MagicSquare.Encrypt(text, square).ToBigInteger();
+
+        tmp.Shift(j, 16 * 5);
+        return tmp.ToText();
     }
     
     public static string Decrypt(string text, int roundNumber)
     {
         if (text.Length != 16)
             throw new ArgumentException("Input text must be 16 characters long.");
-        
-        //TODO
+
+        var square = MagicSquare.GetDefaultSet()[roundNumber % 3];
+        var j = -(4 * (roundNumber % 4) + 2);
+
+        var tmp = text.ToBigInteger();
+        tmp.Shift(j, 16 * 5);
+        var result = MagicSquare.Decrypt(tmp.ToText(), square);
+
+        return result;
     }
 }

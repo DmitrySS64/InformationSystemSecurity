@@ -1,4 +1,6 @@
-﻿namespace InformationSystemSecurity.domain;
+﻿using System.Text;
+
+namespace InformationSystemSecurity.domain;
 
 public static class MagicSquare
 {
@@ -30,11 +32,28 @@ public static class MagicSquare
 
     public static string Encrypt(string block, int[][] square)
     {
-        // TODO
+        var result = new StringBuilder();
+        for (int i = 0; i < 4; i++) { 
+            for (int j = 0; j < 4; j++)
+            {
+                result.Append(block[square[i][j]-1]);
+            }
+        }
+
+        return result.ToString();
     }
 
     public static string Decrypt(string block, int[][] square)
     {
-        // TODO
+        var array = block.ToNumArray();
+        var result = new int[16];
+        for (int i = 0; i < 4; i++)
+        {
+            for (int j = 0; j < 4; j++)
+            {
+                result[square[i][j] - 1] = array[i * 4 + j];
+            }
+        }
+        return result.ToText();
     }
 }

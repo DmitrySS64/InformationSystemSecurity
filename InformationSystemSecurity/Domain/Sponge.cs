@@ -7,7 +7,7 @@ public class Sponge(ICipher cipher)
 {
     private readonly CBlockCipher _blockCipher = new CBlockCipher(cipher);
     
-    //TODO: починить 
+
     public string GetHash(string message)
     {
         var state = new string[5][];
@@ -54,7 +54,7 @@ public class Sponge(ICipher cipher)
 
         var X = new string[5];
 
-        for (var i = 0; i < 5; i++)
+        for (var i = 0; i < 4; i++)
         {
             X[i] = "____";
             for (var j = 0; j < 5; j++)
