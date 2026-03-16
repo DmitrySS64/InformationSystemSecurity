@@ -1,4 +1,5 @@
-﻿using InformationSystemSecurity.domain;
+﻿using System.Numerics;
+using InformationSystemSecurity.domain;
 
 namespace InformationSystemSecurity.tests;
 
@@ -161,5 +162,26 @@ public class TextConverterTests
         var result = input.ToBinary();
 
         Assert.Equal(expected, result);
+    }
+    
+    [Fact]
+    public void ToBigInteger_ConvertsStringToBigInteger()
+    {
+        const string a = "ЗОЛОТАЯ_СЕРЕДИНА";
+
+        var result = a.ToBigInteger();
+        
+        Assert.IsType<BigInteger>(result);
+    }
+
+    [Fact]
+    public void ToText_ConvertsBigIntegerBackToString()
+    {
+        const string a = "ЗОЛОТАЯ_СЕРЕДИНА";
+        var b = a.ToBigInteger();
+
+        var result = b.ToText();
+
+        Assert.Equal(a, result);
     }
 }

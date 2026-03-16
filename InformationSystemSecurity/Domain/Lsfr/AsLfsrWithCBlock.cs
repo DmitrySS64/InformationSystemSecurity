@@ -47,8 +47,7 @@ public class AsLfsrWithCBlock
 
         return new AsLfsrWithCBlockResult(_state, _stream);
     }
-
-    // Todo: проверить (параметры задаются при создании через конструктор, taps = AsLfsrWithCBlock.GetDefaultTaps() )
+    
     public string[] ProduceRoundKeys(int resultKeyCount)
     {
         var rawResults = new AsLfsrWithCBlockResult[resultKeyCount];
@@ -103,10 +102,7 @@ public class AsLfsrWithCBlock
 
         return state;
     }
-
-    //TODO?: см. produce_round_keys.Написано использовать апарметры из лр3, здесь их получаем,
-    // хотя он как будто использует другие (make_lfsr_set), поэтому надо по тестам смотреть и,
-    // если что, просто тут поменять константы
+    
     internal static ulong[][] GetDefaultTaps()
     {
         var first = new[] { 19, 18 }.ToBinary();

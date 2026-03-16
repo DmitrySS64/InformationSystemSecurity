@@ -5,38 +5,28 @@ namespace InformationSystemSecurity.domain;
 
 public class SpNet
 {
-    private readonly SBlockCipher _sBlock = null!;
-
-    public SpNet()
-    {
-        _sBlock = new SBlockCipher(new Caesar(Enums.CaesarMode.Poly), new string('А', 16), true, true);
-    }
+    private SBlockCipher _sBlock = null!;
 
     public string Encrypt(string text, string[] keySet, int roundCount)
     {
-        //TODO: см. frw_SPNet
         for (var i = 0; i < roundCount; i++)
-        {
             text = RoundForward(text, keySet[i], i);
-        }
 
         return text;
     }
     
     public string Decrypt(string text, string[] keySet, int roundCount)
     {
-        //TODO: см. inv_SPNet
         for (var i = roundCount - 1; i >= 0; i--)
-        {
             text = RoundInverse(text, keySet[i], i);
-        }
+        
         return text;
     } 
     
     public string RoundForward(string text, string key, int roundNumber)
     {
         var sBlockResult = new string[4];
-        _sBlock.setKey(key);
+        _sBlock = new SBlockCipher(new Caesar(Enums.CaesarMode.Poly), key, true, true);
         for (var i = 0; i < 4; i++)
         {
             var block = text.Substring(i * 4, 4);
@@ -49,7 +39,7 @@ public class SpNet
     public string RoundInverse(string text, string key, int roundNumber)
     {
         var sBlockResult = new string[4];
-        _sBlock.setKey(key);
+        _sBlock = new SBlockCipher(new Caesar(Enums.CaesarMode.Poly), key, true, true);
         var xorResult = BinaryConverter.TextXor(text, key);
         var pBlockResult = PBlockCipher.Decrypt(xorResult, roundNumber);
         for (var i = 0; i < 4; i++)

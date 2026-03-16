@@ -73,10 +73,8 @@ public static class TextConverter
         BigInteger result = 0;
         var tmp = text.ToNumArray();
 
-        for (var i = 0; i < tmp.Length; i++)
-        {
-            result = result * AlphabetLength + tmp[i];
-        }
+        foreach (var t in tmp)
+            result = result * AlphabetLength + t;
 
         return result;
     }

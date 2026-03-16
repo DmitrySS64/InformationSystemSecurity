@@ -1,6 +1,6 @@
 ﻿using InformationSystemSecurity.domain;
 
-namespace InformationSystemSecurity.Tests.SpNet;
+namespace InformationSystemSecurity.Tests;
 
 public class BinaryConverterTests
 {
@@ -8,7 +8,7 @@ public class BinaryConverterTests
     [InlineData("АГАТ", "ТАГА", "СДДС")]
     [InlineData("КОЛЕНЬКА", "МТВ_ТЛЕН", "ЕЬОЕЭПМО")]
     [InlineData("ТОРТ_ХОЧЕТ_ГОРКУ", "МТВ_ВСЕ_ЕЩЕ_ТЛЕН", "ЮЬСТВГИЧ_ИЕГЬЭМЩ")]
-    public void SubblocksXOR(string inA, string inB, string expected)
+    public void TextXor_ReturnsCorrectResult(string inA, string inB, string expected)
     {
         var result = BinaryConverter.TextXor(inA, inB);
 
@@ -23,11 +23,12 @@ public class BinaryConverterTests
     [Theory]
     [InlineData("ГОЛД", 1, "СЖХБ")]
     [InlineData("ЯРУС", 1, "ОЧЩИ")]
-    public void Shift(string @in, int shift, string expected)
+    public void Shift_WithUlong_ReturnsCorrectResult(string @in, int shift, string expected)
     {
         var result = @in.ToNum();
         result.Shift(shift, @in.Length * 5);
         Assert.Equal(expected.ToNum().ToBinaryString(), result.ToBinaryString());
+
         //Обратная операция
         result.Shift(-shift, @in.Length * 5);
         Assert.Equal(@in.ToNum().ToBinaryString(), result.ToBinaryString());
@@ -36,28 +37,17 @@ public class BinaryConverterTests
     [Theory]
     [InlineData("ГОЛД", 1, "СЖХБ")]
     [InlineData("ЯРУС", 1, "ОЧЩИ")]
-    public void BigIntShift(string @in, int shift, string expected)
+    public void Shift_WithBigInteger_ReturnsCorrectResult(string @in, int shift, string expected)
     {
         var num = @in.ToBigInteger();
-        int bitLength = @in.Length * 5;
+        var bitLength = @in.Length * 5;
 
         num.Shift(shift, bitLength);
         Assert.Equal(expected, num.ToText(@in.Length));
+        
         //Обратная операция
         num.Shift(-shift, bitLength);
         Assert.Equal(@in, num.ToText(@in.Length));
-    }
-
-    [Fact]
-    public void BigIntConvert()
-    {
-        var a = "ЗОЛОТАЯ_СЕРЕДИНА";
-
-        var b = a.ToBigInteger();
-
-        var result = b.ToText();
-
-        Assert.Equal(a, result);
     }
 }
 

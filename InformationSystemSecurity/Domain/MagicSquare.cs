@@ -33,11 +33,10 @@ public static class MagicSquare
     public static string Encrypt(string block, int[][] square)
     {
         var result = new StringBuilder();
-        for (int i = 0; i < 4; i++) { 
-            for (int j = 0; j < 4; j++)
-            {
-                result.Append(block[square[i][j]-1]);
-            }
+        for (var i = 0; i < 4; i++) 
+        { 
+            for (var j = 0; j < 4; j++)
+                result.Append(block[square[i][j] - 1]);
         }
 
         return result.ToString();
@@ -47,13 +46,12 @@ public static class MagicSquare
     {
         var array = block.ToNumArray();
         var result = new int[16];
-        for (int i = 0; i < 4; i++)
+        for (var i = 0; i < 4; i++)
         {
-            for (int j = 0; j < 4; j++)
-            {
+            for (var j = 0; j < 4; j++)
                 result[square[i][j] - 1] = array[i * 4 + j];
-            }
         }
+
         return result.ToText();
     }
 }

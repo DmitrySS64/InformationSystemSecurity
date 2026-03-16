@@ -9,11 +9,9 @@ public class SBlockCipher
     private readonly int[] _shiftVector = [1, -1, 1, 2, -2, 1, 1, 3, -1, 2];
     
     private readonly ICipher _cipher;
-    private string _key;
+    private readonly string _key;
     private readonly bool _roundKey;
     private readonly bool _merge;
-
-    public void setKey(string newKey) => _key = newKey;
 
     public SBlockCipher(ICipher cipher, string key, bool roundKey = false, bool merge = false)
     {
@@ -46,7 +44,7 @@ public class SBlockCipher
             var encryptedBlock = _cipher.Encrypt(block, keyForEncrypting);
             
             if (_merge)
-                encryptedBlock = MergeBlock(encryptedBlock, _key); // Второй мёрдж после щифрования
+                encryptedBlock = MergeBlock(encryptedBlock, _key); // Второй мёрдж после шифрования
             
             result.Append(encryptedBlock);
         }

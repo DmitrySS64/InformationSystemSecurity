@@ -41,7 +41,7 @@ public static class BinaryConverter
         if (shift == 0) return num;
 
         // Создаем маску для эффективной длины
-        BigInteger mask = (BigInteger.One << bitLength) - 1;
+        var mask = (BigInteger.One << bitLength) - 1;
 
         num &= mask;
         // Циклический сдвиг
@@ -78,8 +78,7 @@ public static class BinaryConverter
 
         return "0b" + Regex.Replace(binary, ".{4}", "$0_").TrimEnd('_');
     }
-
-    // см. block_xor (на самом деле, приходят не блоками)
+    
     public static string TextXor(string textA, string textB)
     {
         var blockCount = textA.Length / TextConverter.BlockSize;
@@ -95,18 +94,17 @@ public static class BinaryConverter
 
         return result.ToString();
     }
-
-    // см. subblocks_xor
+    
     private static string BlockXor(string blockA, string blockB)
     {
         if (blockA.Length != TextConverter.BlockSize || blockB.Length != TextConverter.BlockSize)
             throw new ArgumentException($"Blocks must be {TextConverter.BlockSize} characters long.");
 
-        ulong binBlockA = blockA.ToNum();
-        ulong binBlockB = blockB.ToNum();
+        var binBlockA = blockA.ToNum();
+        var binBlockB = blockB.ToNum();
 
-        var XOR = binBlockA ^ binBlockB;
+        var xor = binBlockA ^ binBlockB;
         
-        return XOR.ToBlock();
+        return xor.ToBlock();
     }
 }
