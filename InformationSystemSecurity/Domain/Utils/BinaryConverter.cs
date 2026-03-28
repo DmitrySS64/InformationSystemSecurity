@@ -2,7 +2,7 @@ using System.Numerics;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace InformationSystemSecurity.domain;
+namespace InformationSystemSecurity.Domain.Utils;
 
 public static class BinaryConverter
 {
@@ -93,6 +93,35 @@ public static class BinaryConverter
         }
 
         return result.ToString();
+    }
+    
+    // см. msg2bin (стр. 32)
+    // Не ulong, так как дальше тяжело будет с чисто бинарными работать
+    public static byte[] ToBinary(this string textMessage)
+    {
+        // Меняем местами и просто провереям на 0 и 1, чтобы каждый раз не проходиться по всему алфавиту => isSym не нужен
+        // sym2bin тоже, думаю, не нужен - там просто спарсить char в int
+        foreach (var c in textMessage)
+        {
+            if (c is '0' or '1')
+            {
+                // TODO
+            }
+            else if (char.IsDigit(c)) // другие цифры - ошибка
+            {
+                throw new ArgumentException("Only bit digits are allowed.");
+            }
+            else
+            {
+                // todo
+            }
+        }
+    }
+    
+    // см. bin2msg
+    public static string ToTextMessage(this byte[] value)
+    {
+        // TODO
     }
     
     private static string BlockXor(string blockA, string blockB)

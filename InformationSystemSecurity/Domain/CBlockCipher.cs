@@ -1,4 +1,5 @@
 ﻿using InformationSystemSecurity.domain.Enums;
+using InformationSystemSecurity.Domain.Utils;
 
 namespace InformationSystemSecurity.domain;
 

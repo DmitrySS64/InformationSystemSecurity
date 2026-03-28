@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace InformationSystemSecurity.domain;
+namespace InformationSystemSecurity.Domain.Utils;
 
 public static class MagicSquare
 {

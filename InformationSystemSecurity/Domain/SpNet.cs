@@ -1,9 +1,9 @@
-﻿using System.Runtime.ExceptionServices;
-using System.Text;
+﻿using InformationSystemSecurity.domain.Enums;
+using InformationSystemSecurity.Domain.Utils;
 
 namespace InformationSystemSecurity.domain;
 
-public class SpNet
+public class SpNet(CaesarMode caesarMode)
 {
     private SBlockCipher _sBlock = null!;
 
@@ -26,7 +26,7 @@ public class SpNet
     public string RoundForward(string text, string key, int roundNumber)
     {
         var sBlockResult = new string[4];
-        _sBlock = new SBlockCipher(new Caesar(Enums.CaesarMode.Poly), key, true, true);
+        _sBlock = new SBlockCipher(new Caesar(caesarMode), key, true, true);
         for (var i = 0; i < 4; i++)
         {
             var block = text.Substring(i * 4, 4);
@@ -39,7 +39,7 @@ public class SpNet
     public string RoundInverse(string text, string key, int roundNumber)
     {
         var sBlockResult = new string[4];
-        _sBlock = new SBlockCipher(new Caesar(Enums.CaesarMode.Poly), key, true, true);
+        _sBlock = new SBlockCipher(new Caesar(caesarMode), key, true, true);
         var xorResult = BinaryConverter.TextXor(text, key);
         var pBlockResult = PBlockCipher.Decrypt(xorResult, roundNumber);
         for (var i = 0; i < 4; i++)

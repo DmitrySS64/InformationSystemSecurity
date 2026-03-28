@@ -1,13 +1,23 @@
 ﻿using InformationSystemSecurity.domain.Enums;
 using System.Text;
+using InformationSystemSecurity.Domain.Utils;
 
 namespace InformationSystemSecurity.domain;
 
 public class Sponge(ICipher cipher)
 {
     private readonly CBlockCipher _blockCipher = new CBlockCipher(cipher);
-    
 
+    // см. KDF (не нашёл использвания в кода, возможно, и не пригодится - делать в конце) 
+    public string[] GetDerivedKeys(string secret, string salt, string[] context, int[] outSizes, int iterCount)
+    {
+        if (context.Length != outSizes.Length)
+            throw new ArgumentException("context length must be equal to out sizes");
+        // todo:  HASH_FUN = GetHash
+        // PS. То, что rem = i выглядит странно, но мб так и должно быть, надо по тестам смотреть
+        // Но если нигде не пригодится всё-таки, то можно и не замарачиваться
+    }
+    
     public string GetHash(string message)
     {
         var state = new string[5][];

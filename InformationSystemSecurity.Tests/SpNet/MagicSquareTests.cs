@@ -1,4 +1,4 @@
-﻿using InformationSystemSecurity.domain;
+﻿using InformationSystemSecurity.Domain.Utils;
 
 namespace InformationSystemSecurity.Tests.SpNet;
 

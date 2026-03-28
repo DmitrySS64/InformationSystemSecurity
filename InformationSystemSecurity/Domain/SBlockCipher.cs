@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using InformationSystemSecurity.Domain.Utils;
 
 namespace InformationSystemSecurity.domain;
 

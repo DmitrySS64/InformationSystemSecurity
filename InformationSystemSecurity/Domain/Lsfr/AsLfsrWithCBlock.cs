@@ -2,6 +2,7 @@
 using InformationSystemSecurity.domain.Enums;
 using InformationSystemSecurity.domain.Models;
 using System.Text;
+using InformationSystemSecurity.Domain.Utils;
 
 namespace InformationSystemSecurity.Domain.Lsfr;
 
@@ -17,7 +18,8 @@ public class AsLfsrWithCBlock
     {
         if (seed.Length != 16)
             throw new ArgumentException("Seed must be 16 characters long");
-        if (taps == null) taps = GetDefaultTaps();
+        
+        taps ??= GetDefaultTaps();
 
         _taps = taps;
         _cBlock = new CBlockCipher(new Caesar(CaesarMode.Core));

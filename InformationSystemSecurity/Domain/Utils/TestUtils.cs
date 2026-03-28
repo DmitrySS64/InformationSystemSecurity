@@ -1,4 +1,4 @@
-namespace InformationSystemSecurity.Tools;
+namespace InformationSystemSecurity.Domain.Utils;
 
 public static class TestUtils
 {

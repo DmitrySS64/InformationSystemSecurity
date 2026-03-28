@@ -1,4 +1,5 @@
 ﻿using InformationSystemSecurity.domain;
+using InformationSystemSecurity.Domain.Utils;
 using InformationSystemSecurity.Tests.Common;
 
 namespace InformationSystemSecurity.tests;
