@@ -49,5 +49,29 @@ public class BinaryConverterTests
         num.Shift(-shift, bitLength);
         Assert.Equal(@in, num.ToText(@in.Length));
     }
+
+    [Theory]
+    [InlineData("ГНОЛЛЫ_ПИЛИЛИ_ПЫЛЕСОС_ЛОСОСЕМ", 145)]
+    [InlineData("ГНОЛЛЫ_ПИЛИЛИ_ПЫЛЕСОС_ЛОСОСЕМ0011", 149)]
+    [InlineData("ГНОЛЛЫ_ПИЛИЛИ_ПЫЛЕСОС_ЛОСОСЕМ1110011011011", 158)]
+    public void MessageToBinary_ReturnsCorrectResult(string @in, int expectedLen)
+    {
+        var result = @in.ToBinary();
+
+        Assert.Equal(expectedLen, result.Length);
+    }
+
+    [Theory]
+    [InlineData("ГНОЛЛЫ_ПИЛИЛИ_ПЫЛЕСОС_ЛОСОСЕМ", "ГНОЛЛЫ_ПИЛИЛИ_ПЫЛЕСОС_ЛОСОСЕМ")]
+    [InlineData("ГНОЛЛЫ_ПИЛИЛИ_ПЫЛЕСОС_ЛОСОСЕМ0011", "ГНОЛЛЫ_ПИЛИЛИ_ПЫЛЕСОС_ЛОСОСЕМ0011")]
+    [InlineData("ГНОЛЛЫ_ПИЛИЛИ_ПЫЛЕСОС_ЛОСОСЕМ1110011011011", "ГНОЛЛЫ_ПИЛИЛИ_ПЫЛЕСОС_ЛОСОСЕМЬЫ011")]
+    public void BinaryToMessage_ReturnsCorrectResult(string @in, string expected)
+    {
+        var bins = @in.ToBinary();
+
+        var result = bins.ToTextMessage();
+
+        Assert.Equal(expected, result);
+    }
 }
 

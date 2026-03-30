@@ -1,4 +1,7 @@
-﻿namespace InformationSystemSecurity.domain.Models;
+﻿using InformationSystemSecurity.Domain.Utils;
+using System.Text;
+
+namespace InformationSystemSecurity.domain.Models;
 
 public class Packet
 {
@@ -36,16 +39,34 @@ public class Packet
     
     public required string Mac { get; set; }
     
-    // см. prepare_packet
+    // см. prepare_packet (стр 38)
     public static Packet Prepare(AssociatedData associatedData, string initVector, string message)
     {
-        // todo ...
+        initVector = TextConverter.AddTexts(initVector, new string('_', 16));
+        var msg = PaddingManager.PadMessage(message);
+        var L = msg.ToBinary().Length;
+        var a = "";
+        for (var i = 0; i < 5; i++)
+        {
+            a = (L % TextConverter.AlphabetLength).ToChar() + a;
+            L /= TextConverter.AlphabetLength;
+        }
+
+        var data = new string[5]
+        {
+            associatedData.SecurityLevel,
+            associatedData.Sender,
+            associatedData.Receiver,
+            associatedData.SessionId,
+            a
+        };
+
         return new Packet
         {
-            Data = ...,
-            InitVector = ...,
-            Message = ...,
-            Mac = ...
+            Data = data,
+            InitVector = initVector,
+            Message = msg,
+            Mac = ""
         };
     }
 }

@@ -1,6 +1,8 @@
 using System.Numerics;
+using System.Runtime.ExceptionServices;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace InformationSystemSecurity.Domain.Utils;
 
@@ -94,34 +96,77 @@ public static class BinaryConverter
 
         return result.ToString();
     }
-    
-    // см. msg2bin (стр. 32)
-    // Не ulong, так как дальше тяжело будет с чисто бинарными работать
+
+
+    /// <summary>
+    /// Преобразование сообщения в массив битов. 
+    /// см. msg2bin (стр. 32)
+    /// </summary>
+    /// <param name="textMessage"></param>
+    /// <returns>Возвращает массив битов (не байтов!).</returns>
+    /// <exception cref="ArgumentException"></exception>
     public static byte[] ToBinary(this string textMessage)
     {
-        // Меняем местами и просто провереям на 0 и 1, чтобы каждый раз не проходиться по всему алфавиту => isSym не нужен
-        // sym2bin тоже, думаю, не нужен - там просто спарсить char в int
+        var result = new List<byte>();
+
         foreach (var c in textMessage)
         {
             if (c is '0' or '1')
             {
-                // TODO
+                var bit = (byte)((c == '0') ? 0 : 1);
+                result.Add(bit);
             }
-            else if (char.IsDigit(c)) // другие цифры - ошибка
+            else if (char.IsDigit(c))
             {
                 throw new ArgumentException("Only bit digits are allowed.");
             }
             else
             {
-                // todo
+                var d = c.ToNum();
+                for (var i = 4; i >= 0; i--)
+                {
+                    var bit = (byte)((d >> i) & 1);
+                    result.Add(bit);
+                }
             }
         }
+        return result.ToArray();
     }
-    
-    // см. bin2msg
+
+
+    /// <summary>
+    /// Преобразование массив битов в сообщение. См. bin2msg (стр 33)
+    /// </summary>
+    /// <param name="binaryString">Массив битов (не байтов!)</param>
+    /// <returns>Сообщение типа string</returns>
     public static string ToTextMessage(this byte[] value)
     {
-        // TODO
+        if (value == null || value.Length == 0)
+            return string.Empty;
+
+        var result = new StringBuilder();
+        var blockCount = value.Length / 5;
+        var i = 0;
+
+        for (i = 0; i < blockCount * 5; i += 5)
+        {
+            var digit = 0;
+            for (int j = 0; j < 5; j++)
+            {
+                digit = (digit << 1) | value[i + j];
+            }
+
+            result.Append(digit.ToChar());
+        }
+
+        // Оставшиеся биты интерпретируем как '0' и '1'
+        while (i < value.Length)
+        {
+            result.Append(value[i] == 1 ? '1' : '0');
+            i++;
+        }
+
+        return result.ToString();
     }
     
     private static string BlockXor(string blockA, string blockB)
