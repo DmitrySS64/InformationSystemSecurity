@@ -1,6 +1,7 @@
 ﻿using InformationSystemSecurity.domain;
-using InformationSystemSecurity.domain.Models;
+using InformationSystemSecurity.domain.Enums;
 using InformationSystemSecurity.Domain.Lsfr;
+using InformationSystemSecurity.domain.Models;
 
 namespace InformationSystemSecurity.Tests.EAX;
 
@@ -80,7 +81,7 @@ public class EaxSessionTests
         var lfsr = new AsLfsrWithCBlock(key);
 
         var keySet = lfsr.ProduceRoundKeys(FeedbackCipher.SBlockRoundCount);
-        var cadmac = feedbackCipher.Encrypt(cad, secIn, keySet, domain.Enums.MacResultMode.NoMac);
+        var cadmac = feedbackCipher.Encrypt(cad, secIn, keySet, MacResultMode.NoMac);
         var sentPacket = eaxSession.Encrypt(packet, cadmac, keySet, secIn);
         var result = eaxSession.Decrypt(sentPacket, keySet, secIn);
 
@@ -90,6 +91,77 @@ public class EaxSessionTests
 
         Assert.Equal(messages[0], result.Message);
         Assert.Equal(new string('_', 16), result.Mac);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void EncryptDecrypt_RoundTrip_ForPresentationScenario(bool onlyMac)
+    {
+        var associatedData = new AssociatedData("ВБ", "АЛИСА_АЖ", "БОБ___ОЧ", "ЕГИПТЯНИН");
+        var key = "СЕАНСОВЫЙ_КЛЮЧИК";
+        var secIn = "ТОЖЕ_ЕЩЕ_НЕВАЖНО";
+        var packet = Packet.Prepare(associatedData, "БОБ_НЕМНОГО_ПЬЯН", messages[0]);
+        packet.Data[4] = "_____";
+
+        var eaxSession = new EaxSession(associatedData, key, "");
+        var feedbackCipher = new FeedbackCipher();
+        var lfsr = new AsLfsrWithCBlock(key);
+        var keySet = lfsr.ProduceRoundKeys(FeedbackCipher.SBlockRoundCount);
+
+        var cad = string.Join("", packet.Data);
+        var cadmac = feedbackCipher.Encrypt(cad, secIn, keySet, MacResultMode.NoMac);
+
+        var sentPacket = eaxSession.Encrypt(packet, cadmac, keySet, secIn, onlyMac);
+        var result = eaxSession.Decrypt(sentPacket, keySet, secIn, onlyMac);
+
+        Assert.Equal(packet.InitVector, sentPacket.InitVector);
+        Assert.Equal(packet.Data, sentPacket.Data);
+        Assert.Equal(16, sentPacket.Mac.Length);
+
+        if (onlyMac)
+            Assert.Equal(packet.Message, sentPacket.Message);
+        else
+            Assert.NotEqual(packet.Message, sentPacket.Message);
+
+        Assert.Equal(packet.Message, result.Message);
+        Assert.Equal(messages[0], PaddingManager.UnpadMessage(result.Message));
+    }
+
+    [Fact]
+    public void Last20BitsOfMac_DoNotAffectRecoveredMessage()
+    {
+        var associatedData = new AssociatedData("ВБ", "АЛИСА_АЖ", "БОБ___ОЧ", "ЕГИПТЯНИН");
+        var key = "СЕАНСОВЫЙ_КЛЮЧИК";
+        var secIn = "ТОЖЕ_ЕЩЕ_НЕВАЖНО";
+
+        var packet = Packet.Prepare(associatedData, "БОБ_НЕМНОГО_ПЬЯН", messages[0]);
+        packet.Data[4] = "_____";
+
+        var eaxSession = new EaxSession(associatedData, key, "");
+        var feedbackCipher = new FeedbackCipher();
+        var lfsr = new AsLfsrWithCBlock(key);
+        var keySet = lfsr.ProduceRoundKeys(FeedbackCipher.SBlockRoundCount);
+
+        var cad = string.Join("", packet.Data);
+        var cadmac = feedbackCipher.Encrypt(cad, secIn, keySet, MacResultMode.NoMac);
+
+        var sentPacket = eaxSession.Encrypt(packet, cadmac, keySet, secIn);
+        var tamperedPacket = new Packet
+        {
+            Data = sentPacket.Data,
+            InitVector = sentPacket.InitVector,
+            Message = sentPacket.Message,
+            // 4 символа = 20 бит в текущем алфавите (по 5 бит на символ).
+            Mac = sentPacket.Mac[..12] + "АБВГ"
+        };
+
+        var validResult = eaxSession.Decrypt(sentPacket, keySet, secIn);
+        var tamperedResult = eaxSession.Decrypt(tamperedPacket, keySet, secIn);
+
+        Assert.Equal(validResult.Message, tamperedResult.Message);
+        Assert.Equal(messages[0], PaddingManager.UnpadMessage(tamperedResult.Message));
+        Assert.NotEqual(validResult.Mac, tamperedResult.Mac);
     }
 }
 
