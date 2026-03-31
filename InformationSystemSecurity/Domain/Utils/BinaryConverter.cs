@@ -1,8 +1,11 @@
 using System.Numerics;
+using System.Reflection.Metadata;
+using System.Runtime.ExceptionServices;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 
-namespace InformationSystemSecurity.domain;
+namespace InformationSystemSecurity.Domain.Utils;
 
 public static class BinaryConverter
 {
@@ -81,6 +84,9 @@ public static class BinaryConverter
     
     public static string TextXor(string textA, string textB)
     {
+        if (textA.Length != textB.Length)
+            throw new ArgumentException($"The strings must be the same length.");
+
         var blockCount = textA.Length / TextConverter.BlockSize;
 
         var result = new StringBuilder();
@@ -90,6 +96,78 @@ public static class BinaryConverter
             var blockB = textB.Substring(i * TextConverter.BlockSize, TextConverter.BlockSize);
 
             result.Append(BlockXor(blockA, blockB));
+        }
+
+        return result.ToString();
+    }
+
+
+    /// <summary>
+    /// Преобразование сообщения в массив битов. 
+    /// см. msg2bin (стр. 32)
+    /// </summary>
+    /// <param name="textMessage"></param>
+    /// <returns>Возвращает массив битов (не байтов!).</returns>
+    /// <exception cref="ArgumentException"></exception>
+    public static byte[] ToBinary(this string textMessage)
+    {
+        var result = new List<byte>();
+
+        foreach (var c in textMessage)
+        {
+            if (c is '0' or '1')
+            {
+                var bit = (byte)((c == '0') ? 0 : 1);
+                result.Add(bit);
+            }
+            else if (char.IsDigit(c))
+            {
+                throw new ArgumentException("Only bit digits are allowed.");
+            }
+            else
+            {
+                var d = c.ToNum();
+                for (var i = 4; i >= 0; i--)
+                {
+                    var bit = (byte)((d >> i) & 1);
+                    result.Add(bit);
+                }
+            }
+        }
+        return result.ToArray();
+    }
+
+
+    /// <summary>
+    /// Преобразование массив битов в сообщение. См. bin2msg (стр 33)
+    /// </summary>
+    /// <param name="binaryString">Массив битов (не байтов!)</param>
+    /// <returns>Сообщение типа string</returns>
+    public static string ToTextMessage(this byte[] value)
+    {
+        if (value == null || value.Length == 0)
+            return string.Empty;
+
+        var result = new StringBuilder();
+        var blockCount = value.Length / 5;
+        var i = 0;
+
+        for (i = 0; i < blockCount * 5; i += 5)
+        {
+            var digit = 0;
+            for (int j = 0; j < 5; j++)
+            {
+                digit = (digit << 1) | value[i + j];
+            }
+
+            result.Append(digit.ToChar());
+        }
+
+        // Оставшиеся биты интерпретируем как '0' и '1'
+        while (i < value.Length)
+        {
+            result.Append(value[i] == 1 ? '1' : '0');
+            i++;
         }
 
         return result.ToString();

@@ -1,6 +1,6 @@
-﻿using InformationSystemSecurity.domain;
-using InformationSystemSecurity.domain.Models;
+﻿using InformationSystemSecurity.domain.Models;
 using System.Numerics;
+using InformationSystemSecurity.Domain.Utils;
 
 namespace InformationSystemSecurity.Domain.Lsfr;
 

@@ -1,5 +1,5 @@
-﻿using InformationSystemSecurity.domain;
-using InformationSystemSecurity.Domain.Lsfr;
+﻿using InformationSystemSecurity.Domain.Lsfr;
+using InformationSystemSecurity.Domain.Utils;
 
 namespace InformationSystemSecurity.Tests.Lfsr;
 

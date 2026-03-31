@@ -1,10 +1,9 @@
 using System.Globalization;
 using System.Numerics;
 using System.Text;
-using InformationSystemSecurity.domain;
 using InformationSystemSecurity.Domain.Lsfr;
 
-namespace InformationSystemSecurity.Tools.StatsCollectors;
+namespace InformationSystemSecurity.Domain.Utils.StatsCollectors;
 
 public static class LfsrStatsCollector
 {

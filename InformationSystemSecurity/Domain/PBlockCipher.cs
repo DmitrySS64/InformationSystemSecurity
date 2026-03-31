@@ -1,4 +1,6 @@
-﻿namespace InformationSystemSecurity.domain;
+﻿using InformationSystemSecurity.Domain.Utils;
+
+namespace InformationSystemSecurity.domain;
 
 public class PBlockCipher 
 {

@@ -1,4 +1,4 @@
-﻿using InformationSystemSecurity.domain;
+﻿using InformationSystemSecurity.domain.Enums;
 using InformationSystemSecurity.Domain.Lsfr;
 
 namespace InformationSystemSecurity.Tests.SpNet;
@@ -9,7 +9,7 @@ public class SpNetTests
     [InlineData("КОРЫСТЬ_СЛОНА_ЭХ", "МТВ_ВСЕ_ЕЩЕ_ТЛЕН", 0, "СБЖКЕНЙХЧЩЫЭЯТЬР")]
     public void RoundForward_ReturnsCorrectResult(string @in, string key, int round, string expected)
     {
-        var spNet = new domain.SpNet();
+        var spNet = new domain.SpNet(CaesarMode.Poly);
 
         var result = spNet.RoundForward(@in, key, round);
 
@@ -20,7 +20,7 @@ public class SpNetTests
     [InlineData("КОРЫСТЬ_СЛОНА_ЭХ", "МТВ_ВСЕ_ЕЩЕ_ТЛЕН", 0)]
     public void RoundInverse_ReturnsOriginalString(string @in, string key, int round)
     {
-        var spNet = new domain.SpNet();
+        var spNet = new domain.SpNet(CaesarMode.Poly);
 
         var result = spNet.RoundForward(@in, key, round);
         result = spNet.RoundInverse(result, key, round);
@@ -37,7 +37,7 @@ public class SpNetTests
 
         var lfsr = new AsLfsrWithCBlock(key);
         var keysLc = lfsr.ProduceRoundKeys(8);
-        var spNet = new domain.SpNet();
+        var spNet = new domain.SpNet(CaesarMode.Poly);
 
         var result = spNet.Encrypt(@in, keysLc, 8);
 
@@ -53,7 +53,7 @@ public class SpNetTests
 
         var lfsr = new AsLfsrWithCBlock(key);
         var keysLc = lfsr.ProduceRoundKeys(8);
-        var spNet = new domain.SpNet();
+        var spNet = new domain.SpNet(CaesarMode.Poly);
 
         var encrypted = spNet.Encrypt(@in, keysLc, 8);
         var result = spNet.Decrypt(encrypted, keysLc, 8);

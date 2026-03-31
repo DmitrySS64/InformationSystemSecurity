@@ -1,5 +1,5 @@
 ﻿using System.Numerics;
-using InformationSystemSecurity.domain;
+using InformationSystemSecurity.Domain.Utils;
 
 namespace InformationSystemSecurity.tests;
 

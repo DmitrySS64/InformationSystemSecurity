@@ -1,5 +1,5 @@
-using InformationSystemSecurity.domain;
 using InformationSystemSecurity.domain.Enums;
+using InformationSystemSecurity.Domain.Utils;
 
 namespace InformationSystemSecurity.Tests.Common;
 
@@ -424,7 +424,6 @@ public static class TestUtils
                 "ХОРОШО_БЫТЬ_ВАМИ",
                 "КЬЕРКЕГОР_ПРОПАЛ"
             }
-            
         };
 
         for (var i = 0; i < textsLists.Count; i++)
@@ -435,6 +434,5 @@ public static class TestUtils
             yield return [keys, modifiedKeys, CompressMode.Out8, 5];
             yield return [keys, modifiedKeys, CompressMode.Out4, 3];
         }
-
     }
 }

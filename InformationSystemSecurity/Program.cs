@@ -1,4 +1,4 @@
-﻿using InformationSystemSecurity.Tools.StatsCollectors;
+﻿using InformationSystemSecurity.Domain.Utils.StatsCollectors;
 
 const int collectN = 10000;
 const string collectSeed = "САЛАМКА_БАЛАЛАМКА_БОРИСКА_СОСИСКА";

@@ -11,4 +11,10 @@
         <InternalsVisibleTo Include="InformationSystemSecurity.Tests" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="inp.txt">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>
