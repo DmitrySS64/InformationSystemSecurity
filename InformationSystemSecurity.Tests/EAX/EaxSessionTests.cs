@@ -76,8 +76,8 @@ public class EaxSessionTests
         var key = "СЕАНСОВЫЙ_КЛЮЧИК";
         var secIn = "ТОЖЕ_ЕЩЕ_НЕВАЖНО"; //<- в презентации ЕЩЁ
         var packet = Packet.Prepare(associatedData, "БОБ_НЕМНОГО_ПЬЯН", messages[0]);
-        packet.Data[4] = "_____";
-        var cad = string.Join("", packet.Data); //32
+        packet.Data[4] = "АБВГД"; //<-Длина сообщения 5 символов
+        var cad = string.Join("", packet.Data[0..4]) + new string('_', 4); //32
 
         //var expectedMac = "ФЙСВСЩНТЙЭЬМЧБЖЛ";
         //var expectedMessage = "ЦЯЬШЭДВ_ЯЖВЙРЫЩФКДТДУ";

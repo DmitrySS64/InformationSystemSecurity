@@ -12,11 +12,6 @@ public class FeedbackCipher
     // см. frw_cfb (стр 42)
     public string Encrypt(string message, string initVector, string[] keySet, MacResultMode macResultMode)
     {
-        if (message.Length % blockLength != 0)
-        {
-            throw new ArgumentException("The string must be a multiple of 16.");
-        }
-
         var m = message.Length / blockLength;
         var cont = new string('_', 16);
         var feedback = initVector;

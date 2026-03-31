@@ -37,7 +37,7 @@ public class EaxSession
             _associatedData.Sender,
             _associatedData.Receiver,
             _associatedData.SessionId,
-            new string('_', 5));
+            new string('_', 4));
         _mac = _feedbackCipher.Encrypt(data, _secret, _keySet, Enums.MacResultMode.OnlyMac);
     }
 
@@ -172,7 +172,7 @@ public class EaxSession
     public Packet Decrypt(Packet packet, string[] keySet, string nonce, bool onlyMac = false)
     {
         var tmp = packet.Data[0] + packet.Data[3] + packet.Data[4]; //2 + 9 + 5 = 16
-        var data = string.Join("", packet.Data[0..4]) + new string('_', 5); //2 + 8 + 8 + 9 + 5 = 32
+        var data = string.Join("", packet.Data[0..4]) + new string('_', 4); //2 + 8 + 8 + 9 + 5 = 32
 
         var cmac = _feedbackCipher.Encrypt(data, nonce, keySet, Enums.MacResultMode.OnlyMac); //16
         var civ = _feedbackCipher.Encrypt(nonce + tmp, packet.InitVector, keySet, Enums.MacResultMode.OnlyMac); //16
