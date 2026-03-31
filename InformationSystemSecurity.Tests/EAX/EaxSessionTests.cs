@@ -30,7 +30,7 @@ public class EaxSessionTests
     {
         var associatedData = new AssociatedData("ВБ", "БОБ___ЬЬ", "АЛИСА_ЯЗ", "ЭКЛАМПСИЯ");
         var sessionKey = "СЕАНСОВЫЙ_КЛЮЧИК";
-        var nonse =      "СЕМИХАТОВ_КВАНТЫ";
+        var nonse = "СЕМИХАТОВ_КВАНТЫ";
         var eaxSession = new EaxSession(associatedData, sessionKey, nonse);
 
         var channel = eaxSession.SendMessages(messages);
@@ -63,7 +63,7 @@ public class EaxSessionTests
         //message
         Assert.Equal(messages[1], transmission[1].Message);
         //mac
-        Assert.Equal("БПИКЮЮАПЮБЯЮРУИА" ,transmission[0].Mac);
+        Assert.Equal("БПИКЮЮАПЮБЯЮРУИА", transmission[0].Mac);
         Assert.Equal("OK", transmission[1].Mac);
         Assert.Equal("OK", transmission[2].Mac);
         Assert.Equal("НЭЛПИУЛМОЧОЙДЙЫА", transmission[3].Mac);
@@ -88,7 +88,8 @@ public class EaxSessionTests
         var lfsr = new AsLfsrWithCBlock(key);
 
         var keySet = lfsr.ProduceRoundKeys(FeedbackCipher.SBlockRoundCount);
-        var cadmac = feedbackCipher.Encrypt(cad, secIn, keySet, domain.Enums.MacResultMode.OnlyMac); //16
+        var cadmac = feedbackCipher.Encrypt(cad, secIn, keySet, MacResultMode.OnlyMac);
+
         var sentPacket = eaxSession.Encrypt(packet, cadmac, keySet, secIn);
         var result = eaxSession.Decrypt(sentPacket, keySet, secIn);
 
@@ -117,7 +118,7 @@ public class EaxSessionTests
         var keySet = lfsr.ProduceRoundKeys(FeedbackCipher.SBlockRoundCount);
 
         var cad = string.Join("", packet.Data);
-        var cadmac = feedbackCipher.Encrypt(cad, secIn, keySet, MacResultMode.NoMac);
+        var cadmac = feedbackCipher.Encrypt(cad, secIn, keySet, MacResultMode.OnlyMac);
 
         var sentPacket = eaxSession.Encrypt(packet, cadmac, keySet, secIn, onlyMac);
         var result = eaxSession.Decrypt(sentPacket, keySet, secIn, onlyMac);
@@ -151,7 +152,7 @@ public class EaxSessionTests
         var keySet = lfsr.ProduceRoundKeys(FeedbackCipher.SBlockRoundCount);
 
         var cad = string.Join("", packet.Data);
-        var cadmac = feedbackCipher.Encrypt(cad, secIn, keySet, MacResultMode.NoMac);
+        var cadmac = feedbackCipher.Encrypt(cad, secIn, keySet, MacResultMode.OnlyMac);
 
         var sentPacket = eaxSession.Encrypt(packet, cadmac, keySet, secIn);
         var tamperedPacket = new Packet
