@@ -30,7 +30,7 @@ public class EaxSessionTests
     {
         var associatedData = new AssociatedData("ВБ", "БОБ___ЬЬ", "АЛИСА_ЯЗ", "ЭКЛАМПСИЯ");
         var sessionKey = "СЕАНСОВЫЙ_КЛЮЧИК";
-        var nonse =      "СЕМИХАТОВ_КВАНТЫ";
+        var nonse = "СЕМИХАТОВ_КВАНТЫ";
         var eaxSession = new EaxSession(associatedData, sessionKey, nonse);
 
         var channel = eaxSession.SendMessages(messages);
@@ -41,13 +41,20 @@ public class EaxSessionTests
         var transmission = eaxSession.ReceiveMessages(channel);
 
         var expectedMac1 = "__АШП";
+        var expectedMac2 = "__ОБП";
+        var expectedMac3 = "__БСП";
+        var expectedMac4 = "___ЖП";
 
         //data
         Assert.Equal(associatedData.SecurityLevel, transmission[0].Data[0]);
         Assert.Equal(associatedData.Sender, transmission[0].Data[1]);
         Assert.Equal(associatedData.Receiver, transmission[0].Data[2]);
         Assert.Equal(associatedData.SessionId, transmission[0].Data[3]);
+        Assert.NotEqual(associatedData.Sender, transmission[3].Data[1]);
         Assert.Equal(expectedMac1, transmission[0].Data[4]);
+        Assert.Equal(expectedMac2, transmission[1].Data[4]);
+        Assert.Equal(expectedMac3, transmission[2].Data[4]);
+        Assert.Equal(expectedMac4, transmission[3].Data[4]);
         //InitVector
         Assert.Equal("ХУТЕВБЯЖЦЧЛВ____", transmission[0].InitVector);
         Assert.Equal("ХУТЕВБЯЖЦЧЛВ___А", transmission[1].InitVector);
@@ -56,9 +63,9 @@ public class EaxSessionTests
         //message
         Assert.Equal(messages[1], transmission[1].Message);
         //mac
-        Assert.Equal("БПИКЮЮАПЮБЯЮРУИА" ,transmission[0].Mac);
-        Assert.Equal("ОК", transmission[1].Mac);
-        Assert.Equal("ОК", transmission[2].Mac);
+        Assert.Equal("БПИКЮЮАПЮБЯЮРУИА", transmission[0].Mac);
+        Assert.Equal("OK", transmission[1].Mac);
+        Assert.Equal("OK", transmission[2].Mac);
         Assert.Equal("НЭЛПИУЛМОЧОЙДЙЫА", transmission[3].Mac);
     }
 
@@ -70,7 +77,7 @@ public class EaxSessionTests
         var secIn = "ТОЖЕ_ЕЩЕ_НЕВАЖНО"; //<- в презентации ЕЩЁ
         var packet = Packet.Prepare(associatedData, "БОБ_НЕМНОГО_ПЬЯН", messages[0]);
         packet.Data[4] = "_____";
-        var cad = string.Join("", packet.Data);
+        var cad = string.Join("", packet.Data); //32
 
         //var expectedMac = "ФЙСВСЩНТЙЭЬМЧБЖЛ";
         //var expectedMessage = "ЦЯЬШЭДВ_ЯЖВЙРЫЩФКДТДУ";
@@ -81,7 +88,8 @@ public class EaxSessionTests
         var lfsr = new AsLfsrWithCBlock(key);
 
         var keySet = lfsr.ProduceRoundKeys(FeedbackCipher.SBlockRoundCount);
-        var cadmac = feedbackCipher.Encrypt(cad, secIn, keySet, MacResultMode.NoMac);
+        var cadmac = feedbackCipher.Encrypt(cad, secIn, keySet, MacResultMode.OnlyMac);
+
         var sentPacket = eaxSession.Encrypt(packet, cadmac, keySet, secIn);
         var result = eaxSession.Decrypt(sentPacket, keySet, secIn);
 

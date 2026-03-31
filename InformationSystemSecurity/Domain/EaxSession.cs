@@ -20,13 +20,13 @@ public class EaxSession
     {
         // Инициализаций (до if type == "send" на стр. 70)
         _associatedData = assData;
-        var t1 = String.Concat(_associatedData.Receiver, _associatedData.Sender);
-        var t2 = String.Concat(_associatedData.SecurityLevel, _associatedData.SessionId, 
+        var t1 = String.Concat(_associatedData.Receiver, _associatedData.Sender); //16
+        var t2 = String.Concat(_associatedData.SecurityLevel, _associatedData.SessionId, //2 + 9 + 5 = 16
             new string('_', 16 - Packet.TypeLength - Packet.SessionLength));
         var cad = TextConverter.AddTexts(t1, t2);
-        _baseInitVector = TextConverter.AddTexts(cad, nonce).Substring(0, 12);
-        var t3 = (_associatedData.Receiver.Length < _associatedData.Sender.Length) ? 
-            t1 : String.Concat(_associatedData.Sender, _associatedData.Receiver);
+        _baseInitVector = TextConverter.AddTexts(cad, nonce)[..12];
+        var t3 = (_associatedData.Receiver.ToBigInteger() < _associatedData.Sender.ToBigInteger()) ? 
+            t1 : String.Concat(_associatedData.Sender, _associatedData.Receiver); // 16
         _messageCount = 0;
         _lastVector = -1;
         var lfsr = new AsLfsrWithCBlock(key);
@@ -37,7 +37,7 @@ public class EaxSession
             _associatedData.Sender,
             _associatedData.Receiver,
             _associatedData.SessionId,
-            new string('_', 4));
+            new string('_', 5));
         _mac = _feedbackCipher.Encrypt(data, _secret, _keySet, Enums.MacResultMode.OnlyMac);
     }
 
@@ -139,23 +139,23 @@ public class EaxSession
     // см. EAX_CFB_frw (стр 60)
     public Packet Encrypt(Packet packet, string sessionMac, string[] keySet, string nonce, bool onlyMac = false)
     {
-        var tmp = packet.Data[0] + packet.Data[3] + packet.Data[4];
-        var civ = _feedbackCipher.Encrypt(nonce + tmp, packet.InitVector, keySet, Enums.MacResultMode.OnlyMac);
+        var tmp = packet.Data[0] + packet.Data[3] + packet.Data[4]; //2 + 9 + 5
+        var civ = _feedbackCipher.Encrypt(nonce + tmp, packet.InitVector, keySet, Enums.MacResultMode.OnlyMac); //16
         string mac;
         string msg;
         if (onlyMac)
         {
-            tmp = _feedbackCipher.Encrypt(packet.Message, civ, keySet, Enums.MacResultMode.OnlyMac);
-            var a = BinaryConverter.TextXor(tmp[..16], civ[..16]);
-            mac = BinaryConverter.TextXor(a, sessionMac[..16]);
+            tmp = _feedbackCipher.Encrypt(packet.Message, civ, keySet, Enums.MacResultMode.OnlyMac); //16
+            var a = BinaryConverter.TextXor(tmp, civ);
+            mac = BinaryConverter.TextXor(a, sessionMac);
             msg = packet.Message;
         }
         else
         {
             tmp = _feedbackCipher.Encrypt(packet.Message, civ, keySet, Enums.MacResultMode.WithMac);
             var m = tmp.Substring(packet.Message.Length, 16);
-            var a = BinaryConverter.TextXor(m[..16], civ[..16]);
-            mac = BinaryConverter.TextXor(a, sessionMac[..16]);
+            var a = BinaryConverter.TextXor(m, civ); //16
+            mac = BinaryConverter.TextXor(a, sessionMac);
             msg = tmp.Substring(0, packet.Message.Length);
         }
 
@@ -171,16 +171,16 @@ public class EaxSession
     // см. EAX_CFB_inv (стр 61)
     public Packet Decrypt(Packet packet, string[] keySet, string nonce, bool onlyMac = false)
     {
-        var tmp = packet.Data[0] + packet.Data[3] + packet.Data[4];
-        var data = string.Join("", packet.Data[0..3]) + new string('_', 5);
+        var tmp = packet.Data[0] + packet.Data[3] + packet.Data[4]; //2 + 9 + 5 = 16
+        var data = string.Join("", packet.Data[0..4]) + new string('_', 5); //2 + 8 + 8 + 9 + 5 = 32
 
-        var cmac = _feedbackCipher.Encrypt(data, nonce, keySet, Enums.MacResultMode.OnlyMac);
-        var civ = _feedbackCipher.Encrypt(nonce + tmp, packet.InitVector, keySet, Enums.MacResultMode.OnlyMac);
+        var cmac = _feedbackCipher.Encrypt(data, nonce, keySet, Enums.MacResultMode.OnlyMac); //16
+        var civ = _feedbackCipher.Encrypt(nonce + tmp, packet.InitVector, keySet, Enums.MacResultMode.OnlyMac); //16
         string mac;
         string msg;
         if (onlyMac)
         {
-            tmp = _feedbackCipher.Encrypt(packet.Message, civ, keySet, Enums.MacResultMode.OnlyMac);
+            tmp = _feedbackCipher.Encrypt(packet.Message, civ, keySet, Enums.MacResultMode.OnlyMac); //16
             var a = BinaryConverter.TextXor(tmp, civ);
             var b = BinaryConverter.TextXor(a, cmac);
             mac = BinaryConverter.TextXor(packet.Mac, b);

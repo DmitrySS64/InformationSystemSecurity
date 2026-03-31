@@ -1,4 +1,5 @@
 using System.Numerics;
+using System.Reflection.Metadata;
 using System.Runtime.ExceptionServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -83,6 +84,9 @@ public static class BinaryConverter
     
     public static string TextXor(string textA, string textB)
     {
+        if (textA.Length != textB.Length)
+            throw new ArgumentException($"The strings must be the same length.");
+
         var blockCount = textA.Length / TextConverter.BlockSize;
 
         var result = new StringBuilder();
