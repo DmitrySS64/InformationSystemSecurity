@@ -118,7 +118,7 @@ public class EaxSessionTests
         var keySet = lfsr.ProduceRoundKeys(FeedbackCipher.SBlockRoundCount);
 
         var cad = string.Join("", packet.Data);
-        var cadmac = feedbackCipher.Encrypt(cad, secIn, keySet, MacResultMode.NoMac);
+        var cadmac = feedbackCipher.Encrypt(cad, secIn, keySet, MacResultMode.OnlyMac);
 
         var sentPacket = eaxSession.Encrypt(packet, cadmac, keySet, secIn, onlyMac);
         var result = eaxSession.Decrypt(sentPacket, keySet, secIn, onlyMac);
@@ -152,7 +152,7 @@ public class EaxSessionTests
         var keySet = lfsr.ProduceRoundKeys(FeedbackCipher.SBlockRoundCount);
 
         var cad = string.Join("", packet.Data);
-        var cadmac = feedbackCipher.Encrypt(cad, secIn, keySet, MacResultMode.NoMac);
+        var cadmac = feedbackCipher.Encrypt(cad, secIn, keySet, MacResultMode.OnlyMac);
 
         var sentPacket = eaxSession.Encrypt(packet, cadmac, keySet, secIn);
         var tamperedPacket = new Packet
